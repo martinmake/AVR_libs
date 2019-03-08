@@ -1,0 +1,8 @@
+#!/bin/bash
+
+MCUS="atmega328p"
+
+for MCU in $MCUS; do
+	echo "BUILDING FOR: $MCU"
+	make MCU=$MCU
+done
