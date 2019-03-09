@@ -6,6 +6,9 @@
 *.oc
 *.obj
 
+# Object dependencies
+*.d
+
 # Precompiled Headers
 *.gch
 *.pch
@@ -43,3 +46,4 @@ cscope
 .ycm_extra_conf.py
 
 # Other
+inc/*

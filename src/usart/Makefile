@@ -1,13 +1,13 @@
-IDIRS:=inc
-PIDIR:=inc/public
 SDIR :=src
-ODIR :=obj
+ODIR :=obj/$(MCU)
 DDIR :=dep
-LDIR :=/home/arch/Documents/projects/AVR/libs
+MDIR :=man
+LDIR :=$(HOME)/Documents/projects/AVR/libs
 LADIR:=$(LDIR)/arc/$(MCU)
 LIDIR:=$(LDIR)/inc
 LMDIR:=$(LDIR)/man
-MDIR :=man
+IDIRS:=inc
+PIDIR:=inc/public
 
 LNAME:=$(notdir $(shell realpath .))
 
@@ -23,10 +23,11 @@ C_SRCS  :=$(shell find $(SDIR) -name *.c)
 CXX_SRCS:=$(shell find $(SDIR) -name *.cpp)
 ASM_SRCS:=$(shell find $(SDIR) -name *.S)
 
-C_OBJS  :=$(patsubst $(SDIR)/%.c,$(ODIR)/$(MCU)/%.o,$(C_SRCS))
-CXX_OBJS:=$(patsubst $(SDIR)/%.cpp,$(ODIR)/$(MCU)/%.o,$(CXX_SRCS))
-ASM_OBJS:=$(patsubst $(SDIR)/%.S,$(ODIR)/$(MCU)/%.o,$(ASM_SRCS))
+C_OBJS  :=$(patsubst $(SDIR)/%.c,$(ODIR)/%.o,$(C_SRCS))
+CXX_OBJS:=$(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(CXX_SRCS))
+ASM_OBJS:=$(patsubst $(SDIR)/%.S,$(ODIR)/%.o,$(ASM_SRCS))
 OBJS:=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
+ARC_MEMBERS:=$(notdir $(OBJS))
 
 ifeq ($(strip $(OBJS)),)
 	ARC:=
@@ -48,9 +49,9 @@ ASMFLAGS:=$(WARNING) -Os -mmcu=$(MCU) $(INC)
 ARFLAGS :=rUucv
 
 .PHONY: all
-all: $(ARC)($(OBJS)) $(CMANS) $(PHEADERS)
+all: $(ARC)($(ARC_MEMBERS)) $(CMANS) $(PHEADERS)
 
-$(ARC)(%.o): %.o $(LADIR)
+$(ARC)(%.o): $(ODIR)/%.o $(LADIR)
 	@echo =======ARCHIVING=========
 	$(AR) $(ARFLAGS) $@ $<
 	@echo ==========DONE===========
@@ -70,7 +71,7 @@ $(LADIR):
 	mkdir $@
 	@echo ==========DONE===========
 
-$(ODIR)/$(MCU):
+$(ODIR):
 	@echo ====MCU=OBJ=DIR=BUILD====
 	mkdir $@
 	@echo ==========DONE===========
@@ -80,34 +81,34 @@ $(LMDIR)/%.gz: $(MDIR)/%
 	gzip $< -c > $@
 	@echo ==========DONE===========
 
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.c $(ODIR)/$(MCU)
+$(ODIR)/%.o: $(SDIR)/%.c $(ODIR)
 	@echo =======COMPILING=========
 	$(CC) $(CCFLAGS) -c $< -o $@
 	@echo ==========DONE===========
 
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.cpp $(ODIR)/$(MCU)
+$(ODIR)/%.o: $(SDIR)/%.cpp $(ODIR)
 	@echo =====COMPILING======
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo ==========DONE===========
 
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.S $(ODIR)/$(MCU)
+$(ODIR)/%.o: $(SDIR)/%.S $(ODIR)
 	@echo =======COMPILING=========
 	$(ASMC) $(ASMFLAGS) -c $< -o $@
 	@echo ==========DONE===========
 
 $(DDIR)/%.d: $(SDIR)/%.c
 	@echo ==BUILDING=DEPENDENCIES==
-	$(CC) $(INC) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/$$\(MCU\)/%.o,$@) > $@
+	$(CC) $(INC) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/%.o,$@) > $@
 	@echo ==========DONE===========
 
 $(DDIR)/%.d: $(SDIR)/%.cpp
 	@echo ==BUILDING=DEPENDENCIES==
-	$(CXX) $(INC) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/$$\(MCU\)/%.o,$@) > $@
+	$(CXX) $(INC) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/%.o,$@) > $@
 	@echo ==========DONE===========
 
 $(DDIR)/%.d: $(SDIR)/%.S
 	@echo ==BUILDING=DEPENDENCIES==
-	$(ASMC) $(INC) -mmcu=$(MCU) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/$$\(MCU\)/%.o,$@) > $@
+	$(ASMC) $(INC) -mmcu=$(MCU) -MM $< -MT $(patsubst $(DDIR)/%.d,$(ODIR)/%.o,$@) > $@
 	@echo ==========DONE===========
 
 .PHONY: build
