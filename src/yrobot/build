@@ -1,8 +1,0 @@
-#!/bin/bash
-
-MCUS="atmega16"
-
-for MCU in $MCUS; do
-	echo "BUILDING FOR: $MCU"
-	make MCU=$MCU
-done
