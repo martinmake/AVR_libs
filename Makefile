@@ -5,6 +5,8 @@ LMDIR:=$(LDIR)/man
 
 CORE_LIBS:=standard usart
 
+######END#OF#CONFIGURATION#VARIABLES######
+
 export LDIR LADIR LIDIR LMDIR
 
 CORE_LIB_PATHS:=$(foreach CORE_LIB,$(CORE_LIBS),$(dir $(shell find src/$(CORE_LIB) -name Makefile)))

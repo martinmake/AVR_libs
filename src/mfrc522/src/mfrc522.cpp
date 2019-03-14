@@ -8,23 +8,10 @@
 
 #include "mfrc522.h"
 
-#define SCK_DDB  { &DDRB, DD5 }
-#define MISO_DDB { &DDRB, DD4 }
-#define MOSI_DDB { &DDRB, DD3 }
-
-Mfrc522::Mfrc522(Spi::Slave slave, BIT rst_pin, BIT rst_ddb)
+Mfrc522::Mfrc522(Spi::Slave slave, Pin rst)
 	: m_slave(slave)
 {
-	if (!Spi::begun) {
-		Spi::INIT spi_init;
-		spi_init.clock_rate_select = Spi::CLOCK_RATE_SELECT::S4;
-		spi_init.sck_ddb           = SCK_DDB;
-		spi_init.miso_ddb          = MISO_DDB;
-		spi_init.mosi_ddb          = MOSI_DDB;
-		Spi::begin(&spi_init);
-	}
-
-	reset(rst_pin, rst_ddb);
+	reset(rst);
 	init();
 }
 
@@ -32,15 +19,15 @@ Mfrc522::~Mfrc522()
 {
 }
 
-void Mfrc522::reset(BIT rst_pin, BIT rst_ddb)
+void Mfrc522::reset(Pin rst)
 {
-	clear_bit(rst_ddb);
-	if (!read_bit(rst_pin)) {
-		set_bit(rst_ddb);
+	rst.dd.clear();
+	if (!rst.pin.read()) {
+		rst.dd.set();
 
-		clear_bit(rst_pin);
+		rst.port.clear();
 		_delay_ms(2);
-		set_bit(rst_pin);
+		rst.port.set();
 
 		_delay_ms(100);
 	} else

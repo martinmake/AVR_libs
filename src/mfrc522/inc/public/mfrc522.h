@@ -155,7 +155,7 @@ class Mfrc522
 		Spi::Slave m_slave;
 
 	public:
-		Mfrc522(Spi::Slave slave, BIT rst_pin, BIT rst_ddb);
+		Mfrc522(Spi::Slave slave, Pin rst);
 		~Mfrc522();
 
 		bool is_card_present();
@@ -176,7 +176,7 @@ class Mfrc522
 		void set_mask_reg(REG reg, uint8_t mask);
 
 	private:
-		void reset(BIT rst_pin, BIT rst_ddb);
+		void reset(Pin rst);
 		void init();
 		void antenna_on();
 		void reset_baud_rates();

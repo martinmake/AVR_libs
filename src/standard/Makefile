@@ -10,6 +10,8 @@ IDIRS:=inc
 PIDIR:=inc/public
 MCUS :=atmega328p atmega16
 
+######END#OF#CONFIGURATION#VARIABLES######
+
 LNAME:=$(notdir $(realpath .))
 
 MANS :=$(shell find $(MDIR) -name *.* 2>/dev/null)
@@ -56,6 +58,9 @@ all:
 .PHONY: build
 build: $(ARC)($(ARC_MEMBERS)) $(CMANS) $(PHEADERS)
 
+$(LIDIR)/$(LNAME) $(LADIR)/$(MCU) $(ODIR)/$(MCU):
+	mkdir $@
+
 $(ARC)(%.o): $(ODIR)/$(MCU)/%.o | $(LADIR)/$(MCU)
 	@echo =======ARCHIVING=========
 	$(AR) $(ARFLAGS) $@ $<
@@ -66,9 +71,6 @@ $(LIDIR)/$(LNAME)/%.h: $(PIDIR)/%.h | $(LIDIR)/$(LNAME)
 	cp $< -t $(LIDIR)/$(LNAME)
 	@echo ==========DONE===========
 
-$(LIDIR)/$(LNAME) $(LADIR)/$(MCU) $(ODIR)/$(MCU):
-	mkdir $@
-
 $(LMDIR)/%.gz: $(MDIR)/%
 	@echo ===BUILDING=MAN=PAGES====
 	gzip $< -c > $@
@@ -78,12 +80,10 @@ $(ODIR)/$(MCU)/%.o: $(SDIR)/%.c | $(ODIR)/$(MCU)
 	@echo =======COMPILING=========
 	$(CC)   $(CCFLAGS) -c $< -o $@
 	@echo ==========DONE===========
-
 $(ODIR)/$(MCU)/%.o: $(SDIR)/%.cpp | $(ODIR)/$(MCU)
 	@echo =======COMPILING=========
 	$(CXX)  $(CXXFLAGS) -c $< -o $@
 	@echo ==========DONE===========
-
 $(ODIR)/$(MCU)/%.o: $(SDIR)/%.S | $(ODIR)/$(MCU)
 	@echo =======COMPILING=========
 	$(ASMC) $(ASMFLAGS) -c $< -o $@
@@ -93,12 +93,10 @@ $(DDIR)/%.d: $(SDIR)/%.c
 	@echo ==BUILDING=DEPENDENCIES==
 	$(CC)   $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
 	@echo ==========DONE===========
-
 $(DDIR)/%.d: $(SDIR)/%.cpp
 	@echo ==BUILDING=DEPENDENCIES==
 	$(CXX)  $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
 	@echo ==========DONE===========
-
 $(DDIR)/%.d: $(SDIR)/%.S
 	@echo ==BUILDING=DEPENDENCIES==
 	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@

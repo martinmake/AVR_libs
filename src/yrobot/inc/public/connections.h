@@ -7,97 +7,97 @@
 
 /* # LEDs # */
 // LED7
-extern const BIT LED7;
+extern const Pin LED7;
 // LED8
-extern const BIT LED8;
+extern const Pin LED8;
 /* # LEDs # */
 
 /* # Buzzer # */
 // AKU
-extern const BIT BUZZER;
+extern const Pin BUZZER;
 /* # Buzzer # */
 
 /* # 7-Segment Displays # */
 // LED6DIG1
-extern const BIT LED6DIG1;
-extern const BIT LED6DIG2;
+extern const Pin LED6DIG1;
+extern const Pin LED6DIG2;
 // SSDBUS
-extern const BIT SSDBUS_A;
-extern const BIT SSDBUS_B;
-extern const BIT SSDBUS_C;
-extern const BIT SSDBUS_D;
-extern const BIT SSDBUS_E;
-extern const BIT SSDBUS_F;
-extern const BIT SSDBUS_G;
-extern const BIT SSDBUS_DP;
+extern const Pin SSDBUS_A;
+extern const Pin SSDBUS_B;
+extern const Pin SSDBUS_C;
+extern const Pin SSDBUS_D;
+extern const Pin SSDBUS_E;
+extern const Pin SSDBUS_F;
+extern const Pin SSDBUS_G;
+extern const Pin SSDBUS_DP;
 /* # 7-Segment Displays # */
 
 /* # Touch switches & Trimmer # */
 // SW2
-extern const BIT SW2;
+extern const Pin SW2;
 // SW3
-extern const BIT SW3;
+extern const Pin SW3;
 // TRIM1
-extern const uint8_t TRIM1;
+extern const Pin TRIM1;
 /* # Touch switches & Trimmer # */
 
 /* # H-Bridge & Motors # */
 // MOT1
-extern const BIT MOTL_PWR;
-extern const BIT MOTL_DIR;
-extern const BIT MOTL_ENC;
+extern const Pin MOTL_PWR;
+extern const Pin MOTL_DIR;
+extern const Pin MOTL_ENC;
 // MOT2
-extern const BIT MOTR_DIR;
-extern const BIT MOTR_PWR;
-extern const BIT MOTR_ENC;
+extern const Pin MOTR_PWR;
+extern const Pin MOTR_DIR;
+extern const Pin MOTR_ENC;
 /* # H-Bridge & Motors # */
 
 #ifdef YROBOT_DEFAULT_CONNECTIONS
 /* # LEDs # */
 // LED7
-const BIT LED7      = {&PORTA, PA5};
+const Pin LED7      = {&PORTA, PA5};
 // LED8
-const BIT LED8      = {&PORTA, PA6};
+const Pin LED8      = {&PORTA, PA6};
 /* # LEDs # */
 
 /* # Buzzer # */
 // AKU
-const BIT BUZZER    = {&PORTA, PA7};
+const Pin BUZZER    = {&PORTA, PA7};
 /* # Buzzer # */
 
 /* # 7-Segment Displays # */
 // LED6DIG1
-const BIT LED6DIG1  = {&PORTB, PB0};
-const BIT LED6DIG2  = {&PORTB, PB1};
+const Pin LED6DIG1  = {&PORTB, PB0};
+const Pin LED6DIG2  = {&PORTB, PB1};
 // SSDBUS
-const BIT SSDBUS_A  = {&PORTC, PC0};
-const BIT SSDBUS_B  = {&PORTC, PC1};
-const BIT SSDBUS_C  = {&PORTC, PC2};
-const BIT SSDBUS_D  = {&PORTC, PC3};
-const BIT SSDBUS_E  = {&PORTC, PC4};
-const BIT SSDBUS_F  = {&PORTC, PC5};
-const BIT SSDBUS_G  = {&PORTC, PC6};
-const BIT SSDBUS_DP = {&PORTC, PC7};
+const Pin SSDBUS_A  = {&PORTC, PC0};
+const Pin SSDBUS_B  = {&PORTC, PC1};
+const Pin SSDBUS_C  = {&PORTC, PC2};
+const Pin SSDBUS_D  = {&PORTC, PC3};
+const Pin SSDBUS_E  = {&PORTC, PC4};
+const Pin SSDBUS_F  = {&PORTC, PC5};
+const Pin SSDBUS_G  = {&PORTC, PC6};
+const Pin SSDBUS_DP = {&PORTC, PC7};
 /* # 7-Segment Displays # */
 
 /* # Touch switches & Trimmer # */
 // SW2
-const BIT SW2       = {&PORTB, PB2};
+const Pin SW2       = {&PORTB, PB2};
 // SW3
-const BIT SW3       = {&PORTB, PB3};
+const Pin SW3       = {&PORTB, PB3};
 // TRIM1
-const uint8_t TRIM1 = PA0;
+const Pin TRIM1     = {&PORTA, PA0};
 /* # Touch switches & Trimmer # */
 
 /* # H-Bridge & Motors # */
 // MOT1
-const BIT MOTL_PWR  = {&PORTD,  PD5};
-const BIT MOTL_DIR  = {&PORTD,  PD6};
-const BIT MOTL_ENC  = {&PORTD, INT0};
+const Pin MOTL_PWR  = {&PORTD,  PD5};
+const Pin MOTL_DIR  = {&PORTD,  PD6};
+const Pin MOTL_ENC  = {&PORTD, INT0};
 // MOT2
-const BIT MOTR_PWR  = {&PORTD,  PD4};
-const BIT MOTR_DIR  = {&PORTD,  PD7};
-const BIT MOTR_ENC  = {&PORTD, INT1};
+const Pin MOTR_PWR  = {&PORTD,  PD4};
+const Pin MOTR_DIR  = {&PORTD,  PD7};
+const Pin MOTR_ENC  = {&PORTD, INT1};
 /* # H-Bridge & Motors # */
 #endif
 

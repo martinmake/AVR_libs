@@ -9,8 +9,8 @@
 
 namespace Ssd
 {
-	extern uint8_t c1;
-	extern uint8_t c2;
+	extern uint8_t seg1;
+	extern uint8_t seg2;
 
 	void begin();
 	void set_segment(char c);
@@ -29,15 +29,15 @@ ISR(TIMER0_COMP_vect)
 	if (counter == 5) {
 		switch (segment_select) {
 			case 1:
-				set_bit(PRT(LED6DIG2));
+				LED6DIG2.port.set();
 				Ssd::set_segment(Ssd::c1);
-				clear_bit(PRT(LED6DIG1));
+				LED6DIG1.port.clear();
 				segment_select = 2;
 				break;
 			case 2:
-				set_bit(PRT(LED6DIG1));
+				LED6DIG1.port.set();
 				Ssd::set_segment(Ssd::c2);
-				clear_bit(PRT(LED6DIG2));
+				LED6DIG2.port.clear();
 				segment_select = 1;
 				break;
 		}

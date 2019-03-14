@@ -1,6 +1,8 @@
 #ifndef _SPI_H_
 #define _SPI_H_
 
+#include <avr/io.h>
+
 #include <standard/standard.h>
 
 namespace Spi
@@ -17,12 +19,10 @@ namespace Spi
 
 	typedef struct {
 		CLOCK_RATE_SELECT clock_rate_select;
-		BIT sck_ddb;
-		BIT miso_ddb;
-		BIT mosi_ddb;
+		Bit sck_ddb;
+		Bit miso_ddb;
+		Bit mosi_ddb;
 	} INIT;
-
-	extern bool begun;
 
 	void begin(const INIT* init);
 	uint8_t send(uint8_t data);
@@ -30,10 +30,10 @@ namespace Spi
 	class Slave
 	{
 		private:
-			BIT m_ss;
+			Pin m_ss;
 
-	public:
-			Slave(BIT ss_pin, BIT ss_ddb);
+		public:
+			Slave(Pin ss);
 			~Slave();
 
 			void select();

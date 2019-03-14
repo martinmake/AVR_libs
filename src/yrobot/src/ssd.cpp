@@ -2,23 +2,22 @@
 
 namespace Ssd
 {
-	uint8_t c1;
-	uint8_t c2;
+	uint8_t seg1;
+	uint8_t seg2;
 
 	void begin()
 	{
-		set_bit(DDR(LED6DIG1));
-		set_bit(DDR(LED6DIG2));
+		LED6DIG1.dd.set();
+		LED6DIG2.dd.set();
 
-		set_bit(DDR(SSDBUS_A));
-		set_bit(DDR(SSDBUS_B));
-		set_bit(DDR(SSDBUS_C));
-		set_bit(DDR(SSDBUS_D));
-		set_bit(DDR(SSDBUS_E));
-		set_bit(DDR(SSDBUS_F));
-		set_bit(DDR(SSDBUS_G));
-
-		set_bit(DDR(SSDBUS_DP));
+		SSDBUS_A .dd.set();
+		SSDBUS_B .dd.set();
+		SSDBUS_C .dd.set();
+		SSDBUS_D .dd.set();
+		SSDBUS_E .dd.set();
+		SSDBUS_F .dd.set();
+		SSDBUS_G .dd.set();
+		SSDBUS_DP.dd.set();
 
 		TCCR0 = (1 << WGM01);	// CTC
 		TCCR0 = (1 << CS01);	// clk/8
@@ -171,25 +170,25 @@ namespace Ssd
 	void display_num(uint8_t byte, BASE base)
 	{
 		if (byte > base*base - 1) {
-			Ssd::c1 = 'E';
-			Ssd::c2 = 'R';
+			Ssd::seg1 = 'E';
+			Ssd::seg2 = 'R';
 			return;
 		}
 
 		uint8_t digit;
 
 		digit   = byte / base;
-		Ssd::c1 = digit < 10 ? '0' + digit : 'A' + digit-10;
+		Ssd::seg1 = digit < 10 ? '0' + digit : 'A' + digit-10;
 		digit   = byte - (digit * base);
-		Ssd::c2 = digit < 10 ? '0' + digit : 'A' + digit-10;
+		Ssd::seg2 = digit < 10 ? '0' + digit : 'A' + digit-10;
 	}
 
 	void display_str(char* s, uint16_t shift_speed /*=500*/)
 	{
 	for (char *p_s = s; *p_s != '\0'; p_s++)
 		{
-			Ssd::c2 = *p_s;
-			Ssd::c1 = p_s == s ? ' ' : *(p_s-1);
+			Ssd::seg2 = *p_s;
+			Ssd::seg1 = p_s == s ? ' ' : *(p_s-1);
 			for (uint16_t j = 0; j < shift_speed; j++)
 				wait_ms();
 		}
@@ -197,13 +196,13 @@ namespace Ssd
 
 	void set_bus(uint8_t mask)
 	{
-		write_bit(PRT(SSDBUS_A) , !(mask & 0b10000000));
-		write_bit(PRT(SSDBUS_B) , !(mask & 0b01000000));
-		write_bit(PRT(SSDBUS_C) , !(mask & 0b00100000));
-		write_bit(PRT(SSDBUS_D) , !(mask & 0b00010000));
-		write_bit(PRT(SSDBUS_E) , !(mask & 0b00001000));
-		write_bit(PRT(SSDBUS_F) , !(mask & 0b00000100));
-		write_bit(PRT(SSDBUS_G) , !(mask & 0b00000010));
-		write_bit(PRT(SSDBUS_DP), !(mask & 0b00000001));
+		SSDBUS_A .port.write(!(mask & 0b10000000));
+		SSDBUS_B .port.write(!(mask & 0b01000000));
+		SSDBUS_C .port.write(!(mask & 0b00100000));
+		SSDBUS_D .port.write(!(mask & 0b00010000));
+		SSDBUS_E .port.write(!(mask & 0b00001000));
+		SSDBUS_F .port.write(!(mask & 0b00000100));
+		SSDBUS_G .port.write(!(mask & 0b00000010));
+		SSDBUS_DP.port.write(!(mask & 0b00000001));
 	}
 }
