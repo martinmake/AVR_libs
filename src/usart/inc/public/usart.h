@@ -3,10 +3,6 @@
 
 namespace Usart
 {
-	typedef enum class nl : uint8_t {
-		OFF, ON
-	} NL;
-
 	typedef enum class x2 : uint8_t {
 		OFF, ON
 	} X2;
@@ -20,15 +16,15 @@ namespace Usart
 	} TX;
 
 	typedef enum class stop_bit_select : uint8_t {
-		ONE, TWO
+		S1, S2
 	} STOP_BIT_SELECT;
 
 	typedef enum class character_size : uint8_t {
-		FIVE  = 0b000,
-		SIX   = 0b001,
-		SEVEN = 0b010,
-		EIGHT = 0b011,
-		NINE  = 0b111
+		S5 = 0b000,
+		S6 = 0b001,
+		S7 = 0b010,
+		S8 = 0b011,
+		S9 = 0b111
 	} CHARACTER_SIZE;
 
 	typedef struct {
@@ -42,11 +38,12 @@ namespace Usart
 	} INIT;
 
 	void begin(const INIT* init);
-	void begin_simple(uint32_t baud, uint32_t f_osc);
+	void begin(uint32_t baud, uint32_t f_osc);
 	void send_char(char c);
-	void send_bits(uint8_t bits, NL nl);
 	void send_str(const char* s);
 	void sendf(uint16_t size, const char* format, ...);
+	char recv_char();
+	void flush();
 }
 
 #endif

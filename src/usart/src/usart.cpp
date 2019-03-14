@@ -1,6 +1,8 @@
 #include <avr/io.h>
 #include <stdio.h>
 
+#include <standard/standard.h>
+
 #include "usart.h"
 
 namespace Usart
@@ -15,20 +17,29 @@ namespace Usart
 		UBRR0L = (brrv & 0xff);
 
 		if (init->x2 == X2::ON)
-			UCSR0A |= (1 << U2X0);
+			Bit(&UCSR0A, U2X0).set();
+		else if (init->x2 == X2::OFF)
+			Bit(&UCSR0A, U2X0).clear();
 
 		if (init->rx == RX::ON)
-			UCSR0B |= (1 << RXEN0);
-		if (init->tx == TX::ON)
-			UCSR0B |= (1 << TXEN0);
+			Bit(&UCSR0B, RXEN0).set();
+		else if (init->rx == RX::OFF)
+			Bit(&UCSR0B, RXEN0).clear();
 
-		if (init->stop_bit_select == STOP_BIT_SELECT::TWO)
-			UCSR0C |= (1 << USBS0);
+		if (init->tx == TX::ON)
+			Bit(&UCSR0B, TXEN0).set();
+		else if (init->tx == TX::OFF)
+			Bit(&UCSR0B, TXEN0).clear();
+
+		if (init->stop_bit_select == STOP_BIT_SELECT::S1)
+			Bit(&UCSR0C, USBS0).set();
+		else if (init->stop_bit_select == STOP_BIT_SELECT::S2)
+			Bit(&UCSR0C, USBS0).clear();
 
 		uint8_t character_size = static_cast<uint8_t>(init->character_size);
-		UCSR0C |= (character_size & 0b001 << UCSZ00);
-		UCSR0C |= (character_size & 0b010 << UCSZ01);
-		UCSR0B |= (character_size & 0b100 << UCSZ02);
+		Bit(&UCSR0C, UCSZ00).write(character_size & 0b001);
+		Bit(&UCSR0C, UCSZ01).write(character_size & 0b010);
+		Bit(&UCSR0B, UCSZ02).write(character_size & 0b100);
 	}
 #elif defined(__AVR_ATmega16__) || defined(__AVR_ATmega16L__)
 	void begin(const INIT* init)
@@ -40,65 +51,47 @@ namespace Usart
 		UBRRL = (brrv & 0xff);
 
 		if (init->x2 == X2::ON)
-			UCSRA |= (1 << U2X);
+			Bit(&UCSRA, U2X).set();
+		else if (init->x2 == X2::OFF)
+			Bit(&UCSRA, U2X).clear();
 
 		if (init->rx == RX::ON)
-			UCSRB |= (1 << RXEN);
+			Bit(&UCSRB, RXEN).set();
+		else if (init->rx == RX::OFF)
+			Bit(&UCSRB, RXEN).clear();
+
 		if (init->tx == TX::ON)
-			UCSRB |= (1 << TXEN);
+			Bit(&UCSRB, TXEN).set();
+		else if (init->tx == TX::OFF)
+			Bit(&UCSRB, TXEN).clear();
 
 		UCSRC |= (1 << URSEL);
 
-		if (init->stop_bit_select == STOP_BIT_SELECT::TWO)
-			UCSRC |= (1 << USBS);
+		if (init->stop_bit_select == STOP_BIT_SELECT::S1)
+			Bit(&UCSRC, USBS).set();
+		else if (init->stop_bit_select == STOP_BIT_SELECT::S2)
+			Bit(&UCSRC, USBS).clear();
 
 		uint8_t character_size = static_cast<uint8_t>(init->character_size);
-		UCSRC |= (character_size & 0b001 << UCSZ0);
-		UCSRC |= (character_size & 0b010 << UCSZ1);
-		UCSRB |= (character_size & 0b100 << UCSZ2);
+		Bit(&UCSRC, UCSZ0).write(character_size & 0b001);
+		Bit(&UCSRC, UCSZ1).write(character_size & 0b010);
+		Bit(&UCSRB, UCSZ2).write(character_size & 0b100);
 	}
 #endif
 
-#if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
-	void begin_simple(uint32_t baud, uint32_t f_osc)
+	void begin(uint32_t baud, uint32_t f_osc)
 	{
-		uint16_t brrv;
+			INIT init;
+			init.x2 = X2::OFF;
+			init.rx = RX::ON;
+			init.tx = TX::ON;
+			init.character_size  = CHARACTER_SIZE::S8;
+			init.stop_bit_select = STOP_BIT_SELECT::S2;
+			init.baud  = baud;
+			init.f_osc = f_osc;
 
-		brrv  = f_osc/16/baud-1;
-
-		UBRR0H = (brrv >> 8);
-		UBRR0L = (brrv & 0xff);
-
-		UCSR0A &= ~(1 << U2X0);
-		UCSR0B |=  (1 << RXEN0) | (1 << TXEN0);
-		UCSR0C |=  (1 << USBS0);
-
-		uint8_t character_size = static_cast<uint8_t>(Usart::CHARACTER_SIZE::EIGHT);
-		UCSR0C |= (character_size & 0b001 << UCSZ00);
-		UCSR0C |= (character_size & 0b010 << UCSZ01);
-		UCSR0B |= (character_size & 0b100 << UCSZ02);
+			begin(&init);
 	}
-#elif defined(__AVR_ATmega16__) || defined(__AVR_ATmega16L__)
-	void begin_simple(uint32_t baud, uint32_t f_osc)
-	{
-		uint16_t brrv;
-
-		brrv  = f_osc/16/baud-1;
-		UBRRH = (brrv >> 8);
-		UBRRL = (brrv & 0xff);
-
-		UCSRA &= ~(1 << U2X);
-		UCSRB |=  (1 << RXEN) | (1 << TXEN);;
-
-		UCSRC |=  (1 << URSEL);
-		UCSRC |=  (1 << USBS);
-
-		uint8_t character_size = static_cast<uint8_t>(Usart::CHARACTER_SIZE::EIGHT);
-		UCSRC |= (character_size & 0b001 << UCSZ0);
-		UCSRC |= (character_size & 0b010 << UCSZ1);
-		UCSRB |= (character_size & 0b100 << UCSZ2);
-	}
-#endif
 
 #if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
 	void send_char(char c)
@@ -117,26 +110,6 @@ namespace Usart
 		UDR = c;
 	}
 #endif
-
-	void send_bits(uint8_t bits, NL nl)
-	{
-		uint8_t mask = (1 << 7);
-
-		while (mask) {
-			if (bits & mask)
-				send_char('1');
-			else
-				send_char('0');
-
-			if (mask == 0b00010000)
-				send_char(' ');
-
-			mask >>= 1;
-		}
-
-		if (nl == NL::ON)
-			send_char('\n');
-	}
 
 	void send_str(const char* str)
 	{
@@ -157,4 +130,36 @@ namespace Usart
 
 		delete[] buf;
 	}
+
+#if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
+	char recv_char()
+	{
+		while (!(UCSR0A & (1 << RXC0)))
+			;
+
+		return UDR0;
+	}
+#elif defined(__AVR_ATmega16__) || defined(__AVR_ATmega16L__)
+	char recv_char()
+	{
+		while (!(UCSRA & (1 << RXC)))
+			;
+
+		return UDR;
+	}
+#endif
+
+#if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
+	void flush()
+	{
+		uint8_t dummy;
+		while (UCSR0A & (1 << RXC0)) dummy = UDR0;
+	}
+#elif defined(__AVR_ATmega16__) || defined(__AVR_ATmega16L__)
+	void flush()
+	{
+		uint8_t dummy;
+		while (UCSRA & (1 << RXC)) dummy = UDR;
+	}
+#endif
 }
