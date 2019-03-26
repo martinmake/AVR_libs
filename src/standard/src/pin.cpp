@@ -3,8 +3,8 @@
 
 #include "standard.h"
 
-Pin::Pin(const Bit& port)
-	: port(port), dd(port-1), pin(port-2)
+Pin::Pin(volatile uint8_t& port_reg, uint8_t index)
+	: port(port_reg, index), dd(*(&port_reg-1), index), pin(*(&port_reg-2), index)
 {
 }
 

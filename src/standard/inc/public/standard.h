@@ -14,19 +14,17 @@ typedef enum {
 class Bit
 {
 	public:
-		volatile uint8_t* m_addr;
+		volatile uint8_t& m_reg;
 		uint8_t m_index;
 
 	public:
-		Bit(volatile uint8_t* addr, uint8_t index);
+		Bit(volatile uint8_t& reg, uint8_t index);
 		~Bit();
 
-		void set() const;
-		void clear() const;
-		void write(uint8_t val) const;
+		void set();
+		void clear();
+		void write(uint8_t val);
 		uint8_t read() const;
-
-		Bit operator-(int i) const;
 };
 
 class Pin
@@ -37,7 +35,7 @@ class Pin
 		Bit pin;
 
 	public:
-		Pin(const Bit& port);
+		Pin(volatile uint8_t& port_reg, uint8_t index);
 		~Pin();
 };
 
