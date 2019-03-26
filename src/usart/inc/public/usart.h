@@ -39,11 +39,10 @@ namespace Usart
 
 	void begin(const INIT* init);
 	void begin(uint32_t baud, uint32_t f_osc);
-	void send_char(char c);
-	void send_str(const char* s);
+	void sendc(char c);
+	void sends(const char* s);
+	char recvc();
 	void sendf(uint16_t size, const char* format, ...);
-	char recv_char();
-	void flush();
 }
 
 #endif

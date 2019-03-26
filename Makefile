@@ -1,4 +1,4 @@
-LDIR:=$(realpath .)
+LDIR :=$(realpath .)
 LADIR:=$(LDIR)/arc
 LIDIR:=$(LDIR)/inc
 LMDIR:=$(LDIR)/man
