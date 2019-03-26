@@ -21,12 +21,12 @@ int main(void)
 	init();
 
 	while (1) {
-		Usart::send_char('X');
-		Usart::send_char('\n');
-		Usart::send_str("TEST!");
-		Usart::send_char('\n');
+		Usart::sendc('X');
+		Usart::sendc('\n');
+		Usart::sends("TEST!");
+		Usart::sendc('\n');
 		Usart::sendf(10, "2 + 2 = %d", 2 + 2);
-		Usart::send_char('\n');
+		Usart::sendc('\n');
 		_delay_ms(1000);
 	}
 }

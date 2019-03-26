@@ -3,11 +3,12 @@
 
 #include <standard/standard.h>
 
-Pin led({&PORTB, PB5});
+Bit led_port(PORTB, PB5);
+Bit led_dd(DDRB, DD5);
 
 void init(void)
 {
-	led.dd.set();
+	led_dd.set();
 }
 
 int main(void)
@@ -15,9 +16,9 @@ int main(void)
 	init();
 
 	while (1) {
-		led.port.set();
+		led_port.set();
 		_delay_ms(250);
-		led.port.clear();
+		led_port.clear();
 		_delay_ms(250);
 	}
 }

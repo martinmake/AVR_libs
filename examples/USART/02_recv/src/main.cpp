@@ -7,7 +7,7 @@
 #define LED_OFF '0'
 #define LED_ON  '1'
 
-Pin led({&PORTB, PB5});
+Pin led(PORTB, PB5);
 
 void init(void)
 {
@@ -28,7 +28,7 @@ int main(void)
 	init();
 
 	while (1) {
-		char command = Usart::recv_char();
+		char command = Usart::recvc();
 
 		switch (command) {
 			case LED_OFF: led.port.clear(); break;
