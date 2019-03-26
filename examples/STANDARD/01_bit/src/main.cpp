@@ -3,8 +3,8 @@
 
 #include <standard/standard.h>
 
-Bit led_port(PORTB, PB5);
-Bit led_dd(DDRB, DD5);
+Bit led_port({PORTB, PB5});
+Bit led_dd  ({DDRB , DD5});
 
 void init(void)
 {

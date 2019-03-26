@@ -7,7 +7,7 @@
 #define LED_OFF '0'
 #define LED_ON  '1'
 
-Pin led(PORTB, PB5);
+Pin led({PORTB, PB5});
 
 void init(void)
 {

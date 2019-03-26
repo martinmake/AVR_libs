@@ -4,7 +4,7 @@
 #include <standard/standard.h>
 #include <usart/usart.h>
 
-Pin led(PORTB, PB5);
+Pin led({PORTB, PB5});
 
 void init(void)
 {

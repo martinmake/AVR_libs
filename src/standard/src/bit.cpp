@@ -35,4 +35,9 @@ uint8_t Bit::read() const
 	return m_reg & (1 << m_index);
 }
 
+Bit Bit::operator-(int i) const
+{
+	return {*(&m_reg - i), m_index};
+}
+
 #endif

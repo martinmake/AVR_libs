@@ -25,6 +25,8 @@ class Bit
 		void clear();
 		void write(uint8_t val);
 		uint8_t read() const;
+
+		Bit operator-(int i) const;
 };
 
 class Pin
@@ -35,7 +37,7 @@ class Pin
 		Bit pin;
 
 	public:
-		Pin(volatile uint8_t& port_reg, uint8_t index);
+		Pin(const Bit& port_reg);
 		~Pin();
 };
 
