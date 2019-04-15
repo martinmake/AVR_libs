@@ -11,14 +11,13 @@ LDIR :=$(HOME)/Documents/proj/AVR/libs
 LIDIR:=$(LDIR)/inc
 LADIR:=$(LDIR)/arc
 
-# MCU  :=atmega328p
 MCU  :=atmega328p
 F_CPU:=16000000
 BAUD :=1000000
 PROG :=arduino
 PORT :=/dev/ttyUSB0
 
-LIBS:=usart
+LIBS:=usart i2c
 DEFS:=
 
 ######END#OF#CONFIGURATION#VARIABLES######
@@ -65,7 +64,7 @@ all: $(ELF)
 
 $(ELF): $(OBJS)
 	@echo ========LINKING==========
-	$(LD) $(LDFLAGS) $< $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 	@echo ==========DONE===========
 
 $(ODIR)/%.o: $(SDIR)/%.c
@@ -101,6 +100,13 @@ flash:
 .PHONY: serial
 serial:
 	sudo tio -b $(BAUD) -d 8 -s 2 -e -mINLCRNL $(PORT)
+
+.PHONY: setup
+setup:
+	@echo ===MAKING=DIRECTORIES====
+	mkdir -p $(BDIR) $(ODIR) $(DDIR) $(IDIRS) $(SDIR)
+	touch $(BDIR)/.empty $(ODIR)/.empty $(DDIR)/.empty
+	@echo ==========DONE===========
 
 .PHONY: clean
 clean:
