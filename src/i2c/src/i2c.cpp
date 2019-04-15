@@ -1,16 +1,17 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 
 #include <standard/standard.h>
 #include <usart/usart.h>
 
 #include "i2c.h"
+#include "conditions.h"
 
 namespace I2c
 {
-	Bit start_bit     (TWCR, TWSTA);
-	Bit stop_bit      (TWCR, TWSTO);
-	Bit interrupt_bit (TWCR, TWINT);
+	volatile bool transceive_completed;
+	volatile bool transceive_failed;
 
 	void begin(const INIT* init)
 	{
@@ -19,13 +20,14 @@ namespace I2c
 			ps_val *= 4;
 
 		TWBR  = (init->f_osc/init->f_scl - 16)/2/ps_val;
-		TWCR |= (1 << TWEN);
 
 		uint8_t ps = (uint8_t) init->ps;
 		Bit(TWSR, TWPS0).write(ps & 0b01);
 		Bit(TWSR, TWPS1).write(ps & 0b10);
 
 		PORTC |= (1 << PC5) | (1 << PC4);
+
+		TWCR |= (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
 	}
 
 	void begin(uint32_t f_scl, uint32_t f_osc)
@@ -40,104 +42,19 @@ namespace I2c
 			begin(&init);
 	}
 
-	bool write(uint8_t addr, uint8_t data)
+	void write(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
 	{
-		Usart::sendf(20, "\naddr: 0x%02x\n", addr);
-
-		if (!_start())
-			return false;
-
-		if (!_slaw(addr))
-			return false;
-
-		if (!_data(data))
-			return false;
-
-		_stop();
-
-		return true;
+		addr   = (_addr << 1) | 0;
+		count  = _count;
+		buffer = _buffer;
+		start();
 	}
 
-	bool _start()
+	void read(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
 	{
-		stop_bit.clear();
-		start_bit.set();
-		interrupt_bit.set();
-
-		while(!interrupt_bit.read())
-			;
-
-		if ((TWSR & 0xf8) == 0x08)
-			Usart::sends("START!\n");
-		else {
-			Usart::sends("START ERROR!\n");
-			_stop();
-			return false;
-		}
-
-		return true;
-	}
-
-	bool _slaw(uint8_t addr)
-	{
-		TWDR = addr << 1;
-		start_bit.clear();
-		interrupt_bit.set();
-		while(!interrupt_bit.read())
-			;
-
-		if ((TWSR & 0xf8) == 0x18)
-			Usart::sends("ACK!\n");
-		else if ((TWSR & 0xf8) == 0x20) {
-			Usart::sends("NACK!\n");
-			_stop();
-			return false;
-		} else if ((TWSR & 0xf8) == 0x38) {
-			Usart::sends("ARBITRATION LOST!\n");
-			_stop();
-			return false;
-		} else if ( ((TWSR & 0xf8) == 0x68) | ((TWSR & 0xf8) == 0x78) | ((TWSR & 0xf8) == 0xb0) ) {
-			Usart::sends("ARBITRATION LOST AND ADDRESSED AS SLAVE!\n");
-			_stop();
-			return false;
-		} else {
-			Usart::sendf(30, "UNKNOWN ERROR: 0x%02x\n", TWSR & 0xf8);
-			_stop();
-			return false;
-		}
-
-		return true;
-	}
-
-	bool _data(uint8_t data)
-	{
-		TWDR = data;
-		interrupt_bit.set();
-		while(!interrupt_bit.read())
-			;
-
-		if ((TWSR & 0xf8) == 0x28)
-			Usart::sends("ACK!\n");
-		else if ((TWSR & 0xf8) == 0x30) {
-			Usart::sends("NACK!\n");
-			_stop();
-			return false;
-		} else if ((TWSR & 0xf8) == 0x38) {
-			Usart::sends("ARBITRATION LOST!\n");
-			_stop();
-			return false;
-		} else {
-			Usart::sendf(30, "UNKNOWN ERROR: 0x%02x\n", TWSR & 0xf8);
-			_stop();
-			return false;
-		}
-
-		return true;
-	}
-
-	void _stop()
-	{
-		stop_bit.set();
-		interrupt_bit.set();
+		addr   = (_addr << 1) | 1;
+		count  = _count;
+		buffer = _buffer;
+		start();
 	}
 }

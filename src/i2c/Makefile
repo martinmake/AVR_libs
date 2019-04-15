@@ -41,7 +41,7 @@ CXX :=avr-g++
 ASMC:=avr-gcc
 AR  :=ar
 
-WARNING :=-Wall -Wextra -pedantic -Wno-write-strings
+WARNING :=-Wall -Wextra -pedantic -Wno-write-strings -Wimplicit-fallthrough=0
 CCFLAGS :=$(WARNING) -Os -mmcu=$(MCU) $(INC) -std=c99
 CXXFLAGS:=$(WARNING) -Os -mmcu=$(MCU) $(INC) -std=c++14
 ASMFLAGS:=$(WARNING) -Os -mmcu=$(MCU) $(INC)
@@ -100,6 +100,7 @@ $(DDIR)/%.d: $(SDIR)/%.cpp
 $(DDIR)/%.d: $(SDIR)/%.S
 	@echo ==BUILDING=DEPENDENCIES==
 	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
+	@echo ==========DONE===========
 
 .PHONY: setup
 setup:
@@ -107,8 +108,6 @@ setup:
 	mkdir -p $(ODIR) $(DDIR) $(IDIRS) $(SDIR) $(MDIR)
 	touch $(ODIR)/.empty $(DDIR)/.empty
 	@echo ==========DONE===========
-
-@echo ==========DONE===========
 
 .PHONY: clean
 clean:

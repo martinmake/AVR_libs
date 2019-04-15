@@ -21,15 +21,13 @@ namespace I2c
 		uint32_t f_osc;
 	} INIT;
 
-	void begin(const INIT* init);
-	void begin(uint32_t f_scl, uint32_t f_osc);
-	bool write(uint8_t addr, uint8_t data);
-	// uint8_t read(uint8_t addr);
+	extern volatile bool transceive_completed;
+	extern volatile bool transceive_failed;
 
-	bool _start();
-	bool _slaw(uint8_t addr);
-	bool _data(uint8_t data);
-	void _stop();
+	extern void begin(const INIT* init);
+	extern void begin(uint32_t f_scl, uint32_t f_osc);
+	extern void write(uint8_t _addr, uint8_t _count, uint8_t* _buffer);
+	extern void read(uint8_t _addr, uint8_t _count, uint8_t* _buffer);
 }
 
 #endif
