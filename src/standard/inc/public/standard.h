@@ -21,10 +21,10 @@ class Bit
 		Bit(volatile uint8_t& reg, uint8_t index);
 		~Bit();
 
-		void set();
-		void clear();
-		void write(uint8_t val);
-		uint8_t read() const;
+		inline void set()              { m_reg |=  (1 << m_index);      }
+		inline void clear()            { m_reg &= ~(1 << m_index);      }
+		inline void write(uint8_t val) { val ? set() : clear();         }
+		inline uint8_t read() const    { return m_reg & (1 << m_index); }
 
 		Bit operator-(int i) const;
 };
