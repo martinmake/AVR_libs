@@ -1,15 +1,19 @@
-#ifndef _STANDARD_PIN_H_
-#define _STANDARD_PIN_H_
+#include "pin.h"
 
-#include "standard.h"
+Pin::Pin(const Bit& port_bit)
+	: port(port_bit, -0),
+	  dd  (port_bit, -1),
+	  pin (port_bit, -2)
+{
+}
 
-Pin::Pin(const Bit& port_reg)
-	: port(port_reg), dd(port_reg-1), pin(port_reg-2)
+Pin::Pin(volatile uint8_t& reg, uint8_t index)
+	: port(*(&reg - 0), index),
+	  dd  (*(&reg - 1), index),
+	  pin (*(&reg - 2), index)
 {
 }
 
 Pin::~Pin()
 {
 }
-
-#endif
