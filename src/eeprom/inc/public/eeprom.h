@@ -5,10 +5,27 @@
 
 #include <standard/standard.h>
 
-namespace Eeprom
+class Eeprom
 {
-	void write(uint16_t address, uint8_t data);
-	uint8_t read(uint16_t address);
-}
+	private:
+		uint16_t m_address;
+
+	public:
+		Eeprom();
+		~Eeprom();
+
+		inline Eeprom& operator=(uint16_t address) { m_address = address; return *this; }
+		inline uint16_t get_address() { return m_address; }
+
+		inline Eeprom& operator++()    { ++m_address; return *this; }
+		inline Eeprom  operator++(int) { m_address++; return *this; }
+		inline Eeprom& operator--()    { --m_address; return *this; }
+		inline Eeprom  operator--(int) { m_address--; return *this; }
+
+		Eeprom& operator<<(uint8_t  data);
+		Eeprom& operator>>(uint8_t& data);
+};
+
+extern Eeprom eeprom;
 
 #endif

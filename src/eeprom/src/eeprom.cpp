@@ -1,28 +1,38 @@
 #include "eeprom.h"
 
-namespace Eeprom
+Eeprom::Eeprom()
+	: m_address(0)
 {
-	void write(uint16_t address, uint8_t data)
-	{
-		while (EECR & (1 << EEPE))
-			;
+}
 
-		EEAR = address;
-		EEDR = data;
+Eeprom::~Eeprom()
+{
+}
 
-		EECR |= (1 << EEMPE);
-		EECR |= (1 << EEPE);
-	}
+Eeprom& Eeprom::operator<<(uint8_t data)
+{
+	while (EECR & (1 << EEPE))
+		;
 
-	uint8_t read(uint16_t address)
-	{
-		while (EECR & (1 << EEPE))
-			;
+	EEAR = m_address;
+	EEDR = data;
 
-		EEAR = address;
+	EECR |= (1 << EEMPE);
+	EECR |= (1 << EEPE);
 
-		EECR |= (1 << EERE);
+	return *this;
+}
 
-		return EEDR;
-	}
+Eeprom& Eeprom::operator>>(uint8_t& data)
+{
+	while (EECR & (1 << EEPE))
+		;
+
+	EEAR = m_address;
+
+	EECR |= (1 << EERE);
+
+	data = EEDR;
+
+	return *this;
 }

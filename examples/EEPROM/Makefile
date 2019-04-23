@@ -12,7 +12,7 @@ BIN  :=$(BDIR)/firmware.bin
 ASM  :=$(BDIR)/firmware.asm
 
 # LIB DIRS
-LDIR :=$(HOME)/Documents/proj/AVR/libs
+LDIR :=$(HOME)/Documents/libs/AVR
 LIDIR:=$(LDIR)/inc
 LADIR:=$(LDIR)/arc
 
@@ -21,11 +21,11 @@ LIBS:=usart eeprom
 DEFS:=
 
 # TARGET
-MCU  :=atmega328p
-F_CPU:=16000000
-BAUD :=1000000
-PROG :=arduino
-PORT :=/dev/ttyUSB0
+MCU     :=atmega328p
+F_CPU   :=16000000
+TIO_BAUD:=9600
+PROG    :=arduino
+PORT    :=/dev/ttyUSB0
 
 # TOOLCHAIN
 TOOLCHAIN:=avr-
@@ -40,19 +40,19 @@ STRIP  :=$(TOOLCHAIN)strip
 
 # COMPILER FLAGS
 WARNING     :=-Wall -Wextra -pedantic -Wno-write-strings
-OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions
+OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions -s
 
 ######END#OF#CONFIGURATION#VARIABLES######
 
 LIBS+=standard
-DEFS+=$(EDEFS) F_CPU=$(F_CPU) BAUD=$(BAUD)
+DEFS+=$(EDEFS) F_CPU=$(F_CPU) TIO_BAUD=$(TIO_BAUD)
 
 LIBS  :=$(addprefix -l,$(LIBS))
 DEFS  :=$(addprefix -D,$(DEFS))
 
-C_SRCS  :=$(shell find $(SDIR) -name *.c  )
-CXX_SRCS:=$(shell find $(SDIR) -name *.cpp)
-ASM_SRCS:=$(shell find $(SDIR) -name *.S  )
+C_SRCS  :=$(shell find $(SDIR) -name '*.c'  )
+CXX_SRCS:=$(shell find $(SDIR) -name '*.cpp')
+ASM_SRCS:=$(shell find $(SDIR) -name '*.S'  )
 
 C_OBJS  :=$(patsubst $(SDIR)/%.c,  $(ODIR)/%.o,$(C_SRCS)  )
 CXX_OBJS:=$(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(CXX_SRCS))
@@ -61,10 +61,10 @@ OBJS    :=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 
 INC:=$(addprefix -I,$(IDIRS) $(LIDIR))
 
-CCFLAGS :=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c99
-CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c++14 -fno-rtti
-ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS)
-LDFLAGS :=$(WARNING) $(OPTIMIZATION)    -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
+CCFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS) -std=c99
+CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS) -std=c++14 -fno-rtti
+ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS)
+LDFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
 
 .SECONDARY: $(OBJS)
 
@@ -73,8 +73,8 @@ all: $(ELF)
 	@echo "> BULDING"
 	$(OBJCOPY) -j .data -j .text -O ihex   $(ELF)   $(HEX)
 	$(OBJCOPY) -j .data -j .text -O binary $(ELF)   $(BIN)
-	$(OBJDUMP) -Dz                         $(ELF) > $(ASM)
-	$(SIZE) $(HEX)
+	$(OBJDUMP) -DCz                        $(ELF) > $(ASM)
+	$(SIZE) $(HEX) | sed -e 's/^/* /'
 	@echo "< BULDING DONE"
 
 $(ELF): $(OBJS)
@@ -114,7 +114,7 @@ flash:
 
 .PHONY: serial
 serial:
-	sudo tio -b $(BAUD) -d 8 -s 2 -e -mINLCRNL $(PORT)
+	sudo tio -b $(TIO_BAUD) -d 8 -s 1 -e -mINLCRNL $(PORT)
 
 .PHONY: setup
 setup:
@@ -126,7 +126,7 @@ setup:
 .PHONY: clean
 clean:
 	@echo "> CLEANING"
-	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* ./$(BDIR)/*
+	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(ELF) $(HEX) $(BIN) $(ASM) | sed -e 's/^/* /'
 	@echo "< CLEANING DONE"
 
 ifeq ($(NODEP),)
