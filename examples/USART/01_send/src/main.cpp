@@ -20,7 +20,6 @@ int main(void)
 	while (1) {
 		usart0 << "ABCDEF" << '\n';
 		usart0 << 'X' << '\n' << "TEST" << '\n';
-		usart0.sendf(10, "2 + 2 = %d", 2 + 2);
-		usart0 << '\n';
+		usart0.sendf(15, "2 + 2 = %d\n", 2 + 2);
 	}
 }
