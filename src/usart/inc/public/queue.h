@@ -3,8 +3,6 @@
 
 #include <inttypes.h>
 
-#include <led/led.h>
-
 class Queue
 {
 	private:

@@ -1,62 +1,105 @@
 #if defined(__AVR_ATmega16__) || defined(__AVR_ATmega16L__)
 
-#include <avr/io.h>
-#include <stdio.h>
-
-#include <standard/standard.h>
-
+#include "config.h"
 #include "usart.h"
 
-void Usart::begin(const INIT* init)
+void Usart::Usart(const Init* init)
 {
-	uint16_t brrv;
+	uint16_t brrv = 0;
 
-	brrv  = init->f_osc/(init->x2 == X2::ON ? 8 : 16)/init->baud-1;
+	switch (init->x2) {
+		case X2::ON:
+			Bit(UCSRA, U2X).set();
+			brrv = init->f_osc/8/init->baud-1;
+			break;
+		case X2::OFF:
+			Bit(UCSRA, U2X).clear();
+			brrv = init->f_osc/16/init->baud-1;
+			break;
+	}
+
 	UBRRH = (brrv >> 8);
 	UBRRL = (brrv & 0xff);
 
-	if (init->x2 == X2::ON)
-		Bit(UCSRA, U2X).set();
-	else if (init->x2 == X2::OFF)
-		Bit(UCSRA, U2X).clear();
+	switch (init->rx) {
+		case Rx::ON:
+			Bit(UCSRB, RXEN).set();
+			break;
+		case Rx::OFF:
+			Bit(UCSRB, RXEN).clear();
+			break;
+	}
 
-	if (init->rx == RX::ON)
-		Bit(UCSRB, RXEN).set();
-	else if (init->rx == RX::OFF)
-		Bit(UCSRB, RXEN).clear();
+	switch (init->tx) {
+		case Tx::ON:
+			Bit(UCSRB, TXEN).set();
+			break;
+		case Tx::OFF:
+			Bit(UCSRB, TXEN).clear();
+			break;
+	}
 
-	if (init->tx == TX::ON)
-		Bit(UCSRB, TXEN).set();
-	else if (init->tx == TX::OFF)
-		Bit(UCSRB, TXEN).clear();
+	switch (init->stop_bit_select) {
+		case StopBitSelect::S1:
+			Bit(UCSRC, USBS).set();
+			break;
+		case StopBitSelect::S2:
+			Bit(UCSRC, USBS).clear();
+			break;
+	}
 
-	UCSRC |= (1 << URSEL);
+	switch (init->character_size) {
+		case CharacterSize::S5:
+			Bit(UCSRC, UCSZ0).clear();
+			Bit(UCSRC, UCSZ1).clear();
+			Bit(UCSRB, UCSZ2).clear();
+			break;
+		case CharacterSize::S6:
+			Bit(UCSRC, UCSZ0).set();
+			Bit(UCSRC, UCSZ1).clear();
+			Bit(UCSRB, UCSZ2).clear();
+			break;
+		case CharacterSize::S7:
+			Bit(UCSRC, UCSZ0).clear();
+			Bit(UCSRC, UCSZ1).set();
+			Bit(UCSRB, UCSZ2).clear();
+			break;
+		case CharacterSize::S8:
+			Bit(UCSRC, UCSZ0).clear();
+			Bit(UCSRC, UCSZ1).set();
+			Bit(UCSRB, UCSZ2).set();
+			break;
+		case CharacterSize::S9:
+			Bit(UCSRC, UCSZ0).set();
+			Bit(UCSRC, UCSZ1).set();
+			Bit(UCSRB, UCSZ2).set();
+			break;
+	}
 
-	if (init->stop_bit_select == STOP_BIT_SELECT::S1)
-		Bit(UCSRC, USBS).set();
-	else if (init->stop_bit_select == STOP_BIT_SELECT::S2)
-		Bit(UCSRC, USBS).clear();
-
-	uint8_t character_size = static_cast<uint8_t>(init->character_size);
-	Bit(UCSRC, UCSZ0).write(character_size & 0b001);
-	Bit(UCSRC, UCSZ1).write(character_size & 0b010);
-	Bit(UCSRB, UCSZ2).write(character_size & 0b100);
+	UCSRB |= (1 << TXCIE);
+	output_queue = Queue(init->output_queue_size);
 }
 
-void Usart::sendc(char c)
+Usart::Usart(uint32_t baud, uint32_t f_osc)
 {
-	while (!(UCSRA & (1 << UDRE)))
-		;
+		Init init;
 
-	UDR = c;
+		init.x2                = X2::OFF;
+		init.rx                = Rx::ON;
+		init.tx                = Tx::ON;
+		init.character_size    = CharacterSize::S8;
+		init.stop_bit_select   = StopBitSelect::S1;
+		init.baud              = baud;
+		init.f_osc             = f_osc;
+		init.output_queue_size = DEFAULT_OUTPUT_QUEUE_SIZE;
+
+		*this = Usart(&init);
 }
 
-char Usart::recvc()
+ISR(USART_TX_vect)
 {
-	while (!(UCSRA & (1 << RXC)))
-		;
-
-	return UDR;
+	while ( ! (UCSRA & (1 << UDRE)) ) {}
+	usart.output_queue >> UDR;
 }
 
 #endif
