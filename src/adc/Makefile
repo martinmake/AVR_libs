@@ -15,11 +15,11 @@ MCUS :=atmega328p
 
 # TOOLCHAIN
 TOOLCHAIN:=avr-
-CC  :=$(TOOLCHAIN)gcc
-CXX :=$(TOOLCHAIN)g++
-ASMC:=$(TOOLCHAIN)gcc
-AR  :=$(TOOLCHAIN)ar
-SIZE:=$(TOOLCHAIN)size
+CC    :=$(TOOLCHAIN)gcc
+CXX   :=$(TOOLCHAIN)g++
+ASMC  :=$(TOOLCHAIN)gcc
+AR    :=$(TOOLCHAIN)ar
+SIZE  :=$(TOOLCHAIN)size
 
 # COMPILER FLAGS
 WARNING     :=-Wall -Wextra -pedantic -Wno-write-strings
@@ -57,13 +57,13 @@ ARFLAGS :=rUucv
 
 .PHONY: all
 all:
-	+$(foreach MCU,$(MCUS),make -e build MCU=$(MCU);)
+	+$(foreach MCU,$(MCUS),make -e build MCU=$(MCU) -j1;)
 
 .PHONY: build
 build: $(ARC)($(ARC_MEMBERS)) $(PHEADERS)
-	@echo "> BULDING $(MCU)"
+	@echo "> BULDING $(LNAME) FOR $(MCU)"
 	$(SIZE) $(ARC) | sed -e 's/^/* /'
-	@echo "< BULDING $(MCU) DONE"
+	@echo "< BULDING $(LNAME) FOR $(MCU) DONE"
 
 $(LIDIR)/$(LNAME) $(LADIR)/$(MCU) $(ODIR)/$(MCU):
 	mkdir $@

@@ -24,4 +24,4 @@ all:
 
 .PHONY: clean
 clean:
-	$(foreach PATH,$(CORE_LIB_PATHS) $(LIB_PATHS) $(EXAMPLE_PATHS),make -e -C $(PATH) clean;)
+	+$(foreach PATH,$(CORE_LIB_PATHS) $(LIB_PATHS) $(EXAMPLE_PATHS),make -e -C $(PATH) clean;)
