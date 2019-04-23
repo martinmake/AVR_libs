@@ -4,49 +4,73 @@
 
 #include "adc.h"
 
-namespace Adc
+Adc::Adc(const Init* init)
 {
-	void begin(const INIT* init)
-	{
 #if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
-		PRR    &= ~(1 << PRADC);
+	Bit(PRR, PRADC).clear();
 #endif
-		uint8_t prescaler_select = static_cast<uint8_t>(init->prescaler_select);
-		write_bit({&ADCSRA, ADPS0}, prescaler_select & 0b001);
-		write_bit({&ADCSRA, ADPS1}, prescaler_select & 0b010);
-		write_bit({&ADCSRA, ADPS2}, prescaler_select & 0b100);
-
-		uint8_t vref = static_cast<uint8_t>(init->vref);
-		write_bit({&ADMUX, REFS0}, vref & 0b01);
-		write_bit({&ADMUX, REFS1}, vref & 0b10);
-
-		ADCSRA |=  (1 << ADEN) | (1 << ADIE);
+	switch (init->prescaler_select) {
+		case PrescalerSelect::S2:
+			Bit(ADCSRA, ADPS0).clear();
+			Bit(ADCSRA, ADPS1).clear();
+			Bit(ADCSRA, ADPS2).clear();
+			break;
+		case PrescalerSelect::S4:
+			Bit(ADCSRA, ADPS0).clear();
+			Bit(ADCSRA, ADPS1).set();
+			Bit(ADCSRA, ADPS2).clear();
+			break;
+		case PrescalerSelect::S8:
+			Bit(ADCSRA, ADPS0).set();
+			Bit(ADCSRA, ADPS1).set();
+			Bit(ADCSRA, ADPS2).clear();
+			break;
+		case PrescalerSelect::S16:
+			Bit(ADCSRA, ADPS0).clear();
+			Bit(ADCSRA, ADPS1).clear();
+			Bit(ADCSRA, ADPS2).set();
+			break;
+		case PrescalerSelect::S32:
+			Bit(ADCSRA, ADPS0).set();
+			Bit(ADCSRA, ADPS1).clear();
+			Bit(ADCSRA, ADPS2).set();
+			break;
+		case PrescalerSelect::S64:
+			Bit(ADCSRA, ADPS0).clear();
+			Bit(ADCSRA, ADPS1).set();
+			Bit(ADCSRA, ADPS2).set();
+			break;
+		case PrescalerSelect::S128:
+			Bit(ADCSRA, ADPS0).set();
+			Bit(ADCSRA, ADPS1).set();
+			Bit(ADCSRA, ADPS2).set();
+			break;
 	}
 
-	void begin_simple()
-	{
-#if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
-		PRR    &= ~(1 << PRADC);
-#endif
-		uint8_t prescaler_select = static_cast<uint8_t>(Adc::PRESCALER_SELECT::S128);
-		write_bit({&ADCSRA, ADPS0}, prescaler_select & 0b001);
-		write_bit({&ADCSRA, ADPS1}, prescaler_select & 0b010);
-		write_bit({&ADCSRA, ADPS2}, prescaler_select & 0b100);
-
-		uint8_t vref = static_cast<uint8_t>(Adc::VREF::AVCC);
-		write_bit({&ADMUX, REFS0}, vref & 0b01);
-		write_bit({&ADMUX, REFS1}, vref & 0b10);
-
-		ADCSRA |=  (1 << ADEN) | (1 << ADIE);
+	switch (init->vref) {
+		case Vref::AREF:
+			Bit(ADMUX, REFS0).clear();
+			Bit(ADMUX, REFS1).clear();
+			break;
+		case Vref::AVCC:
+			Bit(ADMUX, REFS0).set();
+			Bit(ADMUX, REFS1).clear();
+			break;
+		case Vref::IREF:
+			Bit(ADMUX, REFS0).set();
+			Bit(ADMUX, REFS1).set();
+			break;
 	}
 
-	void select_channel(uint8_t channel)
-	{
-		ADMUX = (ADMUX & 0b11100000) | channel;
-	}
+	ADCSRA |=  (1 << ADEN) | (1 << ADIE);
+}
 
-	void start_conversion()
-	{
-		ADCSRA |= (1 << ADSC);
-	}
+Adc::Adc()
+{
+	Init init;
+
+	init.prescaler_select = PrescalerSelect::S2;
+	init.vref             = Vref::AVCC;
+
+	*this = Adc(&init);
 }

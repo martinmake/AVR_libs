@@ -1,33 +1,32 @@
 #ifndef _ADC_ADC_H_
 #define _ADC_ADC_H_
 
-namespace Adc
+class Adc
 {
-	typedef enum class prescaler_select : uint8_t {
-		S2   = 0b000,
-		S4   = 0b010,
-		S8   = 0b011,
-		S16  = 0b100,
-		S32  = 0b101,
-		S64  = 0b110,
-		S128 = 0b111
-	} PRESCALER_SELECT;
+	public:
+		enum class PrescalerSelect : uint8_t {
+			S2, S4, S8, S16, S32, S64, S128
+		};
 
-	typedef enum class vref : uint8_t {
-		AREF = 0b00,
-		AVCC = 0b01,
-		IREF = 0b11
-	} VREF;
+		enum class Vref : uint8_t {
+			AREF, AVCC, IREF
+		};
 
-	typedef struct init {
-		PRESCALER_SELECT prescaler_select;
-		VREF vref;
-	} INIT;
+		struct Init {
+			PrescalerSelect prescaler_select;
+			Vref            vref;
+		};
 
-	void begin(const INIT* init);
-	void begin_simple();
-	void select_channel(uint8_t channel);
-	void start_conversion();
-}
+	public:
+		Adc(const Init* init);
+		Adc();
+
+		inline void start_conversion() { Bit(ADCSRA, ADSC).set(); }
+		inline void select_channel(uint8_t channel) { ADMUX = (ADMUX & 0b11100000) | channel; }
+		inline Adc  operator++()    { ADMUX = (ADMUX & 0b11100000) | ((ADMUX & 0b00011111) + 1) % 0b00100000; return *this; };
+		inline Adc& operator++(int) { ADMUX = (ADMUX & 0b11100000) | ((ADMUX & 0b00011111) + 1) % 0b00100000; return *this; };
+		inline Adc  operator--()    { ADMUX = (ADMUX & 0b11100000) | ((ADMUX & 0b00011111) - 1) % 0b00100000; return *this; };
+		inline Adc& operator--(int) { ADMUX = (ADMUX & 0b11100000) | ((ADMUX & 0b00011111) - 1) % 0b00100000; return *this; };
+};
 
 #endif
