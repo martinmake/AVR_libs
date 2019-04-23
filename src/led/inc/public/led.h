@@ -6,11 +6,12 @@
 class Led
 {
 	private:
-		Bit m_port;
+		Bit  m_port;
 		bool m_inverted;
 
 	public:
-		Led(Bit led_port, bool inverted = false);
+		Led(Pin& led_pin, bool inverted = false);
+		Led(Pin  led_pin, bool inverted = false);
 		~Led();
 
 		bool operator=(bool state);

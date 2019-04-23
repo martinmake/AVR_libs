@@ -4,16 +4,14 @@ PIDIR:=inc/public
 SDIR :=src
 ODIR :=obj
 DDIR :=dep
-MDIR :=man
 
 # LIB DIRS
 LDIR :=$(HOME)/Documents/libs/AVR
 LADIR:=$(LDIR)/arc
 LIDIR:=$(LDIR)/inc
-LMDIR:=$(LDIR)/man
 
 # TARGETS
-MCUS :=atmega328p atmega16
+MCUS :=atmega328p
 
 # TOOLCHAIN
 TOOLCHAIN:=avr-
@@ -24,15 +22,12 @@ AR  :=$(TOOLCHAIN)ar
 SIZE:=$(TOOLCHAIN)size
 
 # COMPILER FLAGS
-WARNING :=-Wall -Wextra -pedantic -Wno-write-strings
+WARNING     :=-Wall -Wextra -pedantic -Wno-write-strings
 OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions
 
 ######END#OF#CONFIGURATION#VARIABLES######
 
 LNAME:=$(notdir $(realpath .))
-
-MANS :=$(shell find $(MDIR) -name '*.*' 2>/dev/null)
-CMANS:=$(patsubst $(MDIR)/%,$(LMDIR)/%.gz,$(MANS))
 
 ARC:=$(LADIR)/$(MCU)/lib$(LNAME).a
 PHEADERS:=$(shell find $(PIDIR) -name '*.h')
@@ -65,7 +60,7 @@ all:
 	+$(foreach MCU,$(MCUS),make -e build MCU=$(MCU);)
 
 .PHONY: build
-build: $(ARC)($(ARC_MEMBERS)) $(CMANS) $(PHEADERS)
+build: $(ARC)($(ARC_MEMBERS)) $(PHEADERS)
 	@echo "> BULDING $(MCU)"
 	$(SIZE) $(ARC) | sed -e 's/^/* /'
 	@echo "< BULDING $(MCU) DONE"
@@ -78,25 +73,20 @@ $(ARC)(%.o): $(ODIR)/$(MCU)/%.o | $(LADIR)/$(MCU)
 	$(AR) $(ARFLAGS) $@ $<
 	@echo "< ARCHIVING $< DONE"
 
-$(LIDIR)/$(LNAME)/%.h: $(PIDIR)/%.h
+$(LIDIR)/$(LNAME)/%.h: $(PIDIR)/%.h | $(LIDIR)/$(LNAME)
 	@echo "> STOIRING PUBLIC LIBRARY HEADER $<"
 	cp $< -t $(LIDIR)/$(LNAME)
 	@echo "< STOIRING PUBLIC LIBRARY HEADER $< DONE"
 
-$(LMDIR)/%.gz: $(MDIR)/%
-	@echo "> BUILDING MAN PAGE $<"
-	gzip $< -c > $@
-	@echo "< BUILDING MAN PAGE $< DONE"
-
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.c | $(ODIR)/$(MCU)
+$(ODIR)/$(MCU)/%.o: $(SDIR)/%.c   | $(ODIR)/$(MCU)
 	@echo "> COMPILING $<"
-	$(CC)   $(CCFLAGS) -c $< -o $@
+	$(CC)   $(CCFLAGS)  -c $< -o $@
 	@echo "< COMPILING $< DONE"
 $(ODIR)/$(MCU)/%.o: $(SDIR)/%.cpp | $(ODIR)/$(MCU)
 	@echo "> COMPILING $<"
 	$(CXX)  $(CXXFLAGS) -c $< -o $@
 	@echo "< COMPILING $< DONE"
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.S | $(ODIR)/$(MCU)
+$(ODIR)/$(MCU)/%.o: $(SDIR)/%.S   | $(ODIR)/$(MCU)
 	@echo "> COMPILING $<"
 	$(ASMC) $(ASMFLAGS) -c $< -o $@
 	@echo "< COMPILING $< DONE"
@@ -114,17 +104,10 @@ $(DDIR)/%.d: $(SDIR)/%.S
 	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
 	@echo "< BUILDING DEPENDENCIES $< DONE"
 
-.PHONY: setup
-setup:
-	@echo "> MAKING DIRECTORIES"
-	mkdir -p $(IDIRS) $(LIDIR)/$(LNAME) $(ODIR) $(DDIR) $(SDIR)
-	touch $(ODIR)/.empty $(DDIR)/.empty
-	@echo "< MAKING DIRECTORIES DONE"
-
 .PHONY: clean
 clean:
 	@echo "> CLEANING"
-	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(LADIR)/*/lib$(LNAME).a $(LIDIR)/$(LNAME) $(CMANS) | sed -e 's/^/* /'
+	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(LADIR)/*/lib$(LNAME).a $(LIDIR)/$(LNAME) | sed -e 's/^/* /'
 	@echo "< CLEANING DONE"
 
 ifeq ($(NODEP),)

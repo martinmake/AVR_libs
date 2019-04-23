@@ -1,9 +1,15 @@
 #include "led.h"
 
-Led::Led(Bit led_port, bool inverted)
-	: m_port(led_port), m_inverted(inverted)
+Led::Led(Pin& led_pin, bool inverted)
+	: m_port(Bit(led_pin.port)), m_inverted(inverted)
 {
-	Pin(led_port).dd.set();
+	led_pin.dd.set();
+}
+
+Led::Led(Pin led_pin, bool inverted)
+	: m_port(Bit(led_pin.port)), m_inverted(inverted)
+{
+	led_pin.dd.set();
 }
 
 Led::~Led()
