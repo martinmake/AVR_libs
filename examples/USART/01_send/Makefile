@@ -17,7 +17,7 @@ LIDIR:=$(LDIR)/inc
 LADIR:=$(LDIR)/arc
 
 # LIBS AND DEFS
-LIBS:=usart
+LIBS:=usart led
 DEFS:=
 
 # TARGET

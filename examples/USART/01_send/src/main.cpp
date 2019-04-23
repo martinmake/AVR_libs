@@ -1,13 +1,16 @@
 #include <avr/io.h>
 #include <util/delay.h>
-#include <stdio.h>
 
+#include <standard/standard.h>
 #include <usart/usart0.h>
+#include <led/led.h>
 
-Usart0 tio(TIO_BAUD, F_CPU);
+Usart0 usart0(TIO_BAUD, F_CPU);
+Led led_err(Bit({PORTB, PB5}));
 
 void init(void)
 {
+	sei();
 }
 
 int main(void)
@@ -15,12 +18,9 @@ int main(void)
 	init();
 
 	while (1) {
-		tio << 'X';
-		tio << '\n';
-		tio << "TEST!";
-		tio << '\n';
-		tio.sendf(10, "2 + 2 = %d", 2 + 2);
-		tio << '\n';
-		_delay_ms(1000);
+		usart0 << "ABCDEF" << '\n';
+		usart0 << 'X' << '\n' << "TEST" << '\n';
+		usart0.sendf(10, "2 + 2 = %d", 2 + 2);
+		usart0 << '\n';
 	}
 }
