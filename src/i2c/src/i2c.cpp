@@ -1,60 +1,72 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
 
 #include <standard/standard.h>
-#include <usart/usart.h>
 
 #include "i2c.h"
 #include "conditions.h"
 
-namespace I2c
+volatile bool transceive_completed;
+volatile bool transceive_failed;
+
+I2c::I2c(const Init* init)
 {
-	volatile bool transceive_completed;
-	volatile bool transceive_failed;
+	TWBR  = (init->f_osc/init->f_scl - 16)/2/((uint8_t) init->ps);
 
-	void begin(const INIT* init)
-	{
-		uint8_t ps_val = 1;
-		for (uint8_t i = 0; i < (uint8_t) init->ps; i++)
-			ps_val *= 4;
+	switch (init->ps) {
+		case Ps::PS1:
+			Bit(TWSR, TWPS0) = 0;
+			Bit(TWSR, TWPS1) = 0;
+			break;
+		case Ps::PS4:
+			Bit(TWSR, TWPS0) = 1;
+			Bit(TWSR, TWPS1) = 0;
+			break;
+		case Ps::PS16:
+			Bit(TWSR, TWPS0) = 0;
+			Bit(TWSR, TWPS1) = 1;
+			break;
+		case Ps::PS64:
+			Bit(TWSR, TWPS0) = 1;
+			Bit(TWSR, TWPS1) = 1;
+			break;
 
-		TWBR  = (init->f_osc/init->f_scl - 16)/2/ps_val;
-
-		uint8_t ps = (uint8_t) init->ps;
-		Bit(TWSR, TWPS0).write(ps & 0b01);
-		Bit(TWSR, TWPS1).write(ps & 0b10);
-
-		PORTC |= (1 << PC5) | (1 << PC4);
-
-		TWCR |= (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
 	}
 
-	void begin(uint32_t f_scl, uint32_t f_osc)
-	{
-			INIT init;
+	PORTC |= (1 << PC5) | (1 << PC4);
 
-			init.x2    = X2::OFF;
-			init.ps    = PS::PS64;
-			init.f_scl = f_scl;
-			init.f_osc = f_osc;
+	TWCR |= (1 << TWEN) | (1 << TWIE) | (1 << TWEA);
+}
 
-			begin(&init);
-	}
+I2c::I2c(uint32_t f_scl, uint32_t f_osc)
+{
+		Init init;
 
-	void write(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
-	{
-		addr   = (_addr << 1) | 0;
-		count  = _count;
-		buffer = _buffer;
-		start();
-	}
+		init.x2    = X2::OFF;
+		init.ps    = Ps::PS64;
+		init.f_scl = f_scl;
+		init.f_osc = f_osc;
 
-	void read(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
-	{
-		addr   = (_addr << 1) | 1;
-		count  = _count;
-		buffer = _buffer;
-		start();
-	}
+		*this = I2c(&init);
+}
+
+void I2c::write(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
+{
+	addr   = (_addr << 1) | 0;
+	count  = _count;
+	buffer = _buffer;
+	send_start();
+}
+
+void I2c::read(uint8_t _addr, uint8_t _count, uint8_t* _buffer)
+{
+	addr   = (_addr << 1) | 1;
+	count  = _count;
+	buffer = _buffer;
+	send_start();
+}
+
+void I2c::wait_until_transceive_completed()
+{
+	while (!transceive_completed) {}
 }

@@ -2,18 +2,16 @@
 #include <avr/interrupt.h>
 
 #include <standard/standard.h>
-#include <usart/usart.h>
+#include <usart/usart0.h>
 #include <i2c/i2c.h>
 
 #define F_SCL 9600
 
-uint8_t value = 0x00;
+Usart0 usart0(TIO_BAUD, F_CPU);
+I2c    i2c   (F_SCL   , F_CPU);
 
 void init(void)
 {
-	Usart::begin(BAUD , F_CPU);
-	I2c  ::begin(F_SCL, F_CPU);
-
 	sei();
 }
 
@@ -21,30 +19,30 @@ int main(void)
 {
 	init();
 
-	Usart::sends("Scan initiated...\n");
+	uint8_t value = 0x00;
+
+	usart0 << "Scan initiated...\n";
 
 	for (uint8_t addr = 0x04; addr <= 0x77; addr++) {
-		I2c::read(addr, 1, &value);
-		while (!I2c::transceive_completed)
-			;
+		i2c.read(addr, 1, &value);
+		i2c.wait_until_transceive_completed();
 
-		if (!I2c::transceive_failed)
-			Usart::sendf(20, "FOUND: 0x%02X\n", addr);
+		if (!i2c.transceive_failed)
+			usart0.sendf(20, "FOUND: 0x%02X\n", addr);
 	}
 
 	for (uint8_t addr = 0x04; addr <= 0x77; addr++) {
-		I2c::read(addr, 1, &value);
-		while (!I2c::transceive_completed)
-			;
+		i2c.read(addr, 1, &value);
+		i2c.wait_until_transceive_completed();
 
-		if (!I2c::transceive_failed)
-			Usart::sendc('!');
+		if (!i2c.transceive_failed)
+			usart0 << '!';
 		else
-			Usart::sendc('.');
+			usart0 << '.';
 	}
-	Usart::sendc('\n');
+	usart0 << '\n';
 
-	Usart::sends("Scan completed...\n");
+	usart0 << "Scan completed...\n";
 
 	while (1) {
 	}
