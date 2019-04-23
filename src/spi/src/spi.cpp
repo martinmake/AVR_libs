@@ -1,49 +1,48 @@
 #include "spi.h"
 
-namespace Spi
+Spi::Spi(Init* init)
 {
-	void begin(const INIT* init)
-	{
-		init->sck_ddb.set();
-		init->miso_ddb.clear();
-		init->mosi_ddb.set();
+	init->sck_ddb  = 1;
+	init->miso_ddb = 0;
+	init->mosi_ddb = 1;
 
-		uint8_t clock_rate_select = static_cast<uint8_t>(init->clock_rate_select);
-		Bit(&SPCR, SPR0 ).write(clock_rate_select & 0b001);
-		Bit(&SPCR, SPR1 ).write(clock_rate_select & 0b010);
-		Bit(&SPSR, SPI2X).write(clock_rate_select & 0b100);
-
-		SPCR |= (1 << SPE) | (1 << MSTR);
+	switch (init->clock_rate_select) {
+		case ClockRateSelect::S2:
+			Bit(SPCR, SPR0 ) = 0;
+			Bit(SPCR, SPR1 ) = 0;
+			Bit(SPSR, SPI2X) = 1;
+			break;
+		case ClockRateSelect::S4:
+			Bit(SPCR, SPR0 ) = 0;
+			Bit(SPCR, SPR1 ) = 0;
+			Bit(SPSR, SPI2X) = 0;
+			break;
+		case ClockRateSelect::S8:
+			Bit(SPCR, SPR0 ) = 1;
+			Bit(SPCR, SPR1 ) = 0;
+			Bit(SPSR, SPI2X) = 1;
+			break;
+		case ClockRateSelect::S16:
+			Bit(SPCR, SPR0 ) = 1;
+			Bit(SPCR, SPR1 ) = 0;
+			Bit(SPSR, SPI2X) = 0;
+			break;
+		case ClockRateSelect::S32:
+			Bit(SPCR, SPR0 ) = 0;
+			Bit(SPCR, SPR1 ) = 1;
+			Bit(SPSR, SPI2X) = 1;
+			break;
+		case ClockRateSelect::S64:
+			Bit(SPCR, SPR0 ) = 0;
+			Bit(SPCR, SPR1 ) = 1;
+			Bit(SPSR, SPI2X) = 0;
+			break;
+		case ClockRateSelect::S128:
+			Bit(SPCR, SPR0 ) = 1;
+			Bit(SPCR, SPR1 ) = 1;
+			Bit(SPSR, SPI2X) = 0;
+			break;
 	}
 
-	uint8_t send(uint8_t data)
-	{
-		SPDR = data;
-
-		while (!(SPSR & (1 << SPIF))) {}
-
-		return SPDR;
-	}
-
-	Slave::Slave(Pin ss)
-		: m_ss(ss)
-	{
-		ss.dd.set();
-		this->unselect();
-	}
-
-	Slave::~Slave()
-	{
-		this->unselect();
-	}
-
-	void Slave::select()
-	{
-		m_ss.port.clear();
-	}
-
-	void Slave::unselect()
-	{
-		m_ss.port.set();
-	}
+	SPCR |= (1 << SPE) | (1 << MSTR);
 }
