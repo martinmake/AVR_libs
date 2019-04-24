@@ -14,8 +14,9 @@ class Eeprom
 		Eeprom();
 		~Eeprom();
 
-		inline Eeprom& operator=(uint16_t address) { m_address = address; return *this; }
 		inline uint16_t get_address() { return m_address; }
+		inline Eeprom& operator=(uint16_t address) { m_address = address; return *this; }
+		inline Eeprom& operator[](uint16_t address) { m_address = address; return *this; }
 
 		inline Eeprom& operator++()    { ++m_address; return *this; }
 		inline Eeprom  operator++(int) { m_address++; return *this; }

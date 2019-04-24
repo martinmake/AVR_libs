@@ -14,17 +14,13 @@ int main(void)
 {
 	init();
 
-	eeprom = 0;
 	for (uint16_t i = 0; i < 0x0200; i++) {
-		eeprom << i;
-		eeprom++;
+		eeprom[i] << i;
 	}
 
-	eeprom = 0;
 	for (uint16_t i = 0; i < 0x0200; i++) {
 		uint8_t data;
-		eeprom >> data;
-		eeprom++;
+		eeprom[i] >> data;
 		usart0.sendf(20, "0x%04X: 0x%02X\n", i, data);
 	}
 }
