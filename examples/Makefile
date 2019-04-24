@@ -1,48 +1,7 @@
-# PROJECT DIRS
-IDIRS:=inc
-SDIR :=src
-ODIR :=obj
-DDIR :=dep
-BDIR :=bin
+include $(MAKEFILE).config
+include Makefile.config
 
-# PROJECT FILES
-ELF  :=$(BDIR)/firmware.elf
-HEX  :=$(BDIR)/firmware.hex
-BIN  :=$(BDIR)/firmware.bin
-ASM  :=$(BDIR)/firmware.asm
-
-# LIB DIRS
-LDIR :=$(HOME)/Documents/libs/AVR
-LIDIR:=$(LDIR)/inc
-LADIR:=$(LDIR)/arc
-
-# LIBS AND DEFS
-LIBS:=led
-DEFS:=
-
-# TARGET
-MCU     :=atmega328p
-F_CPU   :=16000000
-TIO_BAUD:=9600
-PROG    :=arduino
-PORT    :=/dev/ttyUSB0
-
-# TOOLCHAIN
-TOOLCHAIN:=avr-
-CC     :=$(TOOLCHAIN)gcc
-CXX    :=$(TOOLCHAIN)g++
-ASMC   :=$(TOOLCHAIN)gcc
-LD     :=$(TOOLCHAIN)g++
-OBJCOPY:=$(TOOLCHAIN)objcopy
-OBJDUMP:=$(TOOLCHAIN)objdump
-SIZE   :=$(TOOLCHAIN)size
-STRIP  :=$(TOOLCHAIN)strip
-
-# COMPILER FLAGS
-WARNING     :=-Wall -Wextra -pedantic -Wno-write-strings
-OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions
-
-######END#OF#CONFIGURATION#VARIABLES######
+ENAME:=$(shell echo $(realpath .) | sed -E 's/.*\/([^\/]*\/[^\/]*)$$/\1/')
 
 LIBS+=standard
 DEFS+=$(EDEFS) F_CPU=$(F_CPU) TIO_BAUD=$(TIO_BAUD)
@@ -61,26 +20,26 @@ OBJS    :=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 
 INC:=$(addprefix -I,$(IDIRS) $(LIDIR))
 
-CCFLAGS :=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c99
-CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c++14 -fno-rtti
-ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS)
-LDFLAGS :=$(WARNING) $(OPTIMIZATION)    -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
+CCFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS) -std=c99
+CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS) -std=c++14 -fno-rtti
+ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS)
+LDFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
 
 .SECONDARY: $(OBJS)
 
 .PHONY: all
 all: $(ELF)
-	@echo "> BULDING"
+	@echo "> BULDING $(ENAME)"
 	$(OBJCOPY) -j .data -j .text -O ihex   $(ELF)   $(HEX)
 	$(OBJCOPY) -j .data -j .text -O binary $(ELF)   $(BIN)
 	$(OBJDUMP) -DCz                        $(ELF) > $(ASM)
 	$(SIZE) $(HEX) | sed -e 's/^/* /'
-	@echo "< BULDING DONE"
+	@echo "< BULDING $(ENAME) DONE"
 
 $(ELF): $(OBJS)
-	@echo "> LINKING"
+	@echo "> LINKING $(ENAME)"
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-	@echo "< LINKING DONE"
+	@echo "< LINKING $(ENAME) DONE"
 
 $(ODIR)/%.o: $(SDIR)/%.c
 	@echo "> COMPILING $<"
@@ -114,7 +73,7 @@ flash:
 
 .PHONY: serial
 serial:
-	sudo tio -b $(TIO_BAUD) -d 8 -s 2 -e -mINLCRNL $(PORT)
+	sudo tio -b $(TIO_BAUD) -d 8 -s 1 -e -mINLCRNL $(PORT)
 
 .PHONY: setup
 setup:
@@ -125,9 +84,9 @@ setup:
 
 .PHONY: clean
 clean:
-	@echo "> CLEANING"
+	@echo "> CLEANING $(ENAME)"
 	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(ELF) $(HEX) $(BIN) $(ASM) | sed -e 's/^/* /'
-	@echo "< CLEANING DONE"
+	@echo "< CLEANING $(ENAME) DONE"
 
 ifeq ($(NODEP),)
 -include $(patsubst $(SDIR)/%.c,  $(DDIR)/%.d,$(C_SRCS)  )

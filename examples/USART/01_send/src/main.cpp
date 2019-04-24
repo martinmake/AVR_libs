@@ -3,10 +3,8 @@
 
 #include <standard/standard.h>
 #include <usart/usart0.h>
-#include <led/led.h>
 
 Usart0 usart0(TIO_BAUD, F_CPU);
-Led led_err(Bit({PORTB, PB5}));
 
 void init(void)
 {

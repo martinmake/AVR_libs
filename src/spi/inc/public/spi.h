@@ -27,4 +27,6 @@ class Spi
 		inline Spi& operator>>(uint8_t& data) { data = SPDR; return *this; }
 };
 
+extern Spi spi;
+
 #endif

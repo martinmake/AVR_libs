@@ -3,6 +3,12 @@
 
 #include "bit.h"
 
+#define INPUT  ((uint8_t) 0)
+#define OUTPUT ((uint8_t) 1)
+
+#define LOW  ((uint8_t) 0)
+#define HIGH ((uint8_t) 1)
+
 class Pin
 {
 	public:
