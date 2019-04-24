@@ -76,7 +76,7 @@ Usart0::Usart0(const Init* init)
 			break;
 	}
 
-	UCSR0B |= (1 << TXCIE0);
+	UCSR0B |= (1 << UDRIE0);
 	output_queue = Queue(init->output_queue_size);
 }
 
@@ -96,9 +96,8 @@ Usart0::Usart0(uint32_t baud, uint32_t f_osc)
 		*this = Usart0(&init);
 }
 
-ISR(USART_TX_vect)
+ISR(USART_UDRE_vect)
 {
-	while ( ! (UCSR0A & (1 << UDRE0)) ) {}
 	usart0.output_queue >> UDR0;
 }
 

@@ -40,7 +40,7 @@ STRIP  :=$(TOOLCHAIN)strip
 
 # COMPILER FLAGS
 WARNING     :=-Wall -Wextra -pedantic -Wno-write-strings
-OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions
+OPTIMIZATION:=-O3 -Os -fdata-sections -ffunction-sections -fno-exceptions -s
 
 ######END#OF#CONFIGURATION#VARIABLES######
 
@@ -61,10 +61,10 @@ OBJS    :=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 
 INC:=$(addprefix -I,$(IDIRS) $(LIDIR))
 
-CCFLAGS :=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c99
-CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS) -std=c++14 -fno-rtti
-ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -s -mmcu=$(MCU) $(INC)  $(DEFS)
-LDFLAGS :=$(WARNING) $(OPTIMIZATION)    -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
+CCFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS) -std=c99
+CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS) -std=c++14 -fno-rtti
+ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)  $(DEFS)
+LDFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) -L$(LADIR)/$(MCU) -Wl,--gc-sections
 
 .SECONDARY: $(OBJS)
 
@@ -114,7 +114,7 @@ flash:
 
 .PHONY: serial
 serial:
-	sudo tio -b $(TIO_BAUD) -d 8 -s 2 -e -mINLCRNL $(PORT)
+	sudo tio -b $(TIO_BAUD) -d 8 -s 1 -mINLCRNL $(PORT)
 
 .PHONY: setup
 setup:
