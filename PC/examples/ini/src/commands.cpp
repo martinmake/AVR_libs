@@ -40,7 +40,7 @@ void list(const std::vector<std::string>& args)
 		std::vector<std::string> keys = ini.get_section_keys(examined_section);
 		printf("[%s]\n", examined_section.c_str());
 		for (std::string key : keys)
-			std::cout << key << " = " << ini.get_string(examined_section, key) << std::endl;
+			std::cout << key << " = " << ini.get(examined_section, key) << std::endl;
 	} else if (args.empty()) {
 		int section_count = ini.get_section_count();
 		for (int i = 0; i < section_count; i++)
@@ -50,7 +50,7 @@ void list(const std::vector<std::string>& args)
 			std::vector<std::string> keys = ini.get_section_keys(arg);
 			printf("[%s]\n", arg.c_str());
 			for (std::string key : keys)
-				std::cout << key << " = " << ini.get_string(arg, key) << std::endl;
+				std::cout << key << " = " << ini.get(arg, key) << std::endl;
 		}
 	}
 }

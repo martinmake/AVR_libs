@@ -1,7 +1,6 @@
 include $(MAKEFILE).config
 include Makefile.config
 
-LIBS+=
 DEFS+=$(EDEFS) PROOT='"$(realpath .)"'
 
 LIBS  :=$(addprefix -l,$(LIBS))
@@ -16,12 +15,12 @@ CXX_OBJS:=$(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(CXX_SRCS))
 ASM_OBJS:=$(patsubst $(SDIR)/%.S,  $(ODIR)/%.o,$(ASM_SRCS))
 OBJS    :=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 
-INC:=$(addprefix -I,$(IDIRS) $(LIDIR))
+INC:=$(addprefix -I,$(IDIRS) $(LIB_IDIR))
 
 CCFLAGS :=$(WARNING) $(OPTIMIZATION) $(INC) $(DEFS) -std=c99
 CXXFLAGS:=$(WARNING) $(OPTIMIZATION) $(INC) $(DEFS) -std=c++14
 ASMFLAGS:=$(WARNING) $(OPTIMIZATION) $(INC) $(DEFS)
-LDFLAGS :=$(WARNING) $(OPTIMIZATION) -L$(ARCDIR) -Wl,--gc-sections
+LDFLAGS :=$(WARNING) $(OPTIMIZATION) -L$(LIB_LDIR) -Wl,-R$(LIB_LDIR) -Wl,--gc-sections
 
 .SECONDARY: $(OBJS)
 

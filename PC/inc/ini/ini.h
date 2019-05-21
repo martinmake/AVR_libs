@@ -21,7 +21,7 @@ class Ini
 		std::string              get_section_name     (int n);
 		int                      get_section_key_count(const std::string& section);
 		std::vector<std::string> get_section_keys     (const std::string& section);
-		std::string              get_string           (const std::string& section, const std::string& key);
+		std::string              get                  (const std::string& section, const std::string& key);
 		bool                     find_section         (const std::string& section);
 		void                     add_section          (const std::string& section);
 		void                     remove_section       (const std::string& section);
@@ -62,7 +62,7 @@ inline std::vector<std::string> Ini::get_section_keys(const std::string& section
 	return key_vect;
 }
 
-inline std::string Ini::get_string(const std::string& section, const std::string& key)
+inline std::string Ini::get(const std::string& section, const std::string& key)
 {
 	std::string ini_key = section + ':' + key;
 	return iniparser_getstring(m_ini, ini_key.c_str(), "");
@@ -86,6 +86,9 @@ inline void Ini::remove_section(const std::string& section)
 inline void Ini::set(const std::string& section, const std::string& key, const std::string& val)
 {
 	const std::string entry = section + ':' + key;
+
+	if (!find_section(section))
+		add_section(section);
 
 	iniparser_set(m_ini, entry.c_str(), val.c_str());
 }
@@ -114,11 +117,16 @@ inline void Ini::dump(FILE* file)
 
 inline void Ini::load(const std::string& path)
 {
+	free_dict();
+
 	m_ini = iniparser_load(path.c_str());
 }
 
 inline void Ini::free_dict()
 {
+	if (m_ini == nullptr)
+		return;
+
 	iniparser_freedict(m_ini);
 	m_ini = nullptr;
 }

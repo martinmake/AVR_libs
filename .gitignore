@@ -46,4 +46,6 @@ cscope
 .ycm_extra_conf.py
 
 # Other
-inc/*
+ARM/inc/*
+AVR/inc/*
+PC/inc/*
