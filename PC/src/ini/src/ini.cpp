@@ -6,12 +6,11 @@ Ini::Ini(const std::string& path)
 }
 
 Ini::Ini()
-	: m_ini(nullptr)
 {
+	load("/dev/null");
 }
 
 Ini::~Ini()
 {
-	if (m_ini != nullptr)
-		free_dict();
+	free_dict();
 }
