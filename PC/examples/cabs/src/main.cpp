@@ -19,8 +19,7 @@ int main(void)
 
 	Screen screen;
 
-	Widget sample_widget(20, 10, 21, 10, "SAMPLE WIDGET", true, true);
-	screen << sample_widget;
+	#include "design/sample.cpp"
 
 	screen.redraw();
 

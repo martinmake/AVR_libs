@@ -1,7 +1,7 @@
 #include "widget.h"
 
-Widget::Widget(int x, int y, int w, int h, const std::string& label, bool box, bool shadow)
-	: m_label(label), m_box(box), m_shadow(shadow), m_x(x), m_y(y), m_w(w), m_h(h)
+Widget::Widget(int x, int y, int w, int h)
+	: m_x(x), m_y(y), m_w(w), m_h(h)
 {
 }
 
@@ -30,7 +30,7 @@ void Widget::draw(void)
 		wborder(m_win_shadow, ' ', 0, ' ', 0, ' ', 0, 0, 0);
 
 	if (m_box)
-		box(m_win, 0, 0);
+		wborder(m_win, 0, 0, 0, 0, 0, 0, 0, 0);
 
 	if (!m_label.empty())
 		mvwprintw(m_win, 0, 2, "| %s |", m_label.c_str());
