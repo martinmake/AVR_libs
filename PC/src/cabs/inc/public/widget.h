@@ -11,7 +11,7 @@
 class Widget
 {
 	protected:
-		WINDOW*     m_win;
+		WINDOW*     m_win_box;
 		WINDOW*     m_win_shadow;
 		std::string m_label;
 		Position    m_position;
@@ -19,6 +19,9 @@ class Widget
 		bool        m_box    = true;
 		bool        m_shadow = false;
 		bool        m_active = true;
+		int         m_label_attr  = 0;
+		int         m_box_attr    = 0;
+		int         m_shadow_attr = 0;
 
 	public:
 		Widget(void);
@@ -30,21 +33,27 @@ class Widget
 
 	// GETTERS
 	public:
-		const Position&    position(void) const;
-		const Size&        size    (void) const;
-		const std::string& label   (void) const;
-		      bool         box     (void) const;
-		      bool         shadow  (void) const;
-		      bool         active  (void) const;
+		const Position&    position    (void) const;
+		const Size&        size        (void) const;
+		const std::string& label       (void) const;
+		      bool         box         (void) const;
+		      bool         shadow      (void) const;
+		      bool         active      (void) const;
+		      int          label_attr  (void) const;
+		      int          box_attr    (void) const;
+		      int          shadow_attr (void) const;
 
 	// SETTERS
 	public:
-		void position (const Position&    new_position);
-		void size     (const Size&        new_size    );
-		void label    (const std::string& new_label   );
-		void box      (      bool         new_box     );
-		void shadow   (      bool         new_shadow  );
-		void active   (      bool         new_active  );
+		void position    (const Position&    new_position  );
+		void size        (const Size&        new_size      );
+		void label       (const std::string& new_label     );
+		void box         (      bool         new_box       );
+		void shadow      (      bool         new_shadow    );
+		void active      (      bool         new_active    );
+		void label_attr  (      int         new_label_attr );
+		void box_attr    (      int         new_box_attr   );
+		void shadow_attr (      int         new_shadow_attr);
 };
 
 // GETTERS
@@ -72,6 +81,18 @@ inline bool Widget::active(void) const
 {
 	return m_active;
 }
+inline int Widget::label_attr(void) const
+{
+	return m_label_attr;
+}
+inline int Widget::box_attr(void) const
+{
+	return m_box_attr;
+}
+inline int Widget::shadow_attr(void) const
+{
+	return m_shadow_attr;
+}
 
 // SETTERS
 inline void Widget::position(const Position& new_position)
@@ -97,6 +118,18 @@ inline void Widget::shadow(bool new_shadow)
 inline void Widget::active(bool new_active)
 {
 	m_active = new_active;
+}
+inline void Widget::label_attr(int new_label_attr)
+{
+	m_label_attr = new_label_attr;
+}
+inline void Widget::box_attr(int new_box_attr)
+{
+	m_box_attr = new_box_attr;
+}
+inline void Widget::shadow_attr(int new_shadow_attr)
+{
+	m_shadow_attr = new_shadow_attr;
 }
 
 #endif
