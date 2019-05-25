@@ -38,16 +38,21 @@ void Widget::draw(void) const
 		wattr_on(m_win_box, m_box_attr, NULL);
 		wborder(m_win_box, 0, 0, 0, 0, 0, 0, 0, 0);
 		wattr_off(m_win_box, m_box_attr, NULL);
+		if (!m_label.empty())
+		{
+			wmove(m_win_box, 0, 2);
+			waddch(m_win_box, '|' | m_box_attr);
+			wprintw(m_win_box, " %s ", m_label.c_str());
+			waddch(m_win_box, '|' | m_box_attr);
+		}
 	}
 
 	if (!m_label.empty())
 	{
-		wmove(m_win_box, 0, 2);
-		waddch(m_win_box, '|' | m_box_attr);
+		wmove(m_win_box, 0, 3);
 		wattr_on(m_win_box, m_label_attr, NULL);
 		wprintw(m_win_box, " %s ", m_label.c_str());
 		wattr_off(m_win_box, m_label_attr, NULL);
-		waddch(m_win_box, '|' | m_box_attr);
 	}
 
 	wrefresh(m_win_box);
