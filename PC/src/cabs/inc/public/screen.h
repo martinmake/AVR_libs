@@ -21,14 +21,22 @@ class Screen
 	public:
 		Screen(const Position& position, const Size& size);
 		Screen(void);
-		~Screen(void);
+		virtual ~Screen(void);
 
 	public:
+		void draw(void) const;
 		void redraw(void) const;
 		Screen& operator<<(Widget& widget);
 
+	// HANDLERS
+	public:
+		virtual void handle_key(int key);
+
+	// OPERATORS
 	public:
 		Widget& operator[](int index);
 };
+
+#include "application.h"
 
 #endif

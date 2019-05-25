@@ -3,7 +3,6 @@
 
 #include <ncurses.h>
 #include <string>
-#include <list>
 
 #include "cabs.h"
 #include "position.h"
@@ -23,7 +22,7 @@ class Widget
 
 	public:
 		Widget(void);
-		~Widget(void);
+		virtual ~Widget(void);
 
 	public:
 		void attatch_to_window(WINDOW* win);

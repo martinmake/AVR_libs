@@ -21,8 +21,18 @@ void Screen::redraw(void) const
 {
 	werase(m_win);
 
+	draw();
+}
+
+void Screen::draw(void) const
+{
 	for (std::shared_ptr<Widget> widget : m_widgets)
 		widget->draw();
+}
+
+void Screen::handle_key(int key)
+{
+	(void) key;
 }
 
 Screen& Screen::operator<<(Widget& widget)

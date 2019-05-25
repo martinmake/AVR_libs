@@ -34,4 +34,7 @@ void Widget::draw(void) const
 
 	if (!m_label.empty())
 		mvwprintw(m_win, 0, 2, "| %s |", m_label.c_str());
+
+	wrefresh(m_win);
+	wrefresh(m_win_shadow);
 }
