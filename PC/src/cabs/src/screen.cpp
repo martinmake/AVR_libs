@@ -1,3 +1,5 @@
+#include <dialog.h>
+
 #include "cabs/screen.h"
 
 Screen::Screen(const Position& initial_position, const Size& initial_size)
@@ -32,7 +34,31 @@ void Screen::draw(void) const
 
 void Screen::handle_key(int key)
 {
-	(void) key;
+	if (Cabs::move)
+	{
+		switch (key)
+		{
+			case KEY_LEFT:
+			case 'H': break;
+
+			case KEY_DOWN:
+			case 'J': break;
+
+			case KEY_UP:
+			case 'K': break;
+
+			case KEY_RIGHT:
+			case 'L': break;
+
+			case 'a':
+			case 'A':
+			case 'i':
+			case 'I':
+			case 'o':
+			case 'O':
+			case 'e': break;
+		}
+	}
 }
 
 Widget& Screen::operator[](int index)

@@ -1,3 +1,5 @@
+#include <ncurses.h>
+
 #include "cabs/widget.h"
 
 Widget::Widget(void)
@@ -6,7 +8,7 @@ Widget::Widget(void)
 
 Widget::~Widget(void)
 {
-	delwin(m_win_box);
+	delwin(m_win_border);
 	delwin(m_win_shadow);
 }
 
@@ -17,7 +19,7 @@ void Widget::attatch_to_window(WINDOW* win)
 	x = Position::translate_x(win, m_position.x(), m_size.w());
 	y = Position::translate_y(win, m_position.y(), m_size.h());
 
-	m_win_box        = derwin(win, m_size.h(), m_size.w(), y,     x    );
+	m_win_border = derwin(win, m_size.h(), m_size.w(), y,     x    );
 	m_win_shadow = derwin(win, m_size.h(), m_size.w(), y + 1, x + 1);
 }
 
@@ -33,28 +35,28 @@ void Widget::draw(void) const
 		wattr_off(m_win_shadow, m_shadow_attr, NULL);
 	}
 
-	if (m_box)
+	if (m_border)
 	{
-		wattr_on(m_win_box, m_box_attr, NULL);
-		wborder(m_win_box, 0, 0, 0, 0, 0, 0, 0, 0);
-		wattr_off(m_win_box, m_box_attr, NULL);
+		wattr_on(m_win_border, m_border_attr, NULL);
+		wborder(m_win_border, 0, 0, 0, 0, 0, 0, 0, 0);
+		wattr_off(m_win_border, m_border_attr, NULL);
 		if (!m_label.empty())
 		{
-			wmove(m_win_box, 0, 2);
-			waddch(m_win_box, '|' | m_box_attr);
-			wprintw(m_win_box, " %s ", m_label.c_str());
-			waddch(m_win_box, '|' | m_box_attr);
+			wmove(m_win_border, 0, 2);
+			waddch(m_win_border, '|' | m_border_attr);
+			wmove(m_win_border, 0, 5 + m_label.size());
+			waddch(m_win_border, '|' | m_border_attr);
 		}
 	}
 
 	if (!m_label.empty())
 	{
-		wmove(m_win_box, 0, 3);
-		wattr_on(m_win_box, m_label_attr, NULL);
-		wprintw(m_win_box, " %s ", m_label.c_str());
-		wattr_off(m_win_box, m_label_attr, NULL);
+		wmove(m_win_border, 0, 3);
+		wattr_on(m_win_border, m_label_attr, NULL);
+		wprintw(m_win_border, " %s ", m_label.c_str());
+		wattr_off(m_win_border, m_label_attr, NULL);
 	}
 
-	wrefresh(m_win_box);
+	wrefresh(m_win_border);
 	wrefresh(m_win_shadow);
 }
