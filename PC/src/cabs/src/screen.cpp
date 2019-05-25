@@ -1,4 +1,4 @@
-#include "screen.h"
+#include "cabs/screen.h"
 
 Screen::Screen(const Position& initial_position, const Size& initial_size)
 	: m_position(initial_position), m_size(initial_size)
@@ -33,14 +33,6 @@ void Screen::draw(void) const
 void Screen::handle_key(int key)
 {
 	(void) key;
-}
-
-Screen& Screen::operator<<(Widget& widget)
-{
-	widget.attatch_to_window(m_win);
-	m_widgets.push_back(std::make_shared<Widget>(widget));
-
-	return *this;
 }
 
 Widget& Screen::operator[](int index)

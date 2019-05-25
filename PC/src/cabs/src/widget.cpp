@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "cabs/widget.h"
 
 Widget::Widget(void)
 {
