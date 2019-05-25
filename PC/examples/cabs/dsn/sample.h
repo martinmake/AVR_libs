@@ -1,0 +1,9 @@
+Widget  widget1;
+Widget  widget2;
+Widget  widget3;
+Widget  widget4;
+TextBox text_box;
+Widget  widget6;
+Widget  widget7;
+Widget  widget8;
+Widget  widget9;
