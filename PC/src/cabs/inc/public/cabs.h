@@ -1,20 +1,15 @@
 #ifndef _CABS_CABS_H_
 #define _CABS_CABS_H_
 
-#include <ncurses.h>
-
 namespace Cabs
 {
-	namespace Position
+	namespace Positions
 	{
-		extern int LEFT;
-		extern int TOP;
-		extern int CENTER;
-		extern int RIGHT;
-		extern int BOTTOM;
-
-		extern int translate_x(const WINDOW* win, int x, int w);
-		extern int translate_y(const WINDOW* win, int y, int h);
+		extern const int LEFT;
+		extern const int TOP;
+		extern const int CENTER;
+		extern const int RIGHT;
+		extern const int BOTTOM;
 	}
 }
 

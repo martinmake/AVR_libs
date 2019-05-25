@@ -1,11 +1,10 @@
 #include "widget.h"
 
-Widget::Widget(int x, int y, int w, int h)
-	: m_x(x), m_y(y), m_w(w), m_h(h)
+Widget::Widget(void)
 {
 }
 
-Widget::~Widget()
+Widget::~Widget(void)
 {
 	delwin(m_win);
 	delwin(m_win_shadow);
@@ -13,19 +12,20 @@ Widget::~Widget()
 
 void Widget::attatch_to_window(WINDOW* win)
 {
-	using namespace Cabs::Position;
-
 	int x, y;
 
-	x = translate_x(win, m_x, m_w);
-	y = translate_y(win, m_y, m_h);
+	x = Position::translate_x(win, m_position.x(), m_size.w());
+	y = Position::translate_y(win, m_position.y(), m_size.h());
 
-	m_win        = derwin(win, m_h, m_w, y,     x);
-	m_win_shadow = derwin(win, m_h, m_w, y + 1, x + 1);
+	m_win        = derwin(win, m_size.h(), m_size.w(), y,     x    );
+	m_win_shadow = derwin(win, m_size.h(), m_size.w(), y + 1, x + 1);
 }
 
-void Widget::draw(void)
+void Widget::draw(void) const
 {
+	if (!m_active)
+		return;
+
 	if (m_shadow)
 		wborder(m_win_shadow, ' ', 0, ' ', 0, ' ', 0, 0, 0);
 
@@ -34,7 +34,4 @@ void Widget::draw(void)
 
 	if (!m_label.empty())
 		mvwprintw(m_win, 0, 2, "| %s |", m_label.c_str());
-
-	wrefresh(m_win_shadow);
-	wrefresh(m_win);
 }

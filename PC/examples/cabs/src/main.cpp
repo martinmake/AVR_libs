@@ -2,7 +2,11 @@
 #include <memory>
 
 #include <cabs/cabs.h>
+#include <cabs/application.h>
 #include <cabs/screen.h>
+#include <cabs/widget.h>
+
+#include "sample_screen.h"
 
 static void signal_handler(int sig)
 {
@@ -17,13 +21,9 @@ int main(void)
 {
 	signal(SIGINT, signal_handler);
 
-	Screen screen;
+	application << *new SampleScreen();
 
-	#include "design/sample.cpp"
-
-	screen.redraw();
-
-	getch();
+	application.run();
 
 	return 0;
 }

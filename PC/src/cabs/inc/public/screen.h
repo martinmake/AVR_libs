@@ -2,32 +2,33 @@
 #define _CABS_SCREEN_H_
 
 #include <ncurses.h>
-#include <string>
-#include <list>
+#include <memory>
+#include <vector>
 
 #include "widget.h"
 
 class Screen
 {
 	private:
-		std::list<Widget> m_widgets;
-		std::list<bool>   m_widget_states;
+		std::vector<std::shared_ptr<Widget>> m_widgets;
 
 	protected:
-		WINDOW* m_win;
-		int     m_x;
-		int	m_y;
-		int	m_w;
-		int	m_h;
+		WINDOW*     m_win;
+		Position    m_position;
+		Size	    m_size;
+		std::string m_name;
 
 	public:
-		Screen(int x, int y, int w, int h);
+		Screen(const Position& position, const Size& size);
 		Screen(void);
 		~Screen(void);
 
 	public:
-		void redraw(void);
+		void redraw(void) const;
 		Screen& operator<<(Widget& widget);
+
+	public:
+		Widget& operator[](int index);
 };
 
 #endif
