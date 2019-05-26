@@ -1,6 +1,8 @@
 #ifndef _CABS_CABS_H_
 #define _CABS_CABS_H_
 
+#include <string>
+
 namespace Cabs
 {
 	namespace Positions

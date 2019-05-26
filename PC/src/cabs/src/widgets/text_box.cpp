@@ -20,12 +20,16 @@ void TextBox::draw(void) const
 			(m_text.find_first_of('>', it - m_text.begin()) != std::string::npos) // is tag ended
 		)
 		{
-			using namespace Cabs::Colors;
+			it += 2;
+			std::string tag;
+			for (; *it != '>'; it++)
+				tag.push_back(*it);
 
-			wattron(m_win_border, BLACK_WHITE);
-			for (; *(it - 1) != '>'; it++)
-				waddch(m_win_border, *it);
-			wattroff(m_win_border, BLACK_WHITE);
+			int tag_attr = Cabs::parse_tag(tag);
+
+			wattrset(m_win_border, tag_attr);
+
+			it++;
 		}
 
 		if (*it == '\n')
