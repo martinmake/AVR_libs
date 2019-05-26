@@ -4,11 +4,13 @@
 #include <vector>
 
 #include "cabs/widget.h"
+#include "cabs/padding.h"
 
 class TextBox : public Widget
 {
 	private:
-		std::vector<std::string> m_text;
+		std::string m_text;
+		Padding     m_padding;
 
 	public:
 		TextBox(void);
@@ -19,23 +21,33 @@ class TextBox : public Widget
 
 	// GETTERS
 	public:
-		const std::vector<std::string>& text(void) const;
+		const std::string& text   (void) const;
+		const Padding&     padding(void) const;
 
 	// SETTERS
 	public:
-		void text(const std::vector<std::string>& new_text);
+		void text   (const std::string& new_text   );
+		void padding(const Padding&     new_padding);
 };
 
 // GETTERS
-inline const std::vector<std::string>& TextBox::text(void) const
+inline const std::string& TextBox::text(void) const
 {
 	return m_text;
 }
+inline const Padding& TextBox::padding(void) const
+{
+	return m_padding;
+}
 
 // GETTERS
-inline void TextBox::text(const std::vector<std::string>& new_text)
+inline void TextBox::text(const std::string& new_text)
 {
 	m_text = new_text;
+}
+inline void TextBox::padding(const Padding& new_padding)
+{
+	m_padding = new_padding;
 }
 
 #endif

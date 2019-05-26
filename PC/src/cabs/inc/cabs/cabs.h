@@ -79,15 +79,17 @@ namespace Cabs
 		extern const int CYAN_CYAN;
 		extern const int WHITE_CYAN;
 
-		extern const int BLACK_CYAN;
-		extern const int RED_CYAN;
-		extern const int GREEN_CYAN;
-		extern const int YELLOW_CYAN;
-		extern const int BLUE_CYAN;
-		extern const int MAGENTA_CYAN;
-		extern const int CYAN_CYAN;
-		extern const int WHITE_CYAN;
+		extern const int BLACK_WHITE;
+		extern const int RED_WHITE;
+		extern const int GREEN_WHITE;
+		extern const int YELLOW_WHITE;
+		extern const int BLUE_WHITE;
+		extern const int MAGENTA_WHITE;
+		extern const int CYAN_WHITE;
+		extern const int WHITE_WHITE;
 	}
+
+	extern int parse_tag(const std::string& tag);
 
 	extern bool move;
 }

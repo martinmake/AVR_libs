@@ -31,7 +31,11 @@ void Widget::draw(void) const
 	if (m_shadow)
 	{
 		wattr_on(m_win_shadow, m_shadow_attr, NULL);
-		wborder(m_win_shadow, ' ', 0, ' ', 0, ' ', 0, 0, 0);
+		mvwaddch(m_win_shadow, m_size.h() - 1, 0, ACS_LLCORNER);
+		whline(m_win_shadow, 0, m_size.w());
+		mvwaddch(m_win_shadow, m_size.h() - 1, m_size.w() - 1, ACS_LRCORNER);
+		mvwaddch(m_win_shadow, 0, m_size.w() - 1, ACS_URCORNER);
+		mvwvline(m_win_shadow, 1, m_size.w() - 1, 0, m_size.h() - 2);
 		wattr_off(m_win_shadow, m_shadow_attr, NULL);
 	}
 
