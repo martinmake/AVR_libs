@@ -41,14 +41,19 @@ void Application::run(void)
 			// move when ^H, ^J, ^K, ^L are pressed
 			switch (key)
 			{
-
+				case 's':
+					Cabs::move = false;
+					curs_set(0);
+					attroff(A_STANDOUT);
+					break;
 			}
 		}
 
+		if (m_selected_screen != nullptr)
+			m_selected_screen->handle_key(key);
+
 		if (key == ESC)
 			Cabs::move = true;
-
-		m_screens.back()->handle_key(key);
 	}
 }
 

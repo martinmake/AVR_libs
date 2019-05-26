@@ -172,5 +172,5 @@ namespace Cabs
 		else                               return NO_COLOR;
 	}
 
-	bool move = false;
+	bool move = true;
 }

@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <dialog.h>
 
 #include "cabs/widget.h"
 
@@ -25,10 +26,10 @@ void Widget::attatch_to_window(WINDOW* win)
 
 void Widget::draw(void) const
 {
-	if (!m_active)
+	if (!m_is_visible)
 		return;
 
-	if (m_shadow)
+	if (m_is_shadowed)
 	{
 		wattr_on(m_win_shadow, m_shadow_attr, NULL);
 		mvwaddch(m_win_shadow, m_size.h() - 1, 0, ACS_LLCORNER);
@@ -39,7 +40,7 @@ void Widget::draw(void) const
 		wattr_off(m_win_shadow, m_shadow_attr, NULL);
 	}
 
-	if (m_border)
+	if (m_is_bordered)
 	{
 		wattr_on(m_win_border, m_border_attr, NULL);
 		wborder(m_win_border, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -61,6 +62,22 @@ void Widget::draw(void) const
 		wattr_off(m_win_border, m_label_attr, NULL);
 	}
 
+	if (m_is_selected)
+	{
+		wmove(m_win_border, 0, 0);
+		waddch(m_win_border, '#' | A_STANDOUT | A_BLINK);
+	}
+
 	wrefresh(m_win_border);
 	wrefresh(m_win_shadow);
+}
+
+void Widget::handle_key(int key)
+{
+	switch (key)
+	{
+		case ESC:
+			m_is_selected = true;
+			break;
+	}
 }

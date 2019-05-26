@@ -8,7 +8,7 @@
 
 #undef shadow_attr
 #undef border_attr
-#undef border
+#undef is_bordered
 
 class Widget
 {
@@ -18,9 +18,10 @@ class Widget
 		std::string m_label;
 		Position    m_position;
 		Size	    m_size;
-		bool        m_border = true;
-		bool        m_shadow = false;
-		bool        m_active = true;
+		bool        m_is_bordered = false;
+		bool        m_is_shadowed = false;
+		bool        m_is_visible  = false;
+		bool        m_is_selected = false;
 		int         m_label_attr  = 0;
 		int         m_border_attr = 0;
 		int         m_shadow_attr = 0;
@@ -33,29 +34,35 @@ class Widget
 		void attatch_to_window(WINDOW* win);
 		virtual void draw(void) const;
 
+	// HANDLERS
+	public:
+		virtual void handle_key(int key);
+
 	// GETTERS
 	public:
 		const Position&    position   (void) const;
 		const Size&        size       (void) const;
 		const std::string& label      (void) const;
-		      bool         border        (void) const;
-		      bool         shadow     (void) const;
-		      bool         active     (void) const;
+		      bool         is_bordered(void) const;
+		      bool         is_shadowed(void) const;
+		      bool         is_visible (void) const;
+		      bool         is_selected(void) const;
 		      int          label_attr (void) const;
-		      int          border_attr   (void) const;
+		      int          border_attr(void) const;
 		      int          shadow_attr(void) const;
 
 	// SETTERS
 	public:
-		void position   (const Position&    new_position  );
-		void size       (const Size&        new_size      );
-		void label      (const std::string& new_label     );
-		void border        (      bool         new_border       );
-		void shadow     (      bool         new_shadow    );
-		void active     (      bool         new_active    );
-		void label_attr (      int         new_label_attr );
-		void border_attr   (      int         new_border_attr   );
-		void shadow_attr(      int         new_shadow_attr);
+		void position   (const Position&    new_position   );
+		void size       (const Size&        new_size       );
+		void label      (const std::string& new_label      );
+		void is_bordered(      bool         new_is_bordered);
+		void is_shadowed(      bool         new_is_shadowed);
+		void is_visible (      bool         new_is_visible );
+		void is_selected(      bool         new_is_selected);
+		void label_attr (      int          new_label_attr );
+		void border_attr(      int          new_border_attr);
+		void shadow_attr(      int          new_shadow_attr);
 };
 
 // GETTERS
@@ -71,17 +78,21 @@ inline const std::string& Widget::label(void) const
 {
 	return m_label;
 }
-inline bool Widget::border(void) const
+inline bool Widget::is_bordered(void) const
 {
-	return m_border;
+	return m_is_bordered;
 }
-inline bool Widget::shadow(void) const
+inline bool Widget::is_shadowed(void) const
 {
-	return m_shadow;
+	return m_is_shadowed;
 }
-inline bool Widget::active(void) const
+inline bool Widget::is_visible(void) const
 {
-	return m_active;
+	return m_is_visible;
+}
+inline bool Widget::is_selected(void) const
+{
+	return m_is_selected;
 }
 inline int Widget::label_attr(void) const
 {
@@ -109,17 +120,21 @@ inline void Widget::label(const std::string& new_label)
 {
 	m_label = new_label;
 }
-inline void Widget::border(bool new_border)
+inline void Widget::is_bordered(bool new_is_bordered)
 {
-	m_border = new_border;
+	m_is_bordered = new_is_bordered;
 }
-inline void Widget::shadow(bool new_shadow)
+inline void Widget::is_shadowed(bool new_is_shadowed)
 {
-	m_shadow = new_shadow;
+	m_is_shadowed = new_is_shadowed;
 }
-inline void Widget::active(bool new_active)
+inline void Widget::is_visible(bool new_is_visible)
 {
-	m_active = new_active;
+	m_is_visible = new_is_visible;
+}
+inline void Widget::is_selected(bool new_is_selected)
+{
+	m_is_selected = new_is_selected;
 }
 inline void Widget::label_attr(int new_label_attr)
 {

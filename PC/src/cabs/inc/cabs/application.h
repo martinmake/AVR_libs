@@ -7,8 +7,8 @@
 class Application
 {
 	private:
-		std::vector<std::shared_ptr<Screen>>           m_screens;
-		std::vector<std::shared_ptr<Screen>>::iterator m_selected_screen;
+		std::vector<std::shared_ptr<Screen>> m_screens;
+		            std::shared_ptr<Screen>  m_selected_screen;
 
 	public:
 		Application(void);
@@ -29,6 +29,9 @@ template <typename S>
 Application& Application::operator<<(S& screen)
 {
 	m_screens.push_back(std::make_shared<S>(screen));
+
+	if (m_selected_screen == nullptr)
+		m_selected_screen = m_screens.front();
 
 	return *this;
 }

@@ -39,25 +39,27 @@ void Screen::handle_key(int key)
 		switch (key)
 		{
 			case KEY_LEFT:
-			case 'H': break;
+			case 'h': break;
 
 			case KEY_DOWN:
-			case 'J': break;
+			case 'j': break;
 
 			case KEY_UP:
-			case 'K': break;
+			case 'k': break;
 
 			case KEY_RIGHT:
-			case 'L': break;
+			case 'l': break;
 
-			case 'a':
-			case 'A':
-			case 'i':
-			case 'I':
-			case 'o':
-			case 'O':
-			case 'e': break;
+			case 'H': break;
+			case 'J': break;
+			case 'K': break;
+			case 'L': break;
 		}
+	}
+	else
+	{
+		if (m_selected_widget != nullptr)
+			m_selected_widget->handle_key(key);
 	}
 }
 

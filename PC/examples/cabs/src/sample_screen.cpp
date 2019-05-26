@@ -13,6 +13,8 @@ SampleScreen::~SampleScreen(void)
 
 void SampleScreen::handle_key(int key)
 {
+	Screen::handle_key(key);
+
 	if (key == 'q')
 		application.exit(0);
 	else
