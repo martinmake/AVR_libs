@@ -91,7 +91,13 @@ namespace Cabs
 		extern const int WHITE_WHITE;
 	}
 
+	enum class Direction : uint8_t
+	{
+		UP, RIGHT, DOWN, LEFT
+	};
+
 	extern int parse_tag(const std::string& tag);
+
 
 	extern bool move;
 }

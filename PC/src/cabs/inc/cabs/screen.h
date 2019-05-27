@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "cabs/widget.h"
+#include "cabs/cabs.h"
 
 class Screen
 {
@@ -27,8 +28,7 @@ class Screen
 	public:
 		void draw(void) const;
 		void redraw(void) const;
-		template <typename W>
-		Screen& operator<<(W& widget);
+		void move(Cabs::Direction direction);
 
 	// HANDLERS
 	public:
@@ -37,6 +37,8 @@ class Screen
 	// OPERATORS
 	public:
 		Widget& operator[](int index);
+		template <typename W>
+		Screen& operator<<(W& widget);
 };
 
 template <typename W>

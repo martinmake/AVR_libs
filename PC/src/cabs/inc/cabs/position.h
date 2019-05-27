@@ -17,14 +17,12 @@ class Position
 		Position(void);
 		~Position(void);
 
-	public:
-		static int translate_x(const WINDOW* win, int x, int w);
-		static int translate_y(const WINDOW* win, int y, int h);
-
 	// GETTERS
 	public:
-		int x(void) const;
-		int y(void) const;
+		int x(void)                 const;
+		int x(const WINDOW*, int w) const;
+		int y(void)                 const;
+		int y(const WINDOW*, int h) const;
 
 	// SETTERS
 	public:
@@ -37,8 +35,30 @@ inline int Position::x(void) const
 {
 	return m_x;
 }
+inline int Position::x(const WINDOW* win, int w) const
+{
+	using namespace Cabs::Positions;
+
+	if (m_x == CENTER)
+		return (getmaxx(win) - w) / 2;
+	if (m_x == RIGHT)
+		return getmaxx(win) - w - 1;
+
+	return m_x;
+}
 inline int Position::y(void) const
 {
+	return m_y;
+}
+inline int Position::y(const WINDOW* win, int h) const
+{
+	using namespace Cabs::Positions;
+
+	if (m_y == CENTER)
+		return (getmaxy(win) - h) / 2;
+	if (m_y == BOTTOM)
+		return getmaxy(win) - h - 1;
+
 	return m_y;
 }
 

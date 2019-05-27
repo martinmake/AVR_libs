@@ -2,6 +2,7 @@
 #define _CABS_WIDGET_H_
 
 #include <string>
+#include <ncurses.h>
 
 #include "cabs/position.h"
 #include "cabs/size.h"
@@ -40,16 +41,17 @@ class Widget
 
 	// GETTERS
 	public:
-		const Position&    position   (void) const;
-		const Size&        size       (void) const;
-		const std::string& label      (void) const;
-		      bool         is_bordered(void) const;
-		      bool         is_shadowed(void) const;
-		      bool         is_visible (void) const;
-		      bool         is_selected(void) const;
-		      int          label_attr (void) const;
-		      int          border_attr(void) const;
-		      int          shadow_attr(void) const;
+		const Position&    position    (       void      ) const;
+		      Position     position    (const WINDOW* win) const;
+		const Size&        size        (       void      ) const;
+		const std::string& label       (       void      ) const;
+		      bool         is_bordered (       void      ) const;
+		      bool         is_shadowed (       void      ) const;
+		      bool         is_visible  (       void      ) const;
+		      bool         is_selected (       void      ) const;
+		      int          label_attr  (       void      ) const;
+		      int          border_attr (       void      ) const;
+		      int          shadow_attr (       void      ) const;
 
 	// SETTERS
 	public:
@@ -69,6 +71,10 @@ class Widget
 inline const Position& Widget::position(void) const
 {
 	return m_position;
+}
+inline Position Widget::position(const WINDOW* win) const
+{
+	return { m_position.x(win, m_size.w()), m_position.y(win, m_size.h()) };
 }
 inline const Size& Widget::size(void) const
 {

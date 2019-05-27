@@ -10,7 +10,7 @@ namespace Cabs
 		const int TOP    =  0;
 		const int CENTER = -1;
 		const int RIGHT  = -2;
-		const int BOTTOM = -3;
+		const int BOTTOM = -2;
 	}
 
 	namespace Colors

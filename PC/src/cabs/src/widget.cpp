@@ -17,8 +17,8 @@ void Widget::attatch_to_window(WINDOW* win)
 {
 	int x, y;
 
-	x = Position::translate_x(win, m_position.x(), m_size.w());
-	y = Position::translate_y(win, m_position.y(), m_size.h());
+	x = m_position.x(win, m_size.w());
+	y = m_position.y(win, m_size.h());
 
 	m_win_border = derwin(win, m_size.h(), m_size.w(), y,     x    );
 	m_win_shadow = derwin(win, m_size.h(), m_size.w(), y + 1, x + 1);
@@ -64,8 +64,10 @@ void Widget::draw(void) const
 
 	if (m_is_selected)
 	{
-		wmove(m_win_border, 0, 0);
-		waddch(m_win_border, '#' | A_STANDOUT | A_BLINK);
+		mvwaddch(m_win_border, 0,              0,             ACS_RARROW | A_BLINK);
+		mvwaddch(m_win_border, 0,              m_size.w() -1, ACS_LARROW | A_BLINK);
+		mvwaddch(m_win_border, m_size.h() - 1, 0,             ACS_RARROW | A_BLINK);
+		mvwaddch(m_win_border, m_size.h() - 1, m_size.w() - 1,ACS_LARROW | A_BLINK);
 	}
 
 	wrefresh(m_win_border);

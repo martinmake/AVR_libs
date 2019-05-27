@@ -1,4 +1,5 @@
 #include <dialog.h>
+#include <algorithm>
 
 #include "cabs/screen.h"
 
@@ -38,17 +39,19 @@ void Screen::handle_key(int key)
 	{
 		switch (key)
 		{
+			using namespace Cabs;
+
 			case KEY_LEFT:
-			case 'h': break;
+			case 'h': move(Direction::LEFT);  break;
 
 			case KEY_DOWN:
-			case 'j': break;
+			case 'j': move(Direction::DOWN);  break;
 
 			case KEY_UP:
-			case 'k': break;
+			case 'k': move(Direction::UP);    break;
 
 			case KEY_RIGHT:
-			case 'l': break;
+			case 'l': move(Direction::RIGHT); break;
 
 			case 'H': break;
 			case 'J': break;
@@ -61,6 +64,83 @@ void Screen::handle_key(int key)
 		if (m_selected_widget != nullptr)
 			m_selected_widget->handle_key(key);
 	}
+}
+
+void Screen::move(Cabs::Direction direction)
+{
+	using namespace Cabs;
+
+	std::vector<std::shared_ptr<Widget>> possible_widgets;
+	std::vector<int>                     distance_metric;
+
+	int selected_x = m_selected_widget->position(m_win).x();
+	int selected_y = m_selected_widget->position(m_win).y();
+	switch (direction) {
+		case Direction::LEFT:
+			selected_y += m_selected_widget->size().h() / 2;
+			break;
+		case Direction::DOWN:
+			selected_x += m_selected_widget->size().w() / 2;
+			selected_y += m_selected_widget->size().h();
+			break;
+		case Direction::UP:
+			selected_x += m_selected_widget->size().w() / 2;
+			break;
+		case Direction::RIGHT:
+			selected_x += m_selected_widget->size().w();
+			selected_y += m_selected_widget->size().h() / 2;
+			break;
+	}
+
+	for (std::shared_ptr<Widget>& widget : m_widgets)
+	{
+		if (widget == m_selected_widget)
+			continue;
+
+		int other_x = widget->position(m_win).x();
+		int other_y = widget->position(m_win).y();
+		switch (direction)
+		{
+			case Direction::LEFT:
+				other_x += widget->size().w();
+				other_y += widget->size().h() / 2;
+				break;
+			case Direction::DOWN:
+				other_x += widget->size().w() / 2;
+				break;
+			case Direction::UP:
+				other_x += widget->size().w() / 2;
+				other_y += widget->size().h();
+				break;
+			case Direction::RIGHT:
+				other_y += widget->size().h() / 2;
+				break;
+		}
+
+		bool is_in_wrong_direction = false;
+		switch (direction)
+		{
+			case Direction::LEFT:  if (other_x >= selected_x) is_in_wrong_direction = true; break;
+			case Direction::DOWN:  if (other_y <= selected_y) is_in_wrong_direction = true; break;
+			case Direction::UP:    if (other_y >= selected_y) is_in_wrong_direction = true; break;
+			case Direction::RIGHT: if (other_x <= selected_x) is_in_wrong_direction = true; break;
+		}
+
+		if (is_in_wrong_direction)
+			continue;
+
+		possible_widgets.emplace_back(widget);
+		distance_metric.emplace_back(other_x - selected_x + other_y - selected_y);
+	}
+
+	if (possible_widgets.size() == 0)
+		return;
+
+	int closest_widget_index = min_element(distance_metric.begin(), distance_metric.end()) - distance_metric.begin();
+	m_selected_widget->is_selected(false);
+	m_selected_widget = possible_widgets[closest_widget_index];
+	m_selected_widget->is_selected(true);
+	redraw();
 }
 
 Widget& Screen::operator[](int index)
