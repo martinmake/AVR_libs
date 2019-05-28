@@ -12,8 +12,8 @@ class Application
 
 	public:
 		int m_label_attr      = Cabs::Colors::RED_BLACK;
-		int m_border_attr     = Cabs::Colors::CYAN_BLACK;
-		int m_shadow_attr     = Cabs::Colors::BLUE_BLACK;
+		int m_border_attr     = Cabs::Colors::BLUE_CYAN;
+		int m_shadow_attr     = Cabs::Colors::BLUE_BLUE;
 		int m_selected_attr   = A_REVERSE;
 		int m_background_attr = Cabs::Colors::BLACK_BLACK;
 

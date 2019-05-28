@@ -64,6 +64,14 @@ void Widget::draw(void) const
 		wattr_off(m_win_border, application.label_attr(), NULL);
 	}
 
+	if (m_is_selected)
+	{
+		mvwaddch(m_win_border, 0,              0,              application.selected_attr());
+		mvwaddch(m_win_border, 0,              m_size.w() - 1, application.selected_attr());
+		mvwaddch(m_win_border, m_size.h() - 1, 0,              application.selected_attr());
+		mvwaddch(m_win_border, m_size.h() - 1, m_size.w() - 1, application.selected_attr());
+	}
+
 	wrefresh(m_win_border);
 	wrefresh(m_win_shadow);
 }
