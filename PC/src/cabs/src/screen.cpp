@@ -71,9 +71,9 @@ void Screen::move(Cabs::Direction direction)
 	using namespace Cabs;
 
 	std::vector<std::shared_ptr<Widget>> possible_widgets;
-	std::vector<int>                     distance_metric;
+	std::vector<int>                     distance_metrics;
 
-	int selected_x = m_selected_widget->position(m_win).x();
+int selected_x = m_selected_widget->position(m_win).x();
 	int selected_y = m_selected_widget->position(m_win).y();
 	switch (direction) {
 		case Direction::LEFT:
@@ -130,13 +130,13 @@ void Screen::move(Cabs::Direction direction)
 			continue;
 
 		possible_widgets.emplace_back(widget);
-		distance_metric.emplace_back(other_x - selected_x + other_y - selected_y);
+		distance_metrics.emplace_back(abs(other_x - selected_x) + abs(other_y - selected_y));
 	}
 
 	if (possible_widgets.size() == 0)
 		return;
 
-	int closest_widget_index = min_element(distance_metric.begin(), distance_metric.end()) - distance_metric.begin();
+	int closest_widget_index = min_element(distance_metrics.begin(), distance_metrics.end()) - distance_metrics.begin();
 	m_selected_widget->is_selected(false);
 	m_selected_widget = possible_widgets[closest_widget_index];
 	m_selected_widget->is_selected(true);

@@ -21,6 +21,8 @@ int main(void)
 {
 	signal(SIGINT, signal_handler);
 
+	#include "dsn/application.cpp"
+
 	application << *new SampleScreen();
 
 	application.run();

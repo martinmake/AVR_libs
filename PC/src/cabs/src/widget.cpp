@@ -2,6 +2,7 @@
 #include <dialog.h>
 
 #include "cabs/widget.h"
+#include "cabs/application.h"
 
 Widget::Widget(void)
 {
@@ -31,43 +32,36 @@ void Widget::draw(void) const
 
 	if (m_is_shadowed)
 	{
-		wattr_on(m_win_shadow, m_shadow_attr, NULL);
+		wattr_on(m_win_shadow, application.shadow_attr(), NULL);
 		mvwaddch(m_win_shadow, m_size.h() - 1, 0, ACS_LLCORNER);
 		whline(m_win_shadow, 0, m_size.w());
 		mvwaddch(m_win_shadow, m_size.h() - 1, m_size.w() - 1, ACS_LRCORNER);
 		mvwaddch(m_win_shadow, 0, m_size.w() - 1, ACS_URCORNER);
 		mvwvline(m_win_shadow, 1, m_size.w() - 1, 0, m_size.h() - 2);
-		wattr_off(m_win_shadow, m_shadow_attr, NULL);
+		wattr_off(m_win_shadow, application.shadow_attr(), NULL);
 	}
 
 	if (m_is_bordered)
 	{
-		wattr_on(m_win_border, m_border_attr, NULL);
+		wattr_on(m_win_border, application.border_attr(), NULL);
 		wborder(m_win_border, 0, 0, 0, 0, 0, 0, 0, 0);
-		wattr_off(m_win_border, m_border_attr, NULL);
+		wattr_off(m_win_border, application.border_attr(), NULL);
+
 		if (!m_label.empty())
 		{
 			wmove(m_win_border, 0, 2);
-			waddch(m_win_border, '|' | m_border_attr);
+			waddch(m_win_border, '|' | application.border_attr());
 			wmove(m_win_border, 0, 5 + m_label.size());
-			waddch(m_win_border, '|' | m_border_attr);
+			waddch(m_win_border, '|' | application.border_attr());
 		}
 	}
 
 	if (!m_label.empty())
 	{
 		wmove(m_win_border, 0, 3);
-		wattr_on(m_win_border, m_label_attr, NULL);
+		wattr_on(m_win_border, application.label_attr(), NULL);
 		wprintw(m_win_border, " %s ", m_label.c_str());
-		wattr_off(m_win_border, m_label_attr, NULL);
-	}
-
-	if (m_is_selected)
-	{
-		mvwaddch(m_win_border, 0,              0,             ACS_RARROW | A_BLINK);
-		mvwaddch(m_win_border, 0,              m_size.w() -1, ACS_LARROW | A_BLINK);
-		mvwaddch(m_win_border, m_size.h() - 1, 0,             ACS_RARROW | A_BLINK);
-		mvwaddch(m_win_border, m_size.h() - 1, m_size.w() - 1,ACS_LARROW | A_BLINK);
+		wattr_off(m_win_border, application.label_attr(), NULL);
 	}
 
 	wrefresh(m_win_border);

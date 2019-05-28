@@ -23,9 +23,6 @@ class Widget
 		bool        m_is_shadowed = false;
 		bool        m_is_visible  = false;
 		bool        m_is_selected = false;
-		int         m_label_attr  = 0;
-		int         m_border_attr = 0;
-		int         m_shadow_attr = 0;
 
 	public:
 		Widget(void);
@@ -49,9 +46,6 @@ class Widget
 		      bool         is_shadowed (       void      ) const;
 		      bool         is_visible  (       void      ) const;
 		      bool         is_selected (       void      ) const;
-		      int          label_attr  (       void      ) const;
-		      int          border_attr (       void      ) const;
-		      int          shadow_attr (       void      ) const;
 
 	// SETTERS
 	public:
@@ -62,9 +56,6 @@ class Widget
 		void is_shadowed(      bool         new_is_shadowed);
 		void is_visible (      bool         new_is_visible );
 		void is_selected(      bool         new_is_selected);
-		void label_attr (      int          new_label_attr );
-		void border_attr(      int          new_border_attr);
-		void shadow_attr(      int          new_shadow_attr);
 };
 
 // GETTERS
@@ -100,18 +91,6 @@ inline bool Widget::is_selected(void) const
 {
 	return m_is_selected;
 }
-inline int Widget::label_attr(void) const
-{
-	return m_label_attr;
-}
-inline int Widget::border_attr(void) const
-{
-	return m_border_attr;
-}
-inline int Widget::shadow_attr(void) const
-{
-	return m_shadow_attr;
-}
 
 // SETTERS
 inline void Widget::position(const Position& new_position)
@@ -141,18 +120,6 @@ inline void Widget::is_visible(bool new_is_visible)
 inline void Widget::is_selected(bool new_is_selected)
 {
 	m_is_selected = new_is_selected;
-}
-inline void Widget::label_attr(int new_label_attr)
-{
-	m_label_attr = new_label_attr;
-}
-inline void Widget::border_attr(int new_border_attr)
-{
-	m_border_attr = new_border_attr;
-}
-inline void Widget::shadow_attr(int new_shadow_attr)
-{
-	m_shadow_attr = new_shadow_attr;
 }
 
 #endif
