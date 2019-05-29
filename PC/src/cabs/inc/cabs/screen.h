@@ -16,12 +16,11 @@ class Screen
 
 	protected:
 		WINDOW*     m_win;
-		Position    m_position;
-		Size	    m_size;
-		std::string m_name;
+		// Position    m_position;
+		// Size	    m_size;
+		// std::string m_name;
 
 	public:
-		Screen(const Position& position, const Size& size);
 		Screen(void);
 		virtual ~Screen(void);
 

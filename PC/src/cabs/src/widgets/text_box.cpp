@@ -1,4 +1,5 @@
 #include "cabs/widgets/text_box.h"
+#include "cabs/application.h"
 
 TextBox::TextBox(void)
 {
@@ -8,7 +9,7 @@ TextBox::~TextBox(void)
 {
 }
 
-void TextBox::draw(void) const
+void TextBox::draw_inside(void) const
 {
 	wmove(m_win_border, 1 + m_padding.top(), 1 + m_padding.left());
 	for (std::string::const_iterator it = m_text.begin(); it != m_text.end(); it++)
@@ -53,6 +54,4 @@ void TextBox::draw(void) const
 			break;
 		}
 	}
-
-	Widget::draw();
 }

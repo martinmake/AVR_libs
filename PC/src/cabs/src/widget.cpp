@@ -25,10 +25,28 @@ void Widget::attatch_to_window(WINDOW* win)
 	m_win_shadow = derwin(win, m_size.h(), m_size.w(), y + 1, x + 1);
 }
 
-void Widget::draw(void) const
+void Widget::clear_inside(void) const
 {
 	if (!m_is_visible)
 		return;
+
+	wbkgd(m_win_border, application.widget_background_attr());
+
+	wmove(m_win_border, 0, 0);
+	for (uint8_t i = m_size.h() - 1; i; i--)
+		waddch(m_win_border, '\n');
+}
+
+void Widget::draw_inside(void) const
+{
+}
+
+void Widget::draw(void) const
+{
+
+	clear_inside();
+
+	draw_inside();
 
 	if (m_is_shadowed)
 	{

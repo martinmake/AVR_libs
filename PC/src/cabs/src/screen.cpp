@@ -3,21 +3,14 @@
 
 #include "cabs/screen.h"
 
-Screen::Screen(const Position& initial_position, const Size& initial_size)
-	: m_position(initial_position), m_size(initial_size)
-{
-	m_win = newwin(m_size.h(), m_size.w(), m_position.y(), m_position.x());
-}
-
 Screen::Screen(void)
 {
-	m_win = stdscr;
+	m_win = derwin(stdscr, LINES - 2, COLS, 0, 0);
 }
 
 Screen::~Screen(void)
 {
-	if (m_win != stdscr)
-		delwin(m_win);
+	delwin(m_win);
 }
 
 void Screen::redraw(void) const
@@ -29,6 +22,7 @@ void Screen::redraw(void) const
 
 void Screen::draw(void) const
 {
+	wbkgd(m_win, application.screen_background_attr());
 	for (std::shared_ptr<Widget> widget : m_widgets)
 		widget->draw();
 }

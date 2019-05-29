@@ -96,7 +96,13 @@ namespace Cabs
 		UP, RIGHT, DOWN, LEFT
 	};
 
-	extern int parse_tag(const std::string& tag);
+	enum class Mode : uint8_t
+	{
+		NORMAL, INPUT, VISUAL
+	};
+
+	extern       int   parse_tag(const std::string& tag);
+	extern const char* mode_to_c_str(Mode mode);
 
 
 	extern bool move;

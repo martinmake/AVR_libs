@@ -172,5 +172,16 @@ namespace Cabs
 		else                               return NO_COLOR;
 	}
 
+	const char* mode_to_c_str(Mode mode)
+	{
+		switch (mode)
+		{
+			case Mode::NORMAL: return "NORMAL";  break;
+			case Mode::INPUT:  return "INPUT";   break;
+			case Mode::VISUAL: return "VISUAL";  break;
+			default:           return "UNKNOWN"; break;
+		}
+	}
+
 	bool move = true;
 }

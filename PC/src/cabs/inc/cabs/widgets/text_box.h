@@ -16,8 +16,8 @@ class TextBox : public Widget
 		TextBox(void);
 		~TextBox(void);
 
-	public:
-		void draw(void) const override;
+	protected:
+		void draw_inside(void) const override;
 
 	// GETTERS
 	public:

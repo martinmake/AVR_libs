@@ -13,6 +13,17 @@ Application::Application(void)
 	curs_set(0);
 	setup_colors();
 	refresh();
+
+	m_status.attatch_to_window(stdscr);
+
+	m_label_attr             = Cabs::Colors::RED_BLACK;
+	m_border_attr            = Cabs::Colors::BLUE_BLACK;
+	m_shadow_attr            = Cabs::Colors::YELLOW_BLACK;
+	m_selected_attr          = Cabs::Colors::RED_BLACK | ACS_DIAMOND | A_BLINK;
+	m_screen_background_attr = Cabs::Colors::BLACK_BLACK;
+	m_widget_background_attr = Cabs::Colors::BLACK_BLACK;
+
+	// m_console_win = derwin(stdscr, 1, COLS, LINES - 1, 0);
 }
 
 Application::~Application(void)
@@ -29,6 +40,8 @@ void Application::run(void)
 {
 	for (std::shared_ptr<Screen> screen : m_screens)
 		screen->draw();
+
+	m_status.draw();
 
 	while (1)
 	{

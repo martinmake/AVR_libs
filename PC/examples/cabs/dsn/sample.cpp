@@ -6,7 +6,7 @@ widget1.position({LEFT, TOP});
 widget1.size({21, 20});
 widget1.label("WIDGET 1");
 widget1.is_bordered(true);
-widget1.is_shadowed(false);
+widget1.is_shadowed(true);
 widget1.is_visible (true);
 
 widget2.position({CENTER, TOP});
@@ -37,33 +37,33 @@ text_box.position({CENTER, CENTER});
 text_box.size({31, 20});
 text_box.label("TEXT BOX");
 text_box.is_bordered(true);
-text_box.is_shadowed(false);
+text_box.is_shadowed(true);
 text_box.is_visible (true);
 text_box.padding({1, 2, 1, 2});
 text_box.text(
-		"<!BLUE_BLACK>THIS IS SAMPLE TEXT\n"
-		"    SAMPLE TEXT\n"
-		"        TEXT<!NO_COLOR>\n"
-		"TEXT\n"
-		" TEXT\n"
-		"  TEXT\n"
+		"   <!BLUE_BLACK>THIS IS SAMPLE TEXT\n"
+		"       SAMPLE TEXT\n"
+		"           TEXT<!GREEN_BLACK>\n"
 		"   TEXT\n"
 		"    TEXT\n"
-		"     TEEEEEEEEEEEEEEEE0123456789XT\n"
+		"     TEXT\n"
 		"      TEXT\n"
+		"       TEXT\n"
+		"        TEEEEEEEEEEE0123456789XT\n"
 		"         TEXT\n"
 		"            TEXT\n"
 		"               TEXT\n"
-		"          TEXT\n"
-		"         TEXT\n"
-		"        TEXT"
+		"                  TEXT\n"
+		"             TEXT\n"
+		"            TEXT\n"
+		"           TEXT"
 	     );
 
 widget6.position({RIGHT, CENTER});
 widget6.size({31, 10});
 widget6.label("WIDGET 6");
 widget6.is_bordered(true);
-widget6.is_shadowed(false);
+widget6.is_shadowed(true);
 widget6.is_visible (true);
 
 widget7.position({LEFT, BOTTOM});

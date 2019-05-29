@@ -32,6 +32,10 @@ class Widget
 		void attatch_to_window(WINDOW* win);
 		virtual void draw(void) const;
 
+	protected:
+		virtual void draw_inside(void) const;
+		virtual void clear_inside(void) const;
+
 	// HANDLERS
 	public:
 		virtual void handle_key(int key);
