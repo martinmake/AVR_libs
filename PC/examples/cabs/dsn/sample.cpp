@@ -9,12 +9,12 @@ widget1.is_bordered(true);
 widget1.is_shadowed(true);
 widget1.is_visible (true);
 
-widget2.position({CENTER, TOP});
-widget2.size({51, 10});
-widget2.label("WIDGET 2");
-widget2.is_bordered(true);
-widget2.is_shadowed(true);
-widget2.is_visible (true);
+histogram.position({CENTER, TOP});
+histogram.size({51, 10});
+histogram.label("HISTOGRAM");
+histogram.is_bordered(true);
+histogram.is_shadowed(true);
+histogram.is_visible (true);
 
 // You are unable to see this widget's is_bordered,
 // is_shadowed and label but it still has
@@ -69,16 +69,16 @@ widget6.is_visible (true);
 widget7.position({LEFT, BOTTOM});
 widget7.size({21, 20});
 widget7.label("WIDGET 7");
-widget7.is_bordered(true);
-widget7.is_shadowed(true);
+widget7.is_bordered(false);
+widget7.is_shadowed(false);
 widget7.is_visible (true);
 
-widget8.position({CENTER, BOTTOM});
-widget8.size({51, 10});
-widget8.label("WIDGET 8");
-widget8.is_bordered(false);
-widget8.is_shadowed(false);
-widget8.is_visible (true);
+graph.position({CENTER, BOTTOM});
+graph.size({51, 10});
+graph.label("GRAPH");
+graph.is_bordered(true);
+graph.is_shadowed(true);
+graph.is_visible (true);
 
 widget9.position({RIGHT, BOTTOM});
 widget9.size({21, 20});
@@ -88,12 +88,12 @@ widget9.is_shadowed(true);
 widget9.is_visible (true);
 
 *this << widget1;
-*this << widget2;
+*this << histogram;
 *this << widget3;
 *this << widget4;
 *this << text_box;
 *this << widget6;
 *this << widget7;
-*this << widget8;
+*this << graph;
 *this << widget9;
 }

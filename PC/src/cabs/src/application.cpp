@@ -15,6 +15,7 @@ Application::Application(void)
 	refresh();
 
 	m_status.attatch_to_window(stdscr);
+	// m_console.attatch_to_window(stdscr);
 
 	m_label_attr             = Cabs::Colors::RED_BLACK;
 	m_border_attr            = Cabs::Colors::BLUE_BLACK;
@@ -22,8 +23,6 @@ Application::Application(void)
 	m_selected_attr          = Cabs::Colors::RED_BLACK | ACS_DIAMOND | A_BLINK;
 	m_screen_background_attr = Cabs::Colors::BLACK_BLACK;
 	m_widget_background_attr = Cabs::Colors::BLACK_BLACK;
-
-	// m_console_win = derwin(stdscr, 1, COLS, LINES - 1, 0);
 }
 
 Application::~Application(void)
@@ -49,7 +48,7 @@ void Application::run(void)
 
 		key = getch();
 
-		if (Cabs::move)
+		if (m_status.mode() == Cabs::Mode::NORMAL)
 		{
 			// move when ^H, ^J, ^K, ^L are pressed
 			switch (key)
@@ -66,7 +65,7 @@ void Application::run(void)
 			m_selected_screen->handle_key(key);
 
 		if (key == ESC)
-			Cabs::move = true;
+			m_status.mode(Cabs::Mode::NORMAL);
 	}
 }
 

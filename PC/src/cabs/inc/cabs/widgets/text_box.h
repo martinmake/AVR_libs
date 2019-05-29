@@ -40,7 +40,7 @@ inline const Padding& TextBox::padding(void) const
 	return m_padding;
 }
 
-// GETTERS
+// SETTERS
 inline void TextBox::text(const std::string& new_text)
 {
 	m_text = new_text;

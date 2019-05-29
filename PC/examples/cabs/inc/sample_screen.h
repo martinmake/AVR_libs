@@ -3,6 +3,8 @@
 
 #include <cabs/screen.h>
 #include <cabs/widgets/text_box.h>
+#include <cabs/widgets/graph.h>
+#include <cabs/widgets/histogram.h>
 
 class SampleScreen : public Screen
 {

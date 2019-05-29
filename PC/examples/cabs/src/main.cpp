@@ -5,6 +5,8 @@
 #include <cabs/application.h>
 #include <cabs/screen.h>
 #include <cabs/widget.h>
+#include <cabs/widgets/text_box.h>
+#include <cabs/widgets/graph.h>
 
 #include "sample_screen.h"
 
