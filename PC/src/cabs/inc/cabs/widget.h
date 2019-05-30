@@ -14,8 +14,8 @@
 class Widget
 {
 	protected:
-		WINDOW*     m_win_border;
-		WINDOW*     m_win_shadow;
+		WINDOW*     m_border_win;
+		WINDOW*     m_shadow_win;
 		std::string m_label;
 		Position    m_position;
 		Size	    m_size;
@@ -42,24 +42,24 @@ class Widget
 
 	// GETTERS
 	public:
-		const Position&    position    (       void      ) const;
-		      Position     position    (const WINDOW* win) const;
-		const Size&        size        (       void      ) const;
-		const std::string& label       (       void      ) const;
-		      bool         is_bordered (       void      ) const;
-		      bool         is_shadowed (       void      ) const;
-		      bool         is_visible  (       void      ) const;
-		      bool         is_selected (       void      ) const;
+		virtual const Position&    position    (       void      ) const;
+		virtual       Position     position    (const WINDOW* win) const;
+		virtual const Size&        size        (       void      ) const;
+		virtual const std::string& label       (       void      ) const;
+		virtual       bool         is_bordered (       void      ) const;
+		virtual       bool         is_shadowed (       void      ) const;
+		virtual       bool         is_visible  (       void      ) const;
+		virtual       bool         is_selected (       void      ) const;
 
 	// SETTERS
 	public:
-		void position   (const Position&    new_position   );
-		void size       (const Size&        new_size       );
-		void label      (const std::string& new_label      );
-		void is_bordered(      bool         new_is_bordered);
-		void is_shadowed(      bool         new_is_shadowed);
-		void is_visible (      bool         new_is_visible );
-		void is_selected(      bool         new_is_selected);
+		virtual void position   (const Position&    new_position   );
+		virtual void size       (const Size&        new_size       );
+		virtual void label      (const std::string& new_label      );
+		virtual void is_bordered(      bool         new_is_bordered);
+		virtual void is_shadowed(      bool         new_is_shadowed);
+		virtual void is_visible (      bool         new_is_visible );
+		virtual void is_selected(      bool         new_is_selected);
 };
 
 // GETTERS

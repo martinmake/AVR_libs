@@ -11,7 +11,7 @@ TextBox::~TextBox(void)
 
 void TextBox::draw_inside(void) const
 {
-	wmove(m_win_border, 1 + m_padding.top(), 1 + m_padding.left());
+	wmove(m_border_win, 1 + m_padding.top(), 1 + m_padding.left());
 	for (std::string::const_iterator it = m_text.begin(); it != m_text.end(); it++)
 	{
 		if
@@ -28,29 +28,29 @@ void TextBox::draw_inside(void) const
 
 			int tag_attr = Cabs::parse_tag(tag);
 
-			wattrset(m_win_border, tag_attr);
+			wattrset(m_border_win, tag_attr);
 
 			it++;
 		}
 
 		if (*it == '\n')
-			wmove(m_win_border, 1 + getcury(m_win_border), 1 + m_padding.left());
+			wmove(m_border_win, 1 + getcury(m_border_win), 1 + m_padding.left());
 		else
 		{
-			bool is_out_of_right_bound = getcurx(m_win_border) > m_size.w() - 2 - m_padding.right();
+			bool is_out_of_right_bound = getcurx(m_border_win) > m_size.w() - 2 - m_padding.right();
 			if (is_out_of_right_bound)
-				wmove(m_win_border, 1 + getcury(m_win_border), 1 + m_padding.left());
+				wmove(m_border_win, 1 + getcury(m_border_win), 1 + m_padding.left());
 
-			waddch(m_win_border, *it);
+			waddch(m_border_win, *it);
 		}
 
-		bool is_out_of_bottom_bound = getcury(m_win_border) > m_size.h() - 2 - m_padding.bottom();
+		bool is_out_of_bottom_bound = getcury(m_border_win) > m_size.h() - 2 - m_padding.bottom();
 		if (is_out_of_bottom_bound)
 		{
-			wmove(m_win_border, getcury(m_win_border) - 1, 1);
-			wclrtoeol(m_win_border);
-			wmove(m_win_border, getcury(m_win_border), m_padding.left() + (m_size.w() - m_padding.left() - m_padding.right()) / 2 - 1);
-			waddstr(m_win_border, "...");
+			wmove(m_border_win, getcury(m_border_win) - 1, 1);
+			wclrtoeol(m_border_win);
+			wmove(m_border_win, getcury(m_border_win), m_padding.left() + (m_size.w() - m_padding.left() - m_padding.right()) / 2 - 1);
+			waddstr(m_border_win, "...");
 			break;
 		}
 	}

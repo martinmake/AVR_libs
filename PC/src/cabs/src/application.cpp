@@ -1,4 +1,5 @@
 #include <dialog.h>
+#include <locale.h>
 
 #include "cabs/application.h"
 
@@ -6,6 +7,8 @@ Application application;
 
 Application::Application(void)
 {
+	setlocale(LC_CTYPE, "");
+
 	initscr();
 	cbreak();
 	keypad(stdscr, true);

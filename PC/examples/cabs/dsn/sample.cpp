@@ -10,11 +10,12 @@ widget1.is_shadowed(true);
 widget1.is_visible (true);
 
 histogram.position({CENTER, TOP});
-histogram.size({51, 10});
+histogram.size({51, 12});
 histogram.label("HISTOGRAM");
 histogram.is_bordered(true);
 histogram.is_shadowed(true);
 histogram.is_visible (true);
+histogram.data({ 1, 2, 3, 4, -5, -6, 2, 4, 6, -3, 4, 2, 1, 5, 6, 2, 4, 5 });
 
 // You are unable to see this widget's is_bordered,
 // is_shadowed and label but it still has
