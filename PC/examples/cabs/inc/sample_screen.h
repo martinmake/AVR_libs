@@ -4,7 +4,7 @@
 #include <cabs/screen.h>
 #include <cabs/widgets/text_box.h>
 #include <cabs/widgets/graph.h>
-#include <cabs/widgets/histogram.h>
+#include <cabs/widgets/history_graph.h>
 
 class SampleScreen : public Screen
 {

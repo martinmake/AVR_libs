@@ -14,8 +14,9 @@
 class Widget
 {
 	protected:
-		WINDOW*     m_border_win;
-		WINDOW*     m_shadow_win;
+		WINDOW*     m_win        = nullptr;
+		WINDOW*     m_border_win = nullptr;
+		WINDOW*     m_shadow_win = nullptr;
 		std::string m_label;
 		Position    m_position;
 		Size	    m_size;

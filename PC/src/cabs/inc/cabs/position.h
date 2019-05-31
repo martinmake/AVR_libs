@@ -42,7 +42,7 @@ inline int Position::x(const WINDOW* win, int w) const
 	if (m_x == CENTER)
 		return (getmaxx(win) - w) / 2;
 	if (m_x == RIGHT)
-		return getmaxx(win) - w - 1;
+		return getmaxx(win) - w - 2;
 
 	return m_x;
 }
@@ -57,7 +57,7 @@ inline int Position::y(const WINDOW* win, int h) const
 	if (m_y == CENTER)
 		return (getmaxy(win) - h) / 2;
 	if (m_y == BOTTOM)
-		return getmaxy(win) - h - 1;
+		return getmaxy(win) - h - 2;
 
 	return m_y;
 }

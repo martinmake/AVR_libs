@@ -10,8 +10,9 @@ Widget::Widget(void)
 
 Widget::~Widget(void)
 {
-	delwin(m_border_win);
-	delwin(m_shadow_win);
+	if (m_win)        delwin(m_win);
+	if (m_border_win) delwin(m_border_win);
+	if (m_shadow_win) delwin(m_shadow_win);
 }
 
 void Widget::attatch_to_window(WINDOW* win)
@@ -21,8 +22,9 @@ void Widget::attatch_to_window(WINDOW* win)
 	x = m_position.x(win, m_size.w());
 	y = m_position.y(win, m_size.h());
 
-	m_border_win = derwin(win, m_size.h(), m_size.w(), y,     x    );
-	m_shadow_win = derwin(win, m_size.h(), m_size.w(), y + 1, x + 1);
+	m_win        = derwin(win, m_size.h(),     m_size.w()    , y + 1, x + 1);
+	m_border_win = derwin(win, m_size.h() + 2, m_size.w() + 2, y    , x    );
+	m_shadow_win = derwin(win, m_size.h() + 2, m_size.w() + 2, y + 1, x + 1);
 }
 
 void Widget::clear_inside(void) const
@@ -30,11 +32,11 @@ void Widget::clear_inside(void) const
 	if (!m_is_visible)
 		return;
 
-	wbkgd(m_border_win, application.widget_background_attr());
+	wbkgd(m_win, application.widget_background_attr());
 
-	wmove(m_border_win, 0, 0);
+	wmove(m_win, 0, 0);
 	for (uint8_t i = m_size.h() - 1; i; i--)
-		waddch(m_border_win, '\n');
+		waddch(m_win, '\n');
 }
 
 void Widget::draw_inside(void) const
@@ -47,23 +49,25 @@ void Widget::draw(void) const
 	clear_inside();
 
 	draw_inside();
+	wrefresh(m_win);
 
 	if (m_is_shadowed)
 	{
-		wattr_on(m_shadow_win, application.shadow_attr(), NULL);
-		mvwaddch(m_shadow_win, m_size.h() - 1, 0, ACS_LLCORNER);
-		whline(m_shadow_win, 0, m_size.w());
-		mvwaddch(m_shadow_win, m_size.h() - 1, m_size.w() - 1, ACS_LRCORNER);
-		mvwaddch(m_shadow_win, 0, m_size.w() - 1, ACS_URCORNER);
-		mvwvline(m_shadow_win, 1, m_size.w() - 1, 0, m_size.h() - 2);
-		wattr_off(m_shadow_win, application.shadow_attr(), NULL);
+
+		wattron(m_shadow_win, application.shadow_attr());
+		mvwaddch(m_shadow_win, 0,              m_size.w() + 1, ACS_URCORNER);
+		mvwvline(m_shadow_win, 1,              m_size.w() + 1, ACS_VLINE, m_size.h());
+		mvwaddch(m_shadow_win, m_size.h() + 1, m_size.w() + 1, ACS_LRCORNER);
+		mvwhline(m_shadow_win, m_size.h() + 1, 1,              ACS_HLINE, m_size.w());
+		mvwaddch(m_shadow_win, m_size.h() + 1, 0,              ACS_LLCORNER);
+		wattroff(m_shadow_win, application.shadow_attr());
 	}
 
 	if (m_is_bordered)
 	{
-		wattr_on(m_border_win, application.border_attr(), NULL);
+		wattron(m_border_win, application.border_attr());
 		wborder(m_border_win, 0, 0, 0, 0, 0, 0, 0, 0);
-		wattr_off(m_border_win, application.border_attr(), NULL);
+		wattroff(m_border_win, application.border_attr());
 
 		if (!m_label.empty())
 		{
@@ -77,17 +81,17 @@ void Widget::draw(void) const
 	if (!m_label.empty())
 	{
 		wmove(m_border_win, 0, 3);
-		wattr_on(m_border_win, application.label_attr(), NULL);
+		wattron(m_border_win, application.label_attr());
 		wprintw(m_border_win, " %s ", m_label.c_str());
-		wattr_off(m_border_win, application.label_attr(), NULL);
+		wattroff(m_border_win, application.label_attr());
 	}
 
 	if (m_is_selected)
 	{
 		mvwaddch(m_border_win, 0,              0,              application.selected_attr());
-		mvwaddch(m_border_win, 0,              m_size.w() - 1, application.selected_attr());
-		mvwaddch(m_border_win, m_size.h() - 1, 0,              application.selected_attr());
-		mvwaddch(m_border_win, m_size.h() - 1, m_size.w() - 1, application.selected_attr());
+		mvwaddch(m_border_win, 0,              m_size.w() + 1, application.selected_attr());
+		mvwaddch(m_border_win, m_size.h() + 1, 0,              application.selected_attr());
+		mvwaddch(m_border_win, m_size.h() + 1, m_size.w() + 1, application.selected_attr());
 	}
 
 	wrefresh(m_border_win);
