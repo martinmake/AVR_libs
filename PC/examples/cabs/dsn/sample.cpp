@@ -10,15 +10,17 @@ widget1.is_shadowed(true);
 widget1.is_visible (true);
 
 history_graph.position({CENTER, TOP});
-history_graph.size({51, 12});
+history_graph.size({40, 12});
 history_graph.label("HISTORY GRAPH");
 history_graph.is_bordered(true);
 history_graph.is_shadowed(true);
 history_graph.is_visible (true);
-history_graph.data({ 1, 2, 3, 4, -5, -6, 2, 4, 6, -3, 4, 2, 1, 5, 6, 2, 4, 5 });
+// history_graph.data({ -2, 4 -5, -4, -3, -2, -1, -0.5, -0.4, -0.3, -0.2, -0.18, 0, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, -6, 0 });
+for (float i = 5; i >= -5; i -= 0.2)
+	history_graph << i;
 
-// You are unable to see this widget's is_bordered,
-// is_shadowed and label but it still has
+// You are unable to see this widget's border,
+// shadow and label but it still has
 // dedicated space to draw it's contents on
 widget3.position({RIGHT, TOP});
 widget3.size({21, 20});
