@@ -15,9 +15,6 @@ class Application
 		std::vector<std::shared_ptr<Screen>> m_screens;
 		            std::shared_ptr<Screen>  m_selected_screen;
 
-	private:
-		Cabs::Mode m_mode;
-
 	public:
 		int m_label_attr;
 		int m_border_attr;

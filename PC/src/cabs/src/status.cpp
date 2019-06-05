@@ -10,13 +10,14 @@ Status::~Status(void)
 
 void Status::attatch_to_window(WINDOW* win)
 {
-	m_win = derwin(win, 1, getmaxx(win) - 1, getmaxy(win) - 1, 0);
+	m_parent_win = win;
+	m_win = derwin(m_parent_win, 1, getmaxx(m_parent_win) - 1, getmaxy(m_parent_win) - 2, 0);
 }
 
 void Status::resize(void)
 {
-	wresize(m_win, 1, getmaxx(m_win) - 1);
-	mvwin  (m_win, getmaxy(m_win) - 1, 0);
+	delwin(m_win);
+	m_win = derwin(m_parent_win, 1, getmaxx(m_parent_win) - 1, getmaxy(m_parent_win) - 2, 0);
 	draw();
 }
 

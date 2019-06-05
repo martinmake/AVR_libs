@@ -23,6 +23,7 @@ class Screen
 
 	protected:
 		WINDOW*     m_win;
+		WINDOW*     m_parent_win;
 		// Position    m_position;
 		// Size	    m_size;
 		// std::string m_name;
@@ -37,7 +38,12 @@ class Screen
 		void resize(void);
 		void move(Cabs::Direction direction);
 
+	// GETTERS
+	public:
+		Status& status(void);
+
 	// SETTERS
+	public:
 		void widget_gap(int new_widget_gap);
 
 	// HANDLERS
@@ -58,6 +64,12 @@ inline void Screen::redraw(void) const
 	draw();
 }
 
+// GETTERS
+inline Status& Screen::status(void)
+{
+	return m_status;
+}
+
 // SETTERS
 inline void Screen::widget_gap(int new_widget_gap)
 {
@@ -68,8 +80,8 @@ inline void Screen::widget_gap(int new_widget_gap)
 template <typename W>
 Screen& Screen::operator<<(W& widget)
 {
-	widget.attatch_to_window(m_win);
 	widget.widget_gap(m_widget_gap);
+	widget.attatch_to_window(m_win);
 	m_widgets.push_back(std::make_shared<W>(widget));
 
 	if (m_selected_widget == nullptr)

@@ -17,6 +17,7 @@ class Widget
 		WINDOW*     m_win        = nullptr;
 		WINDOW*     m_border_win = nullptr;
 		WINDOW*     m_shadow_win = nullptr;
+		WINDOW*     m_parent_win = nullptr;
 		std::string m_label;
 		Position    m_position;
 		Size        m_size;
@@ -34,6 +35,7 @@ class Widget
 		virtual void clear(void) const;
 		virtual void resize(void);
 		virtual void draw(void) const;
+		virtual void redraw(void) const;
 
 	protected:
 		virtual void draw_inside(void) const;
@@ -64,6 +66,12 @@ class Widget
 		void is_selected(      bool         new_is_selected);
 		void widget_gap (      int          new_widget_gap );
 };
+
+inline void Widget::redraw(void) const
+{
+	clear();
+	draw();
+}
 
 inline void Widget::clear(void) const
 {

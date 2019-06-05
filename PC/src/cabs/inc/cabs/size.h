@@ -33,11 +33,11 @@ class Size
 // GETTERS
 inline int Size::w(void) const
 {
-	return round(getmaxx(m_parent_win) * m_percentual_w) - 4;// - application.widget_gap();
+	return round(getmaxx(m_parent_win) * m_percentual_w) - 4 - m_widget_gap;
 }
 inline int Size::h(void) const
 {
-	return round(getmaxy(m_parent_win) * m_percentual_h) - 3;// - application.widget_gap();
+	return round(getmaxy(m_parent_win) * m_percentual_h) - 3 - m_widget_gap;
 }
 
 // SETTERS

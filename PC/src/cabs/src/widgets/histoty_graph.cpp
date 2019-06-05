@@ -19,10 +19,14 @@ void HistoryGraph::draw_inside(void) const
 	if (m_data.size() == 0)
 		return;
 
+	int w, h;
+	w = getmaxx(m_win);
+	h = getmaxy(m_win);
+
 	float min_val = *std::min_element(m_data.begin(), m_data.end());
 	float max_val = *std::max_element(m_data.begin(), m_data.end());
 
-	float scale  = (m_size.h() - 1) / (float) (abs(min_val) + abs(max_val));
+	float scale  = (h - 1) / (float) (abs(min_val) + abs(max_val));
 	int   origin = (max_val < 0 ? 0 : max_val) * scale;
 
 	wchar_t blocks[] = { L'▁', L'▂', L'▃', L'▄', L'▅', L'▆', L'▇' };
@@ -30,15 +34,12 @@ void HistoryGraph::draw_inside(void) const
 
 	wattron(m_win, Cabs::Colors::RED_BLACK);
 	wmove(m_win, origin, 0);
-	for (uint16_t i = 0; i < m_size.w() - (int) m_data.size(); i++)
-		waddch(m_win, ' ' | A_UNDERLINE);
+	for (uint16_t i = 0; i < w - (int) m_data.size(); i++)
+		wprintw(m_win, "%C", L'▁');
 	for (float value : m_data)
 	{
 		if (value == 0)
-		{
-			waddch(m_win, ' ' | A_UNDERLINE);
 			continue;
-		}
 
 		bool is_negative = value < 0 ? true : false;
 		value = abs(value) * scale;
@@ -47,7 +48,7 @@ void HistoryGraph::draw_inside(void) const
 
 		if (is_negative)
 		{
-			waddch(m_win, ' ' | A_UNDERLINE);
+			wprintw(m_win, "%C", L'▁');
 			wmove(m_win, origin + 1, x);
 		}
 

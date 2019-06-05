@@ -10,6 +10,7 @@ class Status
 
 	private:
 		WINDOW* m_win;
+		WINDOW* m_parent_win;
 		Cabs::Mode m_mode = Cabs::Mode::NORMAL;
 		int m_mode_attr = Cabs::Colors::BLACK_GREEN;
 

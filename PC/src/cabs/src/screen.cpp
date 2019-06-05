@@ -6,8 +6,8 @@
 
 Screen::Screen(void)
 {
-	m_win = derwin(stdscr, LINES - 1, COLS, 0, 0);
-	m_status.attatch_to_window(m_win);
+	m_win = derwin(stdscr, LINES - 2, COLS, 0, 0);
+	m_status.attatch_to_window(stdscr);
 }
 
 Screen::~Screen(void)
@@ -51,11 +51,6 @@ void Screen::handle_key(int key)
 
 			case KEY_RIGHT:
 			case 'l': move(Direction::RIGHT); break;
-
-			case 'H': break;
-			case 'J': break;
-			case 'K': break;
-			case 'L': break;
 		}
 	}
 	else
@@ -138,9 +133,10 @@ void Screen::move(Cabs::Direction direction)
 
 	int closest_widget_index = min_element(distance_metrics.begin(), distance_metrics.end()) - distance_metrics.begin();
 	m_selected_widget->is_selected(false);
+	m_selected_widget->redraw();
 	m_selected_widget = possible_widgets[closest_widget_index];
 	m_selected_widget->is_selected(true);
-	redraw();
+	m_selected_widget->redraw();
 }
 
 Widget& Screen::operator[](int index)
