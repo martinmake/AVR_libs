@@ -1,6 +1,7 @@
 #ifndef _EXAMPLES_CABS_SAMPLE_SCREEN_H_
 #define _EXAMPLES_CABS_SAMPLE_SCREEN_H_
 
+#include <cabs/application.h>
 #include <cabs/screen.h>
 #include <cabs/widgets/text_box.h>
 #include <cabs/widgets/graph.h>

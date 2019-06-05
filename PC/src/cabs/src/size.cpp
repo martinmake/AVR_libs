@@ -1,7 +1,7 @@
 #include "cabs/size.h"
 
-Size::Size(int initial_w,int initial_h)
-	: m_w(initial_w), m_h(initial_h)
+Size::Size(float initial_percentual_w,float initial_percentual_h)
+	: m_percentual_w(initial_percentual_w), m_percentual_h(initial_percentual_h)
 {
 }
 

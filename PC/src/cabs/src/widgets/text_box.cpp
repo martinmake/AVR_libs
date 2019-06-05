@@ -11,6 +11,11 @@ TextBox::~TextBox(void)
 
 void TextBox::draw_inside(void) const
 {
+	int w, h;
+
+	w = m_size.w();
+	h = m_size.h();
+
 	wmove(m_win, m_padding.top(), m_padding.left());
 	for (std::string::const_iterator it = m_text.begin(); it != m_text.end(); it++)
 	{
@@ -33,12 +38,12 @@ void TextBox::draw_inside(void) const
 			it++;
 		}
 
-		bool is_out_of_bottom_bound = getcury(m_win) >= m_size.h() - 1 - m_padding.bottom();
+		bool is_out_of_bottom_bound = getcury(m_win) >= h - 1 - m_padding.bottom();
 		if (is_out_of_bottom_bound)
 		{
 			wmove(m_win, getcury(m_win), 0);
 			wclrtoeol(m_win);
-			wmove(m_win, getcury(m_win), m_padding.left() + (m_size.w() - m_padding.left() - m_padding.right()) / 2 - 1);
+			wmove(m_win, getcury(m_win), m_padding.left() + (w - m_padding.left() - m_padding.right()) / 2 - 1);
 			waddstr(m_win, "...");
 			break;
 		}
@@ -47,7 +52,7 @@ void TextBox::draw_inside(void) const
 			wmove(m_win, 1 + getcury(m_win), m_padding.left());
 		else
 		{
-			bool is_out_of_right_bound = getcurx(m_win) + 1 >= m_size.w() - 1 - m_padding.right();
+			bool is_out_of_right_bound = getcurx(m_win) + 1 >= w - 1 - m_padding.right();
 			if (is_out_of_right_bound)
 				wmove(m_win, getcury(m_win) + 1, m_padding.left());
 

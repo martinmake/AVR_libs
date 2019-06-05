@@ -1,7 +1,7 @@
 #include "cabs/position.h"
 
-Position::Position(int initial_x,int initial_y)
-	: m_x(initial_x), m_y(initial_y)
+Position::Position(float initial_percentual_x, float initial_percentual_y)
+	: m_percentual_x(initial_percentual_x), m_percentual_y(initial_percentual_y)
 {
 }
 

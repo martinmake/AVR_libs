@@ -1,9 +1,5 @@
-Widget       widget1;
 HistoryGraph history_graph;
-Widget       widget3;
-Widget       widget4;
 TextBox      text_box;
-Widget       widget6;
-Widget       widget7;
 Graph        graph;
-Widget       widget9;
+Widget       widget1;
+Widget       widget2;

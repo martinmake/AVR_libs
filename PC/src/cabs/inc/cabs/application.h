@@ -5,12 +5,10 @@
 
 #include "cabs/cabs.h"
 #include "cabs/screen.h"
-#include "cabs/status.h"
 
 class Application
 {
 	private:
-		Status m_status;
 		// Console m_console;
 
 	public:
@@ -27,6 +25,7 @@ class Application
 		int m_selected_attr;
 		int m_screen_background_attr;
 		int m_widget_background_attr;
+		int m_widget_gap;
 
 	public:
 		Application(void);
@@ -38,7 +37,6 @@ class Application
 
 	private:
 		void setup_colors(void);
-		void draw_status(void);
 
 	// OPERATORS
 	public:
@@ -54,6 +52,7 @@ class Application
 		int selected_attr         (void) const;
 		int screen_background_attr(void) const;
 		int widget_background_attr(void) const;
+		int widget_gap            (void) const;
 
 	// SETTERS
 	public:
@@ -63,12 +62,14 @@ class Application
 		void selected_attr         (int new_selected_attr         );
 		void screen_background_attr(int new_screen_background_attr);
 		void widget_background_attr(int new_widget_background_attr);
+		void widget_gap            (int new_widget_gap            );
 };
 
 template <typename S>
 Application& Application::operator<<(S& screen)
 {
 	m_screens.push_back(std::make_shared<S>(screen));
+	screen.widget_gap(m_widget_gap);
 
 	if (m_selected_screen == nullptr)
 		m_selected_screen = m_screens.front();
@@ -101,6 +102,10 @@ inline int Application::widget_background_attr(void) const
 {
 	return m_widget_background_attr;
 }
+inline int Application::widget_gap(void) const
+{
+	return m_widget_gap;
+}
 
 // SETTERS
 inline void Application::label_attr(int new_label_attr)
@@ -126,6 +131,10 @@ inline void Application::screen_background_attr(int new_screen_background_attr)
 inline void Application::widget_background_attr(int new_widget_background_attr)
 {
 	m_widget_background_attr = new_widget_background_attr;
+}
+inline void Application::widget_gap(int new_widget_gap)
+{
+	m_widget_gap = new_widget_gap;
 }
 
 extern Application application;

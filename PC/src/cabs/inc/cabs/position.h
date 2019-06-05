@@ -2,74 +2,56 @@
 #define _CABS_POSITION_H_
 
 #include <ncurses.h>
+#include <math.h>
 
 #include "cabs.h"
 
 class Position
 {
-
 	private:
-		int m_x = 0;
-		int m_y = 0;
+		const WINDOW* m_parent_win = nullptr;
+		float m_percentual_x = 0.0;
+		float m_percentual_y = 0.0;
 
 	public:
-		Position(int initial_x, int initial_y);
+		Position(float initial_percentual_x, float initial_percentual_y);
 		Position(void);
 		~Position(void);
 
 	// GETTERS
 	public:
-		int x(void)                 const;
-		int x(const WINDOW*, int w) const;
-		int y(void)                 const;
-		int y(const WINDOW*, int h) const;
+		int x(void) const;
+		int y(void) const;
 
 	// SETTERS
 	public:
-		void x(int new_x);
-		void y(int new_y);
+		void x(float new_percentual_x);
+		void y(float new_percentual_y);
+		void parent_win(const WINDOW* new_parent_win);
 };
 
 // GETTERS
 inline int Position::x(void) const
 {
-	return m_x;
-}
-inline int Position::x(const WINDOW* win, int w) const
-{
-	using namespace Cabs::Positions;
-
-	if (m_x == CENTER)
-		return (getmaxx(win) - w) / 2;
-	if (m_x == RIGHT)
-		return getmaxx(win) - w - 3;
-
-	return m_x;
+	return round(getmaxx(m_parent_win) * m_percentual_x) + 1;
 }
 inline int Position::y(void) const
 {
-	return m_y;
-}
-inline int Position::y(const WINDOW* win, int h) const
-{
-	using namespace Cabs::Positions;
-
-	if (m_y == CENTER)
-		return (getmaxy(win) - h) / 2;
-	if (m_y == BOTTOM)
-		return getmaxy(win) - h - 3;
-
-	return m_y;
+	return round(getmaxy(m_parent_win) * m_percentual_y) + 1;
 }
 
 // SETTERS
-inline void Position::x(int new_x)
+inline void Position::x(float new_percentual_x)
 {
-	m_x = new_x;
+	m_percentual_x = new_percentual_x;
 }
-inline void Position::y(int new_y)
+inline void Position::y(float new_percentual_y)
 {
-	m_y = new_y;
+	m_percentual_y = new_percentual_y;
+}
+inline void Position::parent_win(const WINDOW* new_parent_win)
+{
+	m_parent_win = new_parent_win;
 }
 
 #endif

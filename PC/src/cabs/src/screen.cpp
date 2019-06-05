@@ -2,10 +2,12 @@
 #include <algorithm>
 
 #include "cabs/screen.h"
+#include "cabs/application.h"
 
 Screen::Screen(void)
 {
-	m_win = derwin(stdscr, LINES - 2, COLS, 0, 0);
+	m_win = derwin(stdscr, LINES - 1, COLS, 0, 0);
+	m_status.attatch_to_window(m_win);
 }
 
 Screen::~Screen(void)
@@ -13,18 +15,21 @@ Screen::~Screen(void)
 	delwin(m_win);
 }
 
-void Screen::redraw(void) const
-{
-	werase(m_win);
-
-	draw();
-}
-
 void Screen::draw(void) const
 {
 	wbkgd(m_win, application.screen_background_attr());
 	for (std::shared_ptr<Widget> widget : m_widgets)
 		widget->draw();
+	m_status.draw();
+}
+
+void Screen::resize(void)
+{
+	wresize (m_win, LINES - 2, COLS);
+	mvderwin(m_win, 0, 0);
+	for (std::shared_ptr<Widget> widget : m_widgets)
+		widget->resize();
+	m_status.resize();
 }
 
 void Screen::handle_key(int key)
@@ -67,9 +72,10 @@ void Screen::move(Cabs::Direction direction)
 	std::vector<std::shared_ptr<Widget>> possible_widgets;
 	std::vector<int>                     distance_metrics;
 
-int selected_x = m_selected_widget->position(m_win).x();
-	int selected_y = m_selected_widget->position(m_win).y();
-	switch (direction) {
+	int selected_x = m_selected_widget->position().x();
+	int selected_y = m_selected_widget->position().y();
+	switch (direction)
+	{
 		case Direction::LEFT:
 			selected_y += m_selected_widget->size().h() / 2;
 			break;
@@ -91,8 +97,8 @@ int selected_x = m_selected_widget->position(m_win).x();
 		if (widget == m_selected_widget)
 			continue;
 
-		int other_x = widget->position(m_win).x();
-		int other_y = widget->position(m_win).y();
+		int other_x = widget->position().x();
+		int other_y = widget->position().y();
 		switch (direction)
 		{
 			case Direction::LEFT:

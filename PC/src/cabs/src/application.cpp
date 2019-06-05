@@ -17,7 +17,6 @@ Application::Application(void)
 	setup_colors();
 	refresh();
 
-	m_status.attatch_to_window(stdscr);
 	// m_console.attatch_to_window(stdscr);
 
 	m_label_attr             = Cabs::Colors::RED_BLACK;
@@ -43,15 +42,23 @@ void Application::run(void)
 	for (std::shared_ptr<Screen> screen : m_screens)
 		screen->draw();
 
-	m_status.draw();
-
 	while (1)
 	{
 		static int key;
 
 		key = getch();
 
-		if (m_status.mode() == Cabs::Mode::NORMAL)
+		if (key == KEY_RESIZE)
+		{
+			werase(stdscr);
+
+			for (std::shared_ptr<Screen> screen : m_screens)
+				screen->resize();
+
+			continue;
+		}
+
+		if (Cabs::move)
 		{
 			// move when ^H, ^J, ^K, ^L are pressed
 			switch (key)
@@ -68,7 +75,7 @@ void Application::run(void)
 			m_selected_screen->handle_key(key);
 
 		if (key == ESC)
-			m_status.mode(Cabs::Mode::NORMAL);
+			Cabs::move = true;
 	}
 }
 

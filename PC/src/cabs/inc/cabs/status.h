@@ -19,8 +19,9 @@ class Status
 
 	public:
 		void attatch_to_window(WINDOW* win);
-		void redraw(void);
-		void draw(void);
+		void redraw(void) const;
+		void resize(void);
+		void draw(void) const;
 
 	// GETTERS
 	public:

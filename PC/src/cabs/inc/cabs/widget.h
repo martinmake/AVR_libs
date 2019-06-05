@@ -19,7 +19,7 @@ class Widget
 		WINDOW*     m_shadow_win = nullptr;
 		std::string m_label;
 		Position    m_position;
-		Size	    m_size;
+		Size        m_size;
 		bool        m_is_bordered = false;
 		bool        m_is_shadowed = false;
 		bool        m_is_visible  = false;
@@ -30,7 +30,9 @@ class Widget
 		virtual ~Widget(void);
 
 	public:
-		void attatch_to_window(WINDOW* win);
+		void attatch_to_window(WINDOW* parent_win);
+		virtual void clear(void) const;
+		virtual void resize(void);
 		virtual void draw(void) const;
 
 	protected:
@@ -43,34 +45,38 @@ class Widget
 
 	// GETTERS
 	public:
-		virtual const Position&    position    (       void      ) const;
-		virtual       Position     position    (const WINDOW* win) const;
-		virtual const Size&        size        (       void      ) const;
-		virtual const std::string& label       (       void      ) const;
-		virtual       bool         is_bordered (       void      ) const;
-		virtual       bool         is_shadowed (       void      ) const;
-		virtual       bool         is_visible  (       void      ) const;
-		virtual       bool         is_selected (       void      ) const;
+		const Position&    position   (void) const;
+		const Size&        size       (void) const;
+		const std::string& label      (void) const;
+		      bool         is_bordered(void) const;
+		      bool         is_shadowed(void) const;
+		      bool         is_visible (void) const;
+		      bool         is_selected(void) const;
 
 	// SETTERS
 	public:
-		virtual void position   (const Position&    new_position   );
-		virtual void size       (const Size&        new_size       );
-		virtual void label      (const std::string& new_label      );
-		virtual void is_bordered(      bool         new_is_bordered);
-		virtual void is_shadowed(      bool         new_is_shadowed);
-		virtual void is_visible (      bool         new_is_visible );
-		virtual void is_selected(      bool         new_is_selected);
+		void position   (const Position&    new_position   );
+		void size       (const Size&        new_size       );
+		void label      (const std::string& new_label      );
+		void is_bordered(      bool         new_is_bordered);
+		void is_shadowed(      bool         new_is_shadowed);
+		void is_visible (      bool         new_is_visible );
+		void is_selected(      bool         new_is_selected);
+		void widget_gap (      int          new_widget_gap );
 };
+
+inline void Widget::clear(void) const
+{
+	werase(m_win);
+	werase(m_border_win);
+	werase(m_shadow_win);
+	clear_inside();
+}
 
 // GETTERS
 inline const Position& Widget::position(void) const
 {
 	return m_position;
-}
-inline Position Widget::position(const WINDOW* win) const
-{
-	return { m_position.x(win, m_size.w()), m_position.y(win, m_size.h()) };
 }
 inline const Size& Widget::size(void) const
 {
@@ -125,6 +131,10 @@ inline void Widget::is_visible(bool new_is_visible)
 inline void Widget::is_selected(bool new_is_selected)
 {
 	m_is_selected = new_is_selected;
+}
+inline void Widget::widget_gap(int new_widget_gap)
+{
+	m_size.widget_gap(new_widget_gap);
 }
 
 #endif
