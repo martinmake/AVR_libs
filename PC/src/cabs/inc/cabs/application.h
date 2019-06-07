@@ -12,10 +12,10 @@ class Application
 		// Console m_console;
 
 	public:
-		std::vector<std::shared_ptr<Screen>> m_screens;
-		            std::shared_ptr<Screen>  m_selected_screen;
+		std::vector<Screen*> m_screens;
+		            Screen*  m_selected_screen;
 
-	public:
+	private:
 		int m_label_attr;
 		int m_border_attr;
 		int m_shadow_attr;
@@ -31,6 +31,9 @@ class Application
 	public:
 		void run(void);
 		void exit(int status);
+
+	public:
+		void redraw(void);
 
 	private:
 		void setup_colors(void);
@@ -62,10 +65,17 @@ class Application
 		void widget_gap            (int new_widget_gap            );
 };
 
+inline void Application::redraw(void)
+{
+	for (Screen* screen : m_screens)
+		screen->redraw();
+}
+
+// OPERATORS
 template <typename S>
 Application& Application::operator<<(S& screen)
 {
-	m_screens.push_back(std::make_shared<S>(screen));
+	m_screens.push_back(&screen);
 	screen.widget_gap(m_widget_gap);
 
 	if (m_selected_screen == nullptr)
@@ -74,65 +84,28 @@ Application& Application::operator<<(S& screen)
 	return *this;
 }
 
-// GETTERS
-inline int Application::label_attr(void) const
+inline Screen& Application::operator[](int index)
 {
-	return m_label_attr;
-}
-inline int Application::border_attr(void) const
-{
-	return m_border_attr;
-}
-inline int Application::shadow_attr(void) const
-{
-	return m_shadow_attr;
-}
-inline int Application::selected_attr(void) const
-{
-	return m_selected_attr;
-}
-inline int Application::screen_background_attr(void) const
-{
-	return m_screen_background_attr;
-}
-inline int Application::widget_background_attr(void) const
-{
-	return m_widget_background_attr;
-}
-inline int Application::widget_gap(void) const
-{
-	return m_widget_gap;
+	return *m_screens[index];
 }
 
+// GETTERS
+inline int Application::label_attr            (void) const { return m_label_attr;             }
+inline int Application::border_attr           (void) const { return m_border_attr;            }
+inline int Application::shadow_attr           (void) const { return m_shadow_attr;            }
+inline int Application::selected_attr         (void) const { return m_selected_attr;          }
+inline int Application::screen_background_attr(void) const { return m_screen_background_attr; }
+inline int Application::widget_background_attr(void) const { return m_widget_background_attr; }
+inline int Application::widget_gap            (void) const { return m_widget_gap;             }
+
 // SETTERS
-inline void Application::label_attr(int new_label_attr)
-{
-	m_label_attr = new_label_attr;
-}
-inline void Application::border_attr(int new_border_attr)
-{
-	m_border_attr = new_border_attr;
-}
-inline void Application::shadow_attr(int new_shadow_attr)
-{
-	m_shadow_attr = new_shadow_attr;
-}
-inline void Application::selected_attr(int new_selected_attr)
-{
-	m_selected_attr = new_selected_attr;
-}
-inline void Application::screen_background_attr(int new_screen_background_attr)
-{
-	m_screen_background_attr = new_screen_background_attr;
-}
-inline void Application::widget_background_attr(int new_widget_background_attr)
-{
-	m_widget_background_attr = new_widget_background_attr;
-}
-inline void Application::widget_gap(int new_widget_gap)
-{
-	m_widget_gap = new_widget_gap;
-}
+inline void Application::label_attr            (int new_label_attr)             { m_label_attr             = new_label_attr;             }
+inline void Application::border_attr           (int new_border_attr)            { m_border_attr            = new_border_attr;            }
+inline void Application::shadow_attr           (int new_shadow_attr)            { m_shadow_attr            = new_shadow_attr;            }
+inline void Application::selected_attr         (int new_selected_attr)          { m_selected_attr          = new_selected_attr;          }
+inline void Application::screen_background_attr(int new_screen_background_attr) { m_screen_background_attr = new_screen_background_attr; }
+inline void Application::widget_background_attr(int new_widget_background_attr) { m_widget_background_attr = new_widget_background_attr; }
+inline void Application::widget_gap            (int new_widget_gap)             { m_widget_gap             = new_widget_gap;             }
 
 extern Application application;
 

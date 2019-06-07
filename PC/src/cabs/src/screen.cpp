@@ -18,7 +18,7 @@ Screen::~Screen(void)
 void Screen::draw(void) const
 {
 	wbkgd(m_win, application.screen_background_attr());
-	for (std::shared_ptr<Widget> widget : m_widgets)
+	for (Widget* widget : m_widgets)
 		widget->draw();
 	m_status.draw();
 }
@@ -27,7 +27,7 @@ void Screen::resize(void)
 {
 	wresize (m_win, LINES - 2, COLS);
 	mvderwin(m_win, 0, 0);
-	for (std::shared_ptr<Widget> widget : m_widgets)
+	for (Widget* widget : m_widgets)
 		widget->resize();
 	m_status.resize();
 }
@@ -62,9 +62,10 @@ void Screen::handle_key(int key)
 
 void Screen::move(Cabs::Direction direction)
 {
+	return;
 	using namespace Cabs;
 
-	std::vector<std::shared_ptr<Widget>> possible_widgets;
+	std::vector<Widget*> possible_widgets;
 	std::vector<int>                     distance_metrics;
 
 	int selected_x = m_selected_widget->position().x();
@@ -87,7 +88,7 @@ void Screen::move(Cabs::Direction direction)
 			break;
 	}
 
-	for (std::shared_ptr<Widget>& widget : m_widgets)
+	for (Widget* widget : m_widgets)
 	{
 		if (widget == m_selected_widget)
 			continue;

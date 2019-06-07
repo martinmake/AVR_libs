@@ -39,20 +39,18 @@ void Application::exit(int status)
 
 void Application::run(void)
 {
-	for (std::shared_ptr<Screen> screen : m_screens)
+	for (Screen* screen : m_screens)
 		screen->draw();
 
 	while (1)
 	{
-		static int key;
-
-		key = getch();
+		int key = getch();
 
 		if (key == KEY_RESIZE)
 		{
 			werase(stdscr);
 
-			for (std::shared_ptr<Screen> screen : m_screens)
+			for (Screen* screen : m_screens)
 				screen->resize();
 
 			continue;
@@ -63,7 +61,7 @@ void Application::run(void)
 			// move when ^H, ^J, ^K, ^L are pressed
 			switch (key)
 			{
-				case 's':
+				case 's': // move this to screen_key_handler
 					Cabs::move = false;
 					curs_set(0);
 					attroff(A_STANDOUT);
@@ -98,9 +96,4 @@ void Application::setup_colors(void)
 		for (int fg = 0; fg < avaible_colors; fg++)
 			init_pair(pair++, colors[fg], colors[bg]);
 	}
-}
-
-Screen& Application::operator[](int index)
-{
-	return *m_screens[index];
 }

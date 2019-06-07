@@ -16,7 +16,7 @@ class HistoryGraph : public Widget
 		HistoryGraph(void);
 		~HistoryGraph(void);
 
-	protected:
+	public:
 		void draw_inside(void) const override;
 
 	// OPERATORS
@@ -37,7 +37,7 @@ inline HistoryGraph& HistoryGraph::operator<<(float value)
 {
 	m_data.push_back(value);
 
-	if((int) m_data.size() > m_size.w())
+	if ((int) m_data.size() > m_size.w())
 		m_data.pop_front();
 
 	return *this;

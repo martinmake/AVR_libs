@@ -16,9 +16,6 @@ HistoryGraph::~HistoryGraph(void)
 void HistoryGraph::draw_inside(void) const
 // ☭
 {
-	if (m_data.size() == 0)
-		return;
-
 	int w, h;
 	w = getmaxx(m_win);
 	h = getmaxy(m_win);
@@ -36,6 +33,10 @@ void HistoryGraph::draw_inside(void) const
 	wmove(m_win, origin, 0);
 	for (uint16_t i = 0; i < w - (int) m_data.size(); i++)
 		wprintw(m_win, "%C", L'▁');
+
+	if (m_data.size() == 0)
+		return;
+
 	for (float value : m_data)
 	{
 		if (value == 0)

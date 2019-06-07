@@ -21,6 +21,7 @@ class Status
 	public:
 		void attatch_to_window(WINDOW* win);
 		void redraw(void) const;
+		void erase(void) const;
 		void resize(void);
 		void draw(void) const;
 
@@ -32,6 +33,10 @@ class Status
 	public:
 		void mode(Cabs::Mode new_mode);
 };
+inline void Status::erase(void) const
+{
+	werase(m_win);
+}
 
 // GETTERS
 inline Cabs::Mode Status::mode(void) const

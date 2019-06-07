@@ -24,7 +24,7 @@ void Status::resize(void)
 
 void Status::redraw(void) const
 {
-	werase(m_win);
+	erase();
 
 	draw();
 }

@@ -1,5 +1,6 @@
 #include <ncurses.h>
 #include <dialog.h>
+#include <assert.h>
 
 #include "cabs/widget.h"
 #include "cabs/application.h"
@@ -10,9 +11,13 @@ Widget::Widget(void)
 
 Widget::~Widget(void)
 {
-	if (m_win)        delwin(m_win);
+	if (m_win       ) delwin(m_win);
 	if (m_border_win) delwin(m_border_win);
 	if (m_shadow_win) delwin(m_shadow_win);
+
+	m_win        = nullptr;
+	m_border_win = nullptr;
+	m_shadow_win = nullptr;
 }
 
 void Widget::attatch_to_window(WINDOW* parent_win)
@@ -79,10 +84,7 @@ void Widget::draw(void) const
 	w = m_size.w();
 	h = m_size.h();
 
-	clear_inside();
-
-	draw_inside();
-	wrefresh(m_win);
+	redraw_inside();
 
 	if (m_is_shadowed)
 	{
