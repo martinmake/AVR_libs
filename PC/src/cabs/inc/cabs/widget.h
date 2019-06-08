@@ -41,6 +41,7 @@ class Widget
 		virtual void redraw_inside(void) const;
 		virtual void draw_inside(void)   const;
 		virtual void clear_inside(void)  const;
+		virtual void resize_inside(void);
 
 	// HANDLERS
 	public:
@@ -71,6 +72,11 @@ class Widget
 inline void Widget::redraw(void) const
 {
 	clear();
+	draw();
+}
+
+inline void Widget::resize_inside(void)
+{
 	draw();
 }
 

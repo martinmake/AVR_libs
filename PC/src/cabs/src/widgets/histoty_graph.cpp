@@ -23,8 +23,14 @@ void HistoryGraph::draw_inside(void) const
 	float min_val = *std::min_element(m_data.begin(), m_data.end());
 	float max_val = *std::max_element(m_data.begin(), m_data.end());
 
-	float scale  = (h - 1) / (float) (abs(min_val) + abs(max_val));
-	int   origin = (max_val < 0 ? 0 : max_val) * scale;
+	if (min_val > 0) min_val = 0;
+	if (max_val < 0) max_val = 0;
+
+	// float scale  = (h - 1) / (float) (abs(min_val) + abs(max_val));
+	// int   origin = (max_val < 0 ? 0 : max_val) * scale;
+
+	float scale  = (h / 2) / (float) (std::max(std::abs(min_val), std::abs(max_val)));
+	int   origin = h / 2 - 1;
 
 	wchar_t blocks[] = { L'▁', L'▂', L'▃', L'▄', L'▅', L'▆', L'▇' };
 	uint8_t resolution = sizeof(blocks) / sizeof(wchar_t);
@@ -76,4 +82,12 @@ void HistoryGraph::draw_inside(void) const
 		wmove(m_win, origin, x + 1);
 	}
 	wattroff(m_win, Cabs::Colors::RED_BLACK);
+}
+
+void HistoryGraph::resize_inside(void)
+{
+	while ((int) m_data.size() > m_size.w())
+		m_data.pop_front();
+
+	Widget::resize_inside();
 }

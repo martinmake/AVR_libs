@@ -48,7 +48,7 @@ void Application::run(void)
 
 		if (key == KEY_RESIZE)
 		{
-			werase(stdscr);
+			wclear(stdscr);
 
 			for (Screen* screen : m_screens)
 				screen->resize();
@@ -65,6 +65,9 @@ void Application::run(void)
 					Cabs::move = false;
 					curs_set(0);
 					attroff(A_STANDOUT);
+					break;
+				case 'q':
+					application.exit(0);
 					break;
 			}
 		}

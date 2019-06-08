@@ -58,7 +58,7 @@ void Widget::resize(void)
 	m_border_win = derwin(m_parent_win, h + 2, w + 2, y - 1, x - 1);
 	m_shadow_win = derwin(m_parent_win, h + 2, w + 2, y,     x    );
 
-	draw();
+	resize_inside();
 }
 
 void Widget::clear_inside(void) const
@@ -134,10 +134,5 @@ void Widget::draw(void) const
 
 void Widget::handle_key(int key)
 {
-	switch (key)
-	{
-		case ESC:
-			m_is_selected = true;
-			break;
-	}
+	(void) key;
 }

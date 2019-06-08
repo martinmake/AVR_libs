@@ -12,12 +12,16 @@ class HistoryGraph : public Widget
 		std::string m_x_label;
 		std::string m_y_label;
 
+	private:
+		bool m_is_centered = false;
+
 	public:
 		HistoryGraph(void);
 		~HistoryGraph(void);
 
 	public:
 		void draw_inside(void) const override;
+		void resize_inside(void) override;
 
 	// OPERATORS
 	public:
@@ -25,11 +29,13 @@ class HistoryGraph : public Widget
 
 	// GETTERS
 	public:
-		const std::list<float>& data(void) const;
+		const std::list<float>& data       (void) const;
+		      bool              is_centered(void) const;
 
 	// SETTERS
 	public:
-		void data(const std::list<float>& new_data);
+		void data       (const std::list<float>& new_data       );
+		void is_centered(      bool              new_is_centered);
 };
 
 // OPERATORS
@@ -43,16 +49,24 @@ inline HistoryGraph& HistoryGraph::operator<<(float value)
 	return *this;
 }
 
-// GEfTTERS
+// GETTERS
 inline const std::list<float>& HistoryGraph::data(void) const
 {
 	return m_data;
+}
+inline bool HistoryGraph::is_centered(void) const
+{
+	return m_is_centered;
 }
 
 // SETTERS
 inline void HistoryGraph::data(const std::list<float>& new_data)
 {
 	m_data = new_data;
+}
+inline void HistoryGraph::is_centered(bool new_is_centered)
+{
+	m_is_centered = new_is_centered;
 }
 
 #endif
