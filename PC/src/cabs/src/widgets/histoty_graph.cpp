@@ -26,11 +26,19 @@ void HistoryGraph::draw_inside(void) const
 	if (min_val > 0) min_val = 0;
 	if (max_val < 0) max_val = 0;
 
-	// float scale  = (h - 1) / (float) (abs(min_val) + abs(max_val));
-	// int   origin = (max_val < 0 ? 0 : max_val) * scale;
+	float scale;
+	int   origin;
 
-	float scale  = (h / 2) / (float) (std::max(std::abs(min_val), std::abs(max_val)));
-	int   origin = h / 2 - 1;
+	if (m_is_centered)
+	{
+		scale  = (h / 2) / (float) (std::max(std::abs(min_val), std::abs(max_val)));
+		origin = h / 2 - 1;
+	}
+	else
+	{
+		scale  = (h - 1) / (float) (abs(min_val) + abs(max_val));
+		origin = (max_val < 0 ? 0 : max_val) * scale;
+	}
 
 	wchar_t blocks[] = { L'▁', L'▂', L'▃', L'▄', L'▅', L'▆', L'▇' };
 	uint8_t resolution = sizeof(blocks) / sizeof(wchar_t);
