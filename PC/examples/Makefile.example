@@ -71,13 +71,17 @@ setup:
 	touch $(BDIR)/.empty $(ODIR)/.empty $(DDIR)/.empty
 	@echo "< MAKING DIRECTORIES DONE"
 
+.PHONY: bear
+bear:
+	@better-bear $(SDIR) $(IDIRS)
+
 .PHONY: clean
 clean:
 	@echo "> CLEANING"
 	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(ELF) $(HEX) $(BIN) $(ASM) | sed -e 's/^/* /'
 	@echo "< CLEANING DONE"
 
-ifeq ($(NODEP),)
+ifeq ($(NO_DEPENDENCIES),)
 -include $(patsubst $(SDIR)/%.c,  $(DDIR)/%.d,$(C_SRCS)  )
 -include $(patsubst $(SDIR)/%.cpp,$(DDIR)/%.d,$(CXX_SRCS))
 -include $(patsubst $(SDIR)/%.S,  $(DDIR)/%.d,$(ASM_SRCS))

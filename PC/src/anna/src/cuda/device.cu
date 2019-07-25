@@ -4,7 +4,8 @@
 
 #include <cuda_runtime.h>
 #include <cuda_profiler_api.h>
-#include "cuda/debug.ch"
+
+#include "anna/cuda/debug.ch"
 
 namespace Anna
 {

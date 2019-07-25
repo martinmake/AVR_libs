@@ -1,19 +1,35 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 #include "neural_network.h"
+#include "layer.h"
 
 namespace Anna
 {
-	NeuralNetwork::NeuralNetwork(std::list<Layer::Base>& initial_layers)
-		: m_layers(initial_layers), m_device(0)
+	NeuralNetwork::NeuralNetwork(void)
+		: m_device(0)
 	{
 	}
 
 	NeuralNetwork::~NeuralNetwork(void)
 	{
 	}
+
+	void NeuralNetwork::add_layer(const std::string& layer)
+	{
+		// TODO
+	}
+	void NeuralNetwork::add_layer(const std::string& layer, Shape shape)
+	{
+		std::unordered_map<std::string, std::function<Layer::Base*(Shape shape)>>::iterator it = Layer::constructors.find(layer);
+		assert(it != Layer::constructors.end());
+
+		std::function<Layer::Base*(Shape shape)> layer_constructor = it->second;
+		add_layer(*layer_constructor(shape));
+	}
+		// m_layers.push_back(*layer_constructor(shape));
 }
 
 /*

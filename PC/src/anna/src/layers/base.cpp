@@ -4,7 +4,8 @@ namespace Anna
 {
 	namespace Layer
 	{
-		Base::Base(void)
+		Base::Base(Shape initial_shape)
+			: m_shape(initial_shape)
 		{
 		}
 

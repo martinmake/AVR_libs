@@ -11,7 +11,7 @@ namespace Anna
 		{
 			public:
 				Base(void);
-				~Base(void);
+				virtual ~Base(void);
 		};
 	}
 }
