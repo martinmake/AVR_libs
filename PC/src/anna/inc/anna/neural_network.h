@@ -10,6 +10,8 @@
 #include "anna/cuda/device.ch"
 #include "anna/cuda/debug.ch"
 
+#include "anna/hyperparameters.h"
+
 namespace Anna
 {
 	class NeuralNetwork
@@ -17,6 +19,7 @@ namespace Anna
 		private:
 			Shape m_input_shape;
 			Shape m_output_shape;
+			Hyperparameters m_hyperparameters;
 		private:
 			std::list<Layer::Base> m_layers;
 		private:
@@ -24,6 +27,8 @@ namespace Anna
 
 		public:
 			NeuralNetwork(void);
+			NeuralNetwork(const std::string& config_filepath);
+			// NeuralNetwork(const Json::Value& config);
 			~NeuralNetwork(void);
 
 		public:
