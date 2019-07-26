@@ -49,3 +49,4 @@ cscope
 ARM/inc/*
 AVR/inc/*
 PC/inc/*
+compile_commands.json
