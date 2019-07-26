@@ -11,10 +11,23 @@ namespace Anna
 	NeuralNetwork::NeuralNetwork(void)
 		: m_device(0)
 	{
+		m_hyperparameters = std::make_shared<Hyperparameters>();
 	}
 
 	NeuralNetwork::~NeuralNetwork(void)
 	{
+	}
+
+	NeuralNetwork& NeuralNetwork::operator<<(Layer::Base& layer)
+	{
+		if (layer.shape().is_valid())
+			m_layers.push_back(layer);
+		else
+		{
+			std::cerr << "[NeuralNetwork] add_layer: layer.shape must be valid" << std::endl;
+			exit(1);
+		}
+		return *this;
 	}
 
 	void NeuralNetwork::add_layer(const std::string& layer_name)
@@ -24,9 +37,7 @@ namespace Anna
 			if (layer_name == "input")
 			{
 				if (m_input_shape.is_valid())
-				{
 					add_layer(layer_name, m_input_shape);
-				}
 				else
 				{
 					std::cerr << "[NeuralNetwork] add_layer: this->input_shape must be set when not specifying shape for `" << layer_name << "'" << std::endl;
@@ -36,9 +47,7 @@ namespace Anna
 			else if (layer_name == "output")
 			{
 				if (m_output_shape.is_valid())
-				{
 					add_layer(layer_name, m_output_shape);
-				}
 				else
 				{
 					std::cerr << "[NeuralNetwork] add_layer: this->output_shape must be set when not specifying shape for `" << layer_name << "'" << std::endl;
@@ -47,15 +56,13 @@ namespace Anna
 			}
 			else
 			{
-				if (Layer::changes_data_shape(layer_name))
+				if (Layer::data(layer_name).changes_data_shape)
 				{
 					std::cerr << "[NeuralNetwork] add_layer: shape must be specified for `" << layer_name << "'" << std::endl;
 					exit(1);
 				}
 				else
-				{
 					add_layer(layer_name, m_layers.rbegin()->shape());
-				}
 			}
 		}
 		else
@@ -67,15 +74,17 @@ namespace Anna
 	void NeuralNetwork::add_layer(const std::string& layer_name, Shape shape)
 	{
 		if (Layer::is_valid(layer_name))
-		{
-			std::function<Layer::Base*(Shape shape)> layer_constructor = Layer::get_constructor(layer_name);
-			add_layer(*layer_constructor(shape));
-		}
+			add_layer(*Layer::data(layer_name).constructor(shape));
 		else
 		{
 			std::cerr << "[NeuralNetwork] add_layer: invalid layer name `" << layer_name << "'" << std::endl;
 			exit(1);
 		}
+	}
+
+	void NeuralNetwork::generate_random_weights(void)
+	{
+		// TODO
 	}
 }
 

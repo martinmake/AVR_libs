@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <list>
 #include <string>
+#include <memory>
 
 #include "layers/base.h"
 
@@ -16,10 +17,9 @@ namespace Anna
 {
 	class NeuralNetwork
 	{
-		private:
-			Shape m_input_shape;
-			Shape m_output_shape;
-			Hyperparameters m_hyperparameters;
+		private: Shape                            m_input_shape;
+			Shape                            m_output_shape;
+			std::shared_ptr<Hyperparameters> m_hyperparameters;
 		private:
 			std::list<Layer::Base> m_layers;
 		private:
@@ -40,6 +40,10 @@ namespace Anna
 			void forward();
 			void train();
 
+			void generate_random_weights(void);
+
+		public: // GETTERS
+			Hyperparameters& hyperparameters(void);
 		public: // SETTERS
 			void input_shape (Shape new_input_shape );
 			void output_shape(Shape new_output_shape);
@@ -54,9 +58,10 @@ namespace Anna
 		*/
 	};
 
-	inline void           NeuralNetwork::add_layer (Layer::Base& layer) { *this << layer;                          }
-	inline NeuralNetwork& NeuralNetwork::operator<<(Layer::Base& layer) { m_layers.push_back(layer); return *this; }
+	inline void NeuralNetwork::add_layer(Layer::Base& layer) { *this << layer; }
 
+	// GETTERS
+	inline Hyperparameters& NeuralNetwork::hyperparameters(void) { return *m_hyperparameters; }
 	// SETTERS
 	inline void NeuralNetwork::input_shape (Shape new_input_shape ) { m_input_shape  = new_input_shape;  }
 	inline void NeuralNetwork::output_shape(Shape new_output_shape) { m_output_shape = new_output_shape; }
