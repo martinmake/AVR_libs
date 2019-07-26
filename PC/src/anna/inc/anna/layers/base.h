@@ -15,14 +15,9 @@ namespace Anna
 	{
 		class Base
 		{
-			private: // MEMBER VARIABLES
+			protected: // MEMBER VARIABLES
 				Shape m_shape;
 				std::shared_ptr<Hyperparameters> m_hyperparameters;
-
-			public: // STATIC VARIABLES
-				static const std::string NAME;
-				static const bool        CHANGES_DATA_SHAPE;
-				static const bool        IS_OUTPUT;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
 				Base(Shape initial_shape = Shape(0, 0, 0));
@@ -34,17 +29,23 @@ namespace Anna
 
 			public: // GETTERS
 				const Shape& shape(void) const;
+			public: // SETTERS
+				void shape(const Shape& new_shape);
 			public: // GETTERS FOR STATIC VARIABLES
 				virtual const std::string& name              (void) const;
 				virtual       bool         changes_data_shape(void) const;
+				virtual       bool         is_input          (void) const;
 				virtual       bool         is_output         (void) const;
 		};
 
 		// GETTERS
 		inline const Shape& Base::shape(void) const { return m_shape; }
+		// SETTERS
+		inline void Base::shape(const Shape& new_shape) { m_shape = new_shape; }
 		// GETTERS FOR STATIC VARIABLES
 		inline const std::string& Base::name              (void) const { assert(false && "THIS IS JUST A TEMPLATE"); }
 		inline       bool         Base::changes_data_shape(void) const { assert(false && "THIS IS JUST A TEMPLATE"); }
+		inline       bool         Base::is_input          (void) const { assert(false && "THIS IS JUST A TEMPLATE"); }
 		inline       bool         Base::is_output         (void) const { assert(false && "THIS IS JUST A TEMPLATE"); }
 	}
 }

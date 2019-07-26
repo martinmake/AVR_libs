@@ -6,6 +6,7 @@ namespace Anna
 	{
 		const std::string Output::NAME               = "output";
 		const bool        Output::CHANGES_DATA_SHAPE =  true;
+		const bool        Output::IS_INPUT           =  false;
 		const bool        Output::IS_OUTPUT          =  true;
 
 		Output::Output(Shape initial_shape)
