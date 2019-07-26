@@ -19,8 +19,10 @@ namespace Anna
 				Base(Shape initial_shape);
 				~Base(void);
 
-			public: // STATIC
+			public: // GETTERS
+				const Shape& shape(void) const;
 		};
+		inline const Shape& Base::shape(void) const { return m_shape; }
 	}
 }
 

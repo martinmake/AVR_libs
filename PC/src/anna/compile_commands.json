@@ -18,11 +18,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layer.o",
-            "src/layer.cpp"
+            "obj/shape.o",
+            "src/shape.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/layer.cpp"
+        "file": "src/shape.cpp"
     },
     {
         "arguments": [
@@ -68,11 +68,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/neural_network.o",
-            "src/neural_network.cpp"
+            "obj/layers/input.o",
+            "src/layers/input.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/neural_network.cpp"
+        "file": "src/layers/input.cpp"
     },
     {
         "arguments": [
@@ -93,36 +93,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/shape.o",
-            "src/shape.cpp"
+            "obj/layer.o",
+            "src/layer.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/shape.cpp"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-Wall",
-            "-Wextra",
-            "-pedantic",
-            "-Wno-write-strings",
-            "-O3",
-            "-Ofast",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-Iinc",
-            "-I/home/arch/Documents/libs/PC/inc",
-            "-Iinc/anna",
-            "-fPIC",
-            "-std=c++14",
-            "-o",
-            "obj/layers/full_connected.o",
-            "src/layers/full_connected.cpp"
-        ],
-        "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/layers/full_connected.cpp"
+        "file": "src/layer.cpp"
     },
     {
         "arguments": [
@@ -168,11 +143,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/input.o",
-            "src/layers/input.cpp"
+            "obj/layers/base.o",
+            "src/layers/base.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/layers/input.cpp"
+        "file": "src/layers/base.cpp"
     },
     {
         "arguments": [
@@ -193,11 +168,36 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/base.o",
-            "src/layers/base.cpp"
+            "obj/neural_network.o",
+            "src/neural_network.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/src/anna",
-        "file": "src/layers/base.cpp"
+        "file": "src/neural_network.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-Wextra",
+            "-pedantic",
+            "-Wno-write-strings",
+            "-O3",
+            "-Ofast",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-Iinc",
+            "-I/home/arch/Documents/libs/PC/inc",
+            "-Iinc/anna",
+            "-fPIC",
+            "-std=c++14",
+            "-o",
+            "obj/layers/full_connected.o",
+            "src/layers/full_connected.cpp"
+        ],
+        "directory": "/home/arch/Documents/libs/PC/src/anna",
+        "file": "src/layers/full_connected.cpp"
     }
 ,
     {
@@ -219,11 +219,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layer.o",
-            "inc/layer.cpp"
+            "obj/shape.o",
+            "inc/shape.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/layer.cpp"
+        "file": "inc/shape.cpp"
     },
     {
         "arguments": [
@@ -269,11 +269,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/neural_network.o",
-            "inc/neural_network.cpp"
+            "obj/layers/input.o",
+            "inc/layers/input.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/neural_network.cpp"
+        "file": "inc/layers/input.cpp"
     },
     {
         "arguments": [
@@ -294,36 +294,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/shape.o",
-            "inc/shape.cpp"
+            "obj/layer.o",
+            "inc/layer.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/shape.cpp"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-Wall",
-            "-Wextra",
-            "-pedantic",
-            "-Wno-write-strings",
-            "-O3",
-            "-Ofast",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-Iinc",
-            "-I/home/arch/Documents/libs/PC/inc",
-            "-Iinc/anna",
-            "-fPIC",
-            "-std=c++14",
-            "-o",
-            "obj/layers/full_connected.o",
-            "inc/layers/full_connected.cpp"
-        ],
-        "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/layers/full_connected.cpp"
+        "file": "inc/layer.cpp"
     },
     {
         "arguments": [
@@ -369,11 +344,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/input.o",
-            "inc/layers/input.cpp"
+            "obj/layers/base.o",
+            "inc/layers/base.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/layers/input.cpp"
+        "file": "inc/layers/base.cpp"
     },
     {
         "arguments": [
@@ -394,11 +369,36 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/base.o",
-            "inc/layers/base.cpp"
+            "obj/neural_network.o",
+            "inc/neural_network.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna",
-        "file": "inc/layers/base.cpp"
+        "file": "inc/neural_network.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-Wextra",
+            "-pedantic",
+            "-Wno-write-strings",
+            "-O3",
+            "-Ofast",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-Iinc",
+            "-I/home/arch/Documents/libs/PC/inc",
+            "-Iinc/anna",
+            "-fPIC",
+            "-std=c++14",
+            "-o",
+            "obj/layers/full_connected.o",
+            "inc/layers/full_connected.cpp"
+        ],
+        "directory": "/home/arch/Documents/libs/PC/inc/anna",
+        "file": "inc/layers/full_connected.cpp"
     }
 ,
     {
@@ -420,11 +420,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layer.o",
-            "/home/arch/Documents/libs/PC/inc/layer.cpp"
+            "obj/shape.o",
+            "/home/arch/Documents/libs/PC/inc/shape.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/layer.cpp"
+        "file": "/home/arch/Documents/libs/PC/inc/shape.cpp"
     },
     {
         "arguments": [
@@ -470,11 +470,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/neural_network.o",
-            "/home/arch/Documents/libs/PC/inc/neural_network.cpp"
+            "obj/layers/input.o",
+            "/home/arch/Documents/libs/PC/inc/layers/input.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/neural_network.cpp"
+        "file": "/home/arch/Documents/libs/PC/inc/layers/input.cpp"
     },
     {
         "arguments": [
@@ -495,36 +495,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/shape.o",
-            "/home/arch/Documents/libs/PC/inc/shape.cpp"
+            "obj/layer.o",
+            "/home/arch/Documents/libs/PC/inc/layer.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/shape.cpp"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-Wall",
-            "-Wextra",
-            "-pedantic",
-            "-Wno-write-strings",
-            "-O3",
-            "-Ofast",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-Iinc",
-            "-I/home/arch/Documents/libs/PC/inc",
-            "-Iinc/anna",
-            "-fPIC",
-            "-std=c++14",
-            "-o",
-            "obj/layers/full_connected.o",
-            "/home/arch/Documents/libs/PC/inc/layers/full_connected.cpp"
-        ],
-        "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/layers/full_connected.cpp"
+        "file": "/home/arch/Documents/libs/PC/inc/layer.cpp"
     },
     {
         "arguments": [
@@ -570,11 +545,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/input.o",
-            "/home/arch/Documents/libs/PC/inc/layers/input.cpp"
+            "obj/layers/base.o",
+            "/home/arch/Documents/libs/PC/inc/layers/base.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/layers/input.cpp"
+        "file": "/home/arch/Documents/libs/PC/inc/layers/base.cpp"
     },
     {
         "arguments": [
@@ -595,11 +570,36 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/base.o",
-            "/home/arch/Documents/libs/PC/inc/layers/base.cpp"
+            "obj/neural_network.o",
+            "/home/arch/Documents/libs/PC/inc/neural_network.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
-        "file": "/home/arch/Documents/libs/PC/inc/layers/base.cpp"
+        "file": "/home/arch/Documents/libs/PC/inc/neural_network.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-Wextra",
+            "-pedantic",
+            "-Wno-write-strings",
+            "-O3",
+            "-Ofast",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-Iinc",
+            "-I/home/arch/Documents/libs/PC/inc",
+            "-Iinc/anna",
+            "-fPIC",
+            "-std=c++14",
+            "-o",
+            "obj/layers/full_connected.o",
+            "/home/arch/Documents/libs/PC/inc/layers/full_connected.cpp"
+        ],
+        "directory": "/home/arch/Documents/libs/PC//home/arch/Documents/libs/PC/inc/anna",
+        "file": "/home/arch/Documents/libs/PC/inc/layers/full_connected.cpp"
     }
 ,
     {
@@ -621,11 +621,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layer.o",
-            "inc/anna/layer.cpp"
+            "obj/shape.o",
+            "inc/anna/shape.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/layer.cpp"
+        "file": "inc/anna/shape.cpp"
     },
     {
         "arguments": [
@@ -671,11 +671,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/neural_network.o",
-            "inc/anna/neural_network.cpp"
+            "obj/layers/input.o",
+            "inc/anna/layers/input.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/neural_network.cpp"
+        "file": "inc/anna/layers/input.cpp"
     },
     {
         "arguments": [
@@ -696,36 +696,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/shape.o",
-            "inc/anna/shape.cpp"
+            "obj/layer.o",
+            "inc/anna/layer.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/shape.cpp"
-    },
-    {
-        "arguments": [
-            "g++",
-            "-c",
-            "-Wall",
-            "-Wextra",
-            "-pedantic",
-            "-Wno-write-strings",
-            "-O3",
-            "-Ofast",
-            "-fdata-sections",
-            "-ffunction-sections",
-            "-g",
-            "-Iinc",
-            "-I/home/arch/Documents/libs/PC/inc",
-            "-Iinc/anna",
-            "-fPIC",
-            "-std=c++14",
-            "-o",
-            "obj/layers/full_connected.o",
-            "inc/anna/layers/full_connected.cpp"
-        ],
-        "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/layers/full_connected.cpp"
+        "file": "inc/anna/layer.cpp"
     },
     {
         "arguments": [
@@ -771,11 +746,11 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/input.o",
-            "inc/anna/layers/input.cpp"
+            "obj/layers/base.o",
+            "inc/anna/layers/base.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/layers/input.cpp"
+        "file": "inc/anna/layers/base.cpp"
     },
     {
         "arguments": [
@@ -796,10 +771,35 @@
             "-fPIC",
             "-std=c++14",
             "-o",
-            "obj/layers/base.o",
-            "inc/anna/layers/base.cpp"
+            "obj/neural_network.o",
+            "inc/anna/neural_network.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
-        "file": "inc/anna/layers/base.cpp"
+        "file": "inc/anna/neural_network.cpp"
+    },
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-Wall",
+            "-Wextra",
+            "-pedantic",
+            "-Wno-write-strings",
+            "-O3",
+            "-Ofast",
+            "-fdata-sections",
+            "-ffunction-sections",
+            "-g",
+            "-Iinc",
+            "-I/home/arch/Documents/libs/PC/inc",
+            "-Iinc/anna",
+            "-fPIC",
+            "-std=c++14",
+            "-o",
+            "obj/layers/full_connected.o",
+            "inc/anna/layers/full_connected.cpp"
+        ],
+        "directory": "/home/arch/Documents/libs/PC/inc/anna/anna",
+        "file": "inc/anna/layers/full_connected.cpp"
     }
 ]

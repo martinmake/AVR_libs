@@ -27,8 +27,8 @@ namespace Anna
 			~NeuralNetwork(void);
 
 		public:
-			void add_layer(const std::string& layer);
-			void add_layer(const std::string& layer, Shape shape);
+			void add_layer(const std::string& layer_name);
+			void add_layer(const std::string& layer_name, Shape shape);
 			void add_layer(Layer::Base& layer);
 			NeuralNetwork& operator<<(Layer::Base& layer);
 
@@ -49,8 +49,8 @@ namespace Anna
 		*/
 	};
 
-	inline void           NeuralNetwork::add_layer (Layer::Base& layer) { *this << layer;                 }
-	inline NeuralNetwork& NeuralNetwork::operator<<(Layer::Base& layer) { add_layer(layer); return *this; }
+	inline void           NeuralNetwork::add_layer (Layer::Base& layer) { *this << layer;                          }
+	inline NeuralNetwork& NeuralNetwork::operator<<(Layer::Base& layer) { m_layers.push_back(layer); return *this; }
 
 	// SETTERS
 	inline void NeuralNetwork::input_shape (Shape new_input_shape ) { m_input_shape  = new_input_shape;  }

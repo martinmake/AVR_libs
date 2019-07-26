@@ -17,19 +17,66 @@ namespace Anna
 	{
 	}
 
-	void NeuralNetwork::add_layer(const std::string& layer)
+	void NeuralNetwork::add_layer(const std::string& layer_name)
 	{
-		// TODO
+		if (Layer::is_valid(layer_name))
+		{
+			if (layer_name == "input")
+			{
+				if (m_input_shape.is_valid())
+				{
+					add_layer(layer_name, m_input_shape);
+				}
+				else
+				{
+					std::cerr << "[NeuralNetwork] add_layer: this->input_shape must be set when not specifying shape for `" << layer_name << "'" << std::endl;
+					exit(1);
+				}
+			}
+			else if (layer_name == "output")
+			{
+				if (m_output_shape.is_valid())
+				{
+					add_layer(layer_name, m_output_shape);
+				}
+				else
+				{
+					std::cerr << "[NeuralNetwork] add_layer: this->output_shape must be set when not specifying shape for `" << layer_name << "'" << std::endl;
+					exit(1);
+				}
+			}
+			else
+			{
+				if (Layer::changes_data_shape(layer_name))
+				{
+					std::cerr << "[NeuralNetwork] add_layer: shape must be specified for `" << layer_name << "'" << std::endl;
+					exit(1);
+				}
+				else
+				{
+					add_layer(layer_name, m_layers.rbegin()->shape());
+				}
+			}
+		}
+		else
+		{
+			std::cerr << "[NeuralNetwork] add_layer: invalid layer name `" << layer_name << "'" << std::endl;
+			exit(1);
+		}
 	}
-	void NeuralNetwork::add_layer(const std::string& layer, Shape shape)
+	void NeuralNetwork::add_layer(const std::string& layer_name, Shape shape)
 	{
-		std::unordered_map<std::string, std::function<Layer::Base*(Shape shape)>>::iterator it = Layer::constructors.find(layer);
-		assert(it != Layer::constructors.end());
-
-		std::function<Layer::Base*(Shape shape)> layer_constructor = it->second;
-		add_layer(*layer_constructor(shape));
+		if (Layer::is_valid(layer_name))
+		{
+			std::function<Layer::Base*(Shape shape)> layer_constructor = Layer::get_constructor(layer_name);
+			add_layer(*layer_constructor(shape));
+		}
+		else
+		{
+			std::cerr << "[NeuralNetwork] add_layer: invalid layer name `" << layer_name << "'" << std::endl;
+			exit(1);
+		}
 	}
-		// m_layers.push_back(*layer_constructor(shape));
 }
 
 /*

@@ -1,7 +1,9 @@
 #include <time.h>
+#include <iostream>
 
 #include <anna/neural_network.h>
 #include <anna/layers/all.h>
+#include <anna/layer.h> // TMP
 
 int main(void)
 {
@@ -13,8 +15,8 @@ int main(void)
 	nn.output_shape({ 3, 1, 1 });
 
 	nn.add_layer("input"                           );
-	nn.add_layer("full_connected",   Shape(7, 1, 1));
-	nn.add_layer("hyperbolic_tanget"               );
+	nn.add_layer("full_connected",    Shape(7, 1, 1));
+	nn.add_layer("hyperbolic_tangent"               );
 	nn.add_layer("output"                          );
 
 	// nn.forward();
