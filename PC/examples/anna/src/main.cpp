@@ -13,17 +13,17 @@ int main(void)
 	nn.input_shape ({ 4, 1, 1 });
 	nn.output_shape({ 3, 1, 1 });
 
-	nn.add_layer("input"              /*  input   */);
-	nn.add_layer("full_connected",    Shape(7, 1, 1));
-	nn.add_layer("hyperbolic_tangent" /* constant */);
-	nn.add_layer("output"             /*  output  */);
+//	nn.add_layer("input"              /*  input   */);
+//	nn.add_layer("full_connected",    Shape(7, 1, 1));
+//	nn.add_layer("hyperbolic_tangent" /* constant */);
+//	nn.add_layer("output"             /*  output  */);
 
-	/* ALTERNATIVE SYNTAX
+//	/* ALTERNATIVE SYNTAX
 	nn << *new Layer::Input            (           );
 	nn << *new Layer::FullConnected    ({ 7, 1, 1 });
 	nn << *new Layer::HyperbolicTangent(           );
-	nn << *new Layer::FullConnected    (           );
-	*/
+	nn << *new Layer::Output           (           );
+//	*/
 	/* ALTERNATIVE SYNTAX
 	nn << *new Layer::Input            ({ 4, 1, 1 });
 	nn << *new Layer::FullConnected    ({ 7, 1, 1 });
