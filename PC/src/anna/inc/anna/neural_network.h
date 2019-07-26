@@ -32,15 +32,16 @@ namespace Anna
 			~NeuralNetwork(void);
 
 		public:
-			void add_layer(const std::string& layer_name);
-			void add_layer(const std::string& layer_name, Shape shape);
-			void add_layer(Layer::Base& layer);
-			NeuralNetwork& operator<<(Layer::Base& layer);
+			void add_layer(      Layer::Base& layer,      Shape shape = Shape(0, 0, 0));
+			void add_layer(const std::string& layer_name, Shape shape = Shape(0, 0, 0));
 
 			void forward();
 			void train();
 
 			void generate_random_weights(void);
+
+		public: // OPERATORS
+			NeuralNetwork& operator<<(Layer::Base& layer);
 
 		public: // GETTERS
 			Hyperparameters& hyperparameters(void);
@@ -58,7 +59,8 @@ namespace Anna
 		*/
 	};
 
-	inline void NeuralNetwork::add_layer(Layer::Base& layer) { *this << layer; }
+	// OPERATORS
+	inline NeuralNetwork& NeuralNetwork::operator<<(Layer::Base& layer) { add_layer(layer); return *this; }
 
 	// GETTERS
 	inline Hyperparameters& NeuralNetwork::hyperparameters(void) { return *m_hyperparameters; }
