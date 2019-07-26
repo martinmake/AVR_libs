@@ -2,6 +2,7 @@
 #define _ANNA_SHAPE_H_
 
 #include <inttypes.h>
+#include <iostream>
 
 namespace Anna
 {
