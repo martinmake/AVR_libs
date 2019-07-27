@@ -1,12 +1,17 @@
 #include <time.h>
 #include <iostream>
 
+#include <anna/tensor.h>
 #include <anna/neural_network.h>
 #include <anna/layers/all.h>
 
 int main(void)
 {
 	using namespace Anna;
+
+	Tensor tensor({2, 2});
+	tensor.set_random(0.0, 1.0, time(NULL));
+	std::cout << (std::string) tensor;
 
 	NeuralNetwork nn;
 

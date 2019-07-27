@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <iomanip>
 
 #include "cuda/allocator.h"
 #include "tensor.h"
@@ -13,6 +14,7 @@ namespace Anna
 	}
 
 	Tensor::Tensor(Shape initial_shape)
+		: m_d_data(nullptr)
 	{
 		if (initial_shape.is_valid())
 			shape(initial_shape);
@@ -23,22 +25,14 @@ namespace Anna
 		shape(Shape::INVALID);
 	}
 
-	void Tensor::copy_from_host(float* h_pointer)
+	void Tensor::copy_from_host(const float* h_pointer)
 	{
 		Cuda::allocator.memcpy(h_pointer, m_d_data, m_shape.hypervolume(), Cuda::CopyDirection::HOST_TO_DEVICE);
-	}
-	void Tensor::copy_from_host(const std::vector<float>& h_vector)
-	{
-		Cuda::allocator.memcpy(&h_vector[0], m_d_data, m_shape.hypervolume(), Cuda::CopyDirection::HOST_TO_DEVICE);
 	}
 
 	void Tensor::copy_to_host(float* h_pointer) const
 	{
 		Cuda::allocator.memcpy(m_d_data, h_pointer, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_HOST);
-	}
-	void Tensor::copy_to_host(std::vector<float>& h_vector) const
-	{
-		Cuda::allocator.memcpy(m_d_data, &h_vector[0], m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_HOST);
 	}
 
 	void Tensor::set(Shape location, float value)
@@ -58,6 +52,17 @@ namespace Anna
 		return value;
 	}
 
+	void Tensor::set_random(float lower_limit, float upper_limit)
+	{
+		std::vector<float> h_data(m_shape.hypervolume());
+
+		for (std::vector<float>::iterator it = h_data.begin(); it < h_data.end(); it++)
+		for (uint64_t i = 0; i < m_shape.hypervolume(); i++)
+			*it = (upper_limit - lower_limit) * ((float) std::rand() / RAND_MAX) + lower_limit;
+
+		copy_from_host(h_data);
+	}
+
 	uint64_t Tensor::shape_to_idx(Shape location) const
 	{
 		return location.width() +
@@ -69,10 +74,10 @@ namespace Anna
 	Tensor::operator std::string() const
 	{
 		std::stringstream output;
-		std::vector<float> h_data_vector(m_shape.hypervolume());
-		float* h_data = &h_data_vector[0];
+		std::vector<float> h_data(m_shape.hypervolume());
 
 		copy_to_host(h_data);
+		std::vector<float>::iterator it = h_data.begin();
 		for (uint64_t time = 0; time < m_shape.time(); time++)
 		{
 			for (uint64_t channel_count = 0; channel_count < m_shape.channel_count(); channel_count++)
@@ -81,8 +86,8 @@ namespace Anna
 				{
 					for (uint64_t width = 0; width < m_shape.width(); width++)
 					{
-						output << h_data << " ";
-						h_data++;
+						output << std::fixed << std::setfill(' ') << std::setw(7) << (*it < 0 ? '-' : '+') << std::setprecision(3) << *it << " ";
+						it++;
 					}
 					output << std::endl;
 				}
@@ -95,7 +100,7 @@ namespace Anna
 	}
 
 	// SETTERS
-	void Tensor::shape(Shape new_shape)
+	void Tensor::shape(Shape new_shape) // TODO: COPY DATA TO THE NEW MEMORY IF ANY
 	{
 		m_shape = new_shape;
 
