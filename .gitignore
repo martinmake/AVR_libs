@@ -3,11 +3,13 @@
 *.lo
 *.o
 *.co
+*.cuo
 *.oc
 *.obj
 
 # Object dependencies
 *.d
+*.cud
 
 # Precompiled Headers
 *.gch

@@ -45,7 +45,7 @@
             "-std=c++14",
             "-o",
             "obj/main.o",
-            "inc/main.cpp"
+            "src/main.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/examples/anna",
         "file": "inc/main.cpp"
@@ -71,7 +71,7 @@
             "-std=c++14",
             "-o",
             "obj/main.o",
-            "./main.cpp"
+            "src/main.cpp"
         ],
         "directory": "/home/arch/Documents/libs/PC/examples/anna",
         "file": "./main.cpp"
