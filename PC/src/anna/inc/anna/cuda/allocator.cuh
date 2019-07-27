@@ -17,7 +17,7 @@ namespace Anna
 
 		extern void cuda_memset(void* d_pointer, uint8_t value, uint64_t size);
 
-		extern void cuda_memcpy(void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction);
+		extern void cuda_memcpy(const void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction);
 
 		extern uint64_t cuda_max_allocation_size(void);
 	}

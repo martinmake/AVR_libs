@@ -13,7 +13,7 @@ namespace Anna
 		extern void* malloc(uint64_t size);
 		extern void free(void* d_pointer);
 		extern void memset(void* d_pointer, uint8_t value, uint64_t size);
-		extern void memcpy(void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction);
+		extern void memcpy(const void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction);
 		extern uint64_t max_allocation_size(void);
 
 		template <typename T>
@@ -27,7 +27,7 @@ namespace Anna
 				T* allocate(uint64_t count) const;
 				void deallocate(T* d_pointer) const;
 
-				void memcpy(T* source_pointer, T* destination_pointer, uint64_t count, CopyDirection direction) const;
+				void memcpy(const T* source_pointer, T* destination_pointer, uint64_t count, CopyDirection direction) const;
 				void clear(T* pointer, uint64_t count) const;
 
 			public: // GETTERS
@@ -58,7 +58,7 @@ namespace Anna
 		}
 
 		template <typename T>
-		void Allocator<T>::memcpy(T* source_pointer, T* destination_pointer, uint64_t count, CopyDirection direction) const
+		void Allocator<T>::memcpy(const T* source_pointer, T* destination_pointer, uint64_t count, CopyDirection direction) const
 		{
 			Cuda::memcpy(source_pointer, destination_pointer, count * sizeof(T), direction);
 		}

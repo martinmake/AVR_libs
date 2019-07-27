@@ -27,7 +27,7 @@ namespace Anna
 			cudaCall(cudaMemset(d_pointer, value, size));
 		}
 
-		void cuda_memcpy(void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction)
+		void cuda_memcpy(const void* source_pointer, void* destination_pointer, uint64_t size, CopyDirection direction)
 		{
 			switch (direction)
 			{
