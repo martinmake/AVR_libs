@@ -20,6 +20,11 @@ namespace Anna
 			void copy_from_host(float* h_pointer);
 			void copy_to_host  (float* h_pointer) const;
 
+			void  set(Shape location, float value);
+			float get(Shape location) const;
+
+			uint64_t shape_to_idx(Shape location) const;
+
 		public: // GETTERS
 			const Shape& shape(void) const;
 		public: // SETTERS
