@@ -16,21 +16,24 @@ namespace Anna
 		class Base
 		{
 			protected: // MEMBER VARIABLES
-				Shape m_shape;
+				Shape m_input_shape,
+				      m_output_shape;
 				std::shared_ptr<Hyperparameters> m_hyperparameters;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				Base(Shape initial_shape = Shape(0, 0, 0));
+				Base(Shape initial_output_shape = Shape::INVALID);
 				~Base(void);
 
 			public: // MEMBER FUNCTIONS
-				void attach_to_neural_network(std::shared_ptr<Hyperparameters> initial_hyperparameters);
-				void attach_to_neural_network(const Shape& initial_shape, std::shared_ptr<Hyperparameters> initial_hyperparameters);
+				void attach_to_neural_network(const Shape& initial_input_shape, const Shape& initial_output_shape, std::shared_ptr<Hyperparameters> initial_hyperparameters);
 
 			public: // GETTERS
-				const Shape& shape(void) const;
+				        const Shape&   input_shape         (void) const;
+				        const Shape&   output_shape        (void) const;
+				// virtual       uint64_t trainable_parameters(void) const;
 			public: // SETTERS
-				void shape(const Shape& new_shape);
+				void input_shape (const Shape& new_input_shape );
+				void output_shape(const Shape& new_output_shape);
 			public: // GETTERS FOR STATIC VARIABLES
 				virtual const std::string& name              (void) const;
 				virtual       bool         changes_data_shape(void) const;
@@ -39,9 +42,11 @@ namespace Anna
 		};
 
 		// GETTERS
-		inline const Shape& Base::shape(void) const { return m_shape; }
+		inline const Shape& Base::input_shape (void) const { return m_input_shape;  }
+		inline const Shape& Base::output_shape(void) const { return m_output_shape; }
 		// SETTERS
-		inline void Base::shape(const Shape& new_shape) { m_shape = new_shape; }
+		inline void Base::input_shape (const Shape& new_input_shape ) { m_input_shape  = new_input_shape;  }
+		inline void Base::output_shape(const Shape& new_output_shape) { m_output_shape = new_output_shape; }
 		// GETTERS FOR STATIC VARIABLES
 		inline const std::string& Base::name              (void) const { assert(false && "THIS IS JUST A TEMPLATE"); }
 		inline       bool         Base::changes_data_shape(void) const { assert(false && "THIS IS JUST A TEMPLATE"); }

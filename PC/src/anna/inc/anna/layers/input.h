@@ -18,7 +18,7 @@ namespace Anna
 				static const bool        IS_OUTPUT;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				Input(Shape initial_shape = Shape(0, 0, 0));
+				Input(Shape initial_output_shape = Shape(0, 0, 0));
 				~Input(void);
 
 			public: // GETTERS FOR STATIC VARIABLES

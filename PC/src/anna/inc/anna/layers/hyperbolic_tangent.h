@@ -18,7 +18,7 @@ namespace Anna
 				static const bool        IS_OUTPUT;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				HyperbolicTangent(Shape initial_shape = Shape(0, 0, 0));
+				HyperbolicTangent(Shape initial_output_shape = Shape(0, 0, 0));
 				~HyperbolicTangent(void);
 
 			public: // GETTERS FOR STATIC VARIABLES
