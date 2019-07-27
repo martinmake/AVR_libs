@@ -23,6 +23,7 @@ namespace Anna
 
 		public:
 			bool is_valid(void) const;
+			uint64_t hypervolume(void) const;
 
 		public: // GETTERS
 			uint16_t width         (void) const;
@@ -38,6 +39,7 @@ namespace Anna
 	};
 
 	inline bool Shape::is_valid(void) const { return m_width && m_height && m_channel_count && m_time; }
+	inline uint64_t Shape::hypervolume(void) const { return m_width * m_height * m_channel_count * m_time; }
 
 	// GETTERS
 	inline uint16_t Shape::width         (void) const { return m_width;          }

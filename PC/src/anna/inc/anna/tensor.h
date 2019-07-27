@@ -11,24 +11,24 @@ namespace Anna
 	{
 		private:
 			Shape  m_shape;
-			float* m_data;
+			float* m_d_data;
 
 		public:
 			Tensor(Shape initial_shape = Shape::INVALID);
 			~Tensor(void);
 
+			void copy_from_host(float* h_pointer);
+			void copy_to_host  (float* h_pointer) const;
+
 		public: // GETTERS
-			Shape& shape(void);
+			const Shape& shape(void) const;
 		public: // SETTERS
 			void shape(Shape new_shape);
 
 	};
 
 	// GETTERS
-	inline Shape& Tensor::shape(void) { return m_shape; }
-
-	// SETTERS
-	inline void Tensor::shape(Shape new_shape) { m_shape = new_shape; }
+	inline const Shape& Tensor::shape(void) const { return m_shape; }
 }
 
 #endif
