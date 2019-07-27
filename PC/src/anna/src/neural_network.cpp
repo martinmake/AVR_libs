@@ -18,54 +18,10 @@ namespace Anna
 	{
 	}
 
-	void NeuralNetwork::add_layer(Layer::Base& layer, Shape shape)
-	{
-		if (m_layers.size() == 0 && !layer.is_input())
-			add_layer(*new Layer::Input());
-
-		if (!layer.shape().is_valid())
-		{
-			if (shape.is_valid())
-				layer.shape(shape);
-			else
-			{
-				if (layer.is_input())
-				{
-					if (m_input_shape.is_valid())
-						layer.shape(m_input_shape);
-					else
-					{
-						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Input/\"input\" call this->input_shape(Shape shape) before this call"  << std::endl;
-						exit(1);
-					}
-				}
-				else if (layer.is_output())
-				{
-					if (m_output_shape.is_valid())
-						layer.shape(m_output_shape);
-					else
-					{
-						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" call this->output_shape(Shape shape) before this call"  << std::endl;
-						exit(1);
-					}
-				}
-				else if (!layer.changes_data_shape())
-					layer.shape(m_layers.rbegin()->shape());
-				else
-				{
-					std::cerr << "[NeuralNetwork] add_layer: shape must be specified for `" << layer.name() << "'"  << std::endl;
-					exit(1);
-				}
-			}
-		}
-
-		layer.attach_to_neural_network(m_hyperparameters);
-		m_layers.push_back(layer);
-	}
 	void NeuralNetwork::add_layer(const std::string& layer_name, Shape shape)
 	{
 		if (Layer::is_valid(layer_name))
-			add_layer(*Layer::data(layer_name).constructor(Shape(0, 0, 0)), shape);
+			add_layer(*Layer::data(layer_name).constructor(Shape::INVALID), shape);
 		else
 		{
 			std::cerr << "[NeuralNetwork] add_layer: invalid layer name `" << layer_name << "'" << std::endl;
