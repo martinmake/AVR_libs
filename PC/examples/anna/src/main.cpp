@@ -10,25 +10,26 @@ int main(void)
 
 	NeuralNetwork nn;
 
-	nn.input_shape ({ 4, 1, 1 });
-	nn.output_shape({ 3, 1, 1 });
+	nn.input_shape ({ 4, 1, 1, 1 });
+	nn.output_shape({ 3, 1, 1, 1 });
 
-//	nn.add_layer("input"              /*  input   */);
-//	nn.add_layer("full_connected",    Shape(7, 1, 1));
-//	nn.add_layer("hyperbolic_tangent" /* constant */);
-//	nn.add_layer("output"             /*  output  */);
-
+// 	/* SYNTAX
+// 	nn.add_layer("input"              /*  input   */);
+// 	nn.add_layer("full_connected",    Shape(7, 1, 1));
+// 	nn.add_layer("hyperbolic_tangent" /* constant */);
+// 	nn.add_layer("output"             /*  output  */);
+// 	*/
 //	/* ALTERNATIVE SYNTAX
-	nn << *new Layer::Input            (           );
-	nn << *new Layer::FullConnected    ({ 7, 1, 1 });
-	nn << *new Layer::HyperbolicTangent(           );
-	nn << *new Layer::Output           (           );
+	nn << new Layer::Input            (          ); // optional
+	nn << new Layer::FullConnected    (Shape{ 7 });
+	nn << new Layer::HyperbolicTangent(          );
+	nn << new Layer::Output           (          );
 //	*/
 	/* ALTERNATIVE SYNTAX
-	nn << *new Layer::Input            ({ 4, 1, 1 });
-	nn << *new Layer::FullConnected    ({ 7, 1, 1 });
-	nn << *new Layer::HyperbolicTangent({ 7, 1, 1 });
-	nn << *new Layer::FullConnected    ({ 3, 1, 1 });
+	nn << new Layer::Input            ({ 4, 1, 1 });
+	nn << new Layer::FullConnected    ({ 7, 1, 1 });
+	nn << new Layer::HyperbolicTangent({ 7, 1, 1 });
+	nn << new Layer::FullConnected    ({ 3, 1, 1 });
 	*/
 
 	nn.hyperparameters().weight_generation_lower_limit(-0.01);
