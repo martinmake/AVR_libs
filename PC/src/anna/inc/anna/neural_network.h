@@ -6,12 +6,9 @@
 #include <string>
 #include <memory>
 
-#include "layers/all.h"
-
-#include "anna/cuda/device.ch"
-#include "anna/cuda/debug.ch"
-
+#include "anna/cuda/device.cuh"
 #include "anna/hyperparameters.h"
+#include "anna/layers/all.h"
 
 namespace Anna
 {

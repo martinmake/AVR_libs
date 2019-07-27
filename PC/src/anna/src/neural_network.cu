@@ -1,11 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <inttypes.h>
-#include <iostream>
-
 #include <cuda_runtime.h>
 
-#include "neural_network.h"
+#include "neural_network.cuh"
 
 /*
 __device__ uint16_t get_index_of_max_element(const float* d_array, uint16_t size)
