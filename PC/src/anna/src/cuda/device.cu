@@ -1,11 +1,10 @@
-#include "cuda/device.ch"
-
 #include <stdio.h>
 
 #include <cuda_runtime.h>
 #include <cuda_profiler_api.h>
 
-#include "anna/cuda/debug.ch"
+#include "cuda/device.cuh"
+#include "cuda/debug.cuh"
 
 namespace Anna
 {
