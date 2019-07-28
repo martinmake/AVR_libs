@@ -30,16 +30,16 @@ namespace Anna
 
 	void NeuralNetwork::forward(const Tensor& input, Tensor& output)
 	{
-		// TODO
-	}
+		std::list<std::shared_ptr<Layer::Base>>::iterator previous_layer = m_layers.begin(); previous_layer--;
+		std::list<std::shared_ptr<Layer::Base>>::iterator current_layer  = m_layers.begin();
 
-	void NeuralNetwork::set_random_trainable_parameters(void)
-	{
-		for (std::shared_ptr<Layer::Base>& layer : m_layers)
-		{
-			if (layer->has_trainable_parameters())
-				layer->set_random_trainable_parameters();
-		}
+		(*current_layer)->output(input);
+
+		for (; current_layer != m_layers.end(); current_layer++, previous_layer++)
+			(*current_layer)->forward((*previous_layer)->output());
+
+		current_layer--;
+		output = (*current_layer)->output();
 	}
 }
 
