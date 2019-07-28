@@ -33,11 +33,6 @@ int main(void)
 	nn << new Layer::FullConnected    ({ 3, 1, 1 });
 	*/
 
-	nn.hyperparameters().weight_generation_lower_limit(-0.01);
-	nn.hyperparameters().weight_generation_upper_limit(+0.01);
-	nn.hyperparameters().weight_generation_seed(time(NULL));
-	nn.set_random_trainable_parameters();
-
 	Tensor input(nn.input_shape());
 	Tensor output(nn.output_shape());
 

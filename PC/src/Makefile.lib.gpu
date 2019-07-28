@@ -11,6 +11,7 @@ ARC:=$(LLDIR)/lib$(LNAME).a
 SO :=$(LLDIR)/lib$(LNAME).so
 
 DEFS+=$(EDEFS)
+DEFS:=$(addprefix -D,$(DEFS))
 
 PHEADERS:=$(shell find $(PIDIR) -name '*.h' )
 PHEADERS+=$(shell find $(PIDIR) -name '*.cuh')

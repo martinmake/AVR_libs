@@ -9,7 +9,7 @@
 	const cudaError_t error = call;                                                                \
 	if (error != cudaSuccess)                                                                      \
 	{                                                                                              \
-		printf("[ERROR:%d]: %s:%d, %s", error, __FILE__, __LINE__, cudaGetErrorString(error)); \
+		printf("[ERROR:%d]: %s:%d, %s\n", error, __FILE__, __LINE__, cudaGetErrorString(error)); \
 		exit(-10 * error);                                                                     \
 	}                                                                                              \
 }

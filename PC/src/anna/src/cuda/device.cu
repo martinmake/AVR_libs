@@ -21,8 +21,8 @@ namespace Anna
 
 		Device::~Device(void)
 		{
-			cudaCall(cudaDeviceReset());
-			cudaCall(cudaProfilerStop());
+		// cudaCall(cudaDeviceReset());
+		// cudaCall(cudaProfilerStop());
 		}
 	}
 }
