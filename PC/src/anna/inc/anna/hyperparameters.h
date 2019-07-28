@@ -14,9 +14,6 @@ namespace Anna
 			float    m_learning_rate;
 			uint8_t  m_batch_size;
 			float    m_noise;
-			uint16_t m_weight_generation_seed;
-			float    m_weight_generation_lower_limit;
-			float    m_weight_generation_upper_limit;
 
 		public:
 			Hyperparameters(void);
@@ -43,9 +40,6 @@ namespace Anna
 			void learning_rate                 (float    new_learning_rate                );
 			void batch_size                    (uint8_t  new_batch_size                   );
 			void noise                         (float    new_noise                        );
-			void weight_generation_seed        (uint16_t new_weight_generation_seed       );
-			void weight_generation_lower_limit (float    new_weight_generation_lower_limit);
-			void weight_generation_upper_limit (float    new_weight_generation_upper_limit);
 
 	};
 
@@ -58,9 +52,6 @@ namespace Anna
 	inline float    Hyperparameters::learning_rate                 (void) const { return m_learning_rate;                 }
 	inline uint8_t  Hyperparameters::batch_size                    (void) const { return m_batch_size;                    }
 	inline float    Hyperparameters::noise                         (void) const { return m_noise;                         }
-	inline uint16_t Hyperparameters::weight_generation_seed        (void) const { return m_weight_generation_seed;        }
-	inline float    Hyperparameters::weight_generation_lower_limit (void) const { return m_weight_generation_lower_limit; }
-	inline float    Hyperparameters::weight_generation_upper_limit (void) const { return m_weight_generation_upper_limit; }
 
 	// SETTERS
 	inline void Hyperparameters::dropout                       (float    new_dropout                      ) { m_dropout                       = new_dropout;                       }
@@ -69,9 +60,6 @@ namespace Anna
 	inline void Hyperparameters::learning_rate                 (float    new_learning_rate                ) { m_learning_rate                 = new_learning_rate;                 }
 	inline void Hyperparameters::batch_size                    (uint8_t  new_batch_size                   ) { m_batch_size                    = new_batch_size;                    }
 	inline void Hyperparameters::noise                         (float    new_noise                        ) { m_noise                         = new_noise;                         }
-	inline void Hyperparameters::weight_generation_seed        (uint16_t new_weight_generation_seed       ) { m_weight_generation_seed        = new_weight_generation_seed;        }
-	inline void Hyperparameters::weight_generation_lower_limit (float    new_weight_generation_lower_limit) { m_weight_generation_lower_limit = new_weight_generation_lower_limit; }
-	inline void Hyperparameters::weight_generation_upper_limit (float    new_weight_generation_upper_limit) { m_weight_generation_upper_limit = new_weight_generation_upper_limit; }
 }
 
 #endif

@@ -27,5 +27,10 @@ namespace Anna
 
 			init();
 		}
+
+		void Base::init(void)
+		{
+			m_output.shape(m_output_shape);
+		}
 	}
 }
