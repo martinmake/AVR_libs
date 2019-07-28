@@ -32,6 +32,10 @@ namespace Anna
 				void set_random_trainable_parameters(void) override;
 				void init(void) override;
 
+			public:
+				void cuda_forward(const Tensor& input) override;
+				void cpu_forward (const Tensor& input) override;
+
 			public: // GETTERS
 				uint64_t trainable_parameters(void) const override;
 				uint64_t flops               (void) const override;

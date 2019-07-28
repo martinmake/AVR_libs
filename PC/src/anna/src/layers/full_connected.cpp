@@ -21,12 +21,10 @@ namespace Anna
 		{
 		}
 
-		void FullConnected::set_random_trainable_parameters(void) // TODO
-		{
-		}
-
 		void FullConnected::init(void)
 		{
+			Base::init();
+
 			output_shape({ m_output_shape.hypervolume() });
 
 			m_weights.shape({ m_input_shape.hypervolume(), m_output_shape.hypervolume() });
