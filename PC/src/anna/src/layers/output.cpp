@@ -4,10 +4,7 @@ namespace Anna
 {
 	namespace Layer
 	{
-		const std::string Output::NAME               = "output";
-		const bool        Output::CHANGES_DATA_SHAPE =  true;
-		const bool        Output::IS_INPUT           =  false;
-		const bool        Output::IS_OUTPUT          =  true;
+		const std::string Output::NAME = "output";
 
 		Output::Output(Shape initial_shape)
 			: Base(initial_shape)

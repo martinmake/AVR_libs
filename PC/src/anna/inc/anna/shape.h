@@ -9,16 +9,20 @@ namespace Anna
 	struct Shape
 	{
 		private:
-			uint16_t m_width;
-			uint16_t m_height;
-			uint16_t m_channel_count;
-			uint16_t m_time;
+			uint64_t m_width;
+			uint64_t m_height;
+			union
+			{
+				uint64_t m_depth;
+				uint64_t m_channels_count;
+			};
+			uint64_t m_time;
 		public:
 			static const Shape INVALID;
 
 		public:
 			Shape(void);
-			Shape(uint16_t initial_width, uint16_t initial_height = 1, uint16_t initial_channel_count = 1, uint16_t initial_time = 1);
+			Shape(uint64_t initial_width, uint64_t initial_height = 1, uint64_t initial_depth = 1, uint64_t initial_time = 1);
 			~Shape(void);
 
 		public:
@@ -26,32 +30,34 @@ namespace Anna
 			uint64_t hypervolume(void) const;
 
 		public: // GETTERS
-			uint16_t width         (void) const;
-			uint16_t height        (void) const;
-			uint16_t channel_count (void) const;
-			uint16_t time          (void) const;
+			uint64_t width         (void) const;
+			uint64_t height        (void) const;
+			uint64_t depth         (void) const;
+			uint64_t channels_count(void) const;
+			uint64_t time          (void) const;
 		public: // SETTERS
-			void width         (uint16_t new_width         );
-			void height        (uint16_t new_height        );
-			void channel_count (uint16_t new_channel_count );
-			void time          (uint16_t new_time          );
-
+			void width         (uint64_t new_width         );
+			void height        (uint64_t new_height        );
+			void depth         (uint64_t new_depth         );
+			void channels_count(uint64_t new_channels_count);
+			void time          (uint64_t new_time          );
 	};
 
-	inline bool Shape::is_valid(void) const { return m_width && m_height && m_channel_count && m_time; }
-	inline uint64_t Shape::hypervolume(void) const { return m_width * m_height * m_channel_count * m_time; }
+	inline bool Shape::is_valid(void) const { return m_width && m_height && m_depth && m_time; }
+	inline uint64_t Shape::hypervolume(void) const { return m_width * m_height * m_depth * m_time; }
 
 	// GETTERS
-	inline uint16_t Shape::width         (void) const { return m_width;          }
-	inline uint16_t Shape::height        (void) const { return m_height;         }
-	inline uint16_t Shape::channel_count (void) const { return m_channel_count;  }
-	inline uint16_t Shape::time          (void) const { return m_time;           }
-
+	inline uint64_t Shape::width         (void) const { return m_width;          }
+	inline uint64_t Shape::height        (void) const { return m_height;         }
+	inline uint64_t Shape::depth         (void) const { return m_depth;          }
+	inline uint64_t Shape::channels_count(void) const { return m_channels_count; }
+	inline uint64_t Shape::time          (void) const { return m_time;           }
 	// SETTERS
-	inline void Shape::width         (uint16_t new_width         ) { m_width          = new_width;          }
-	inline void Shape::height        (uint16_t new_height        ) { m_height         = new_height;         }
-	inline void Shape::channel_count (uint16_t new_channel_count ) { m_channel_count  = new_channel_count;  }
-	inline void Shape::time          (uint16_t new_time          ) { m_time           = new_time;           }
+	inline void Shape::width         (uint64_t new_width )         { m_width          = new_width;          }
+	inline void Shape::height        (uint64_t new_height)         { m_height         = new_height;         }
+	inline void Shape::depth         (uint64_t new_depth )         { m_depth          = new_depth;          }
+	inline void Shape::channels_count(uint64_t new_channels_count) { m_channels_count = new_channels_count; }
+	inline void Shape::time          (uint64_t new_time  )         { m_time           = new_time;           }
 }
 
 #endif

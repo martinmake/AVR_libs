@@ -31,8 +31,12 @@ namespace Anna
 			float get(Shape location) const;
 
 		public:
+			void set_random(float range);
+			void set_random(float range, int seed);
 			void set_random(float lower_limit, float upper_limit);
 			void set_random(float lower_limit, float upper_limit, int seed);
+
+			void clear(void);
 
 		public:
 			uint64_t shape_to_idx(Shape location) const;
@@ -50,6 +54,8 @@ namespace Anna
 	inline void Tensor::copy_from_host(const std::vector<float>& h_vector) { copy_from_host(&h_vector[0]); }
 	inline void Tensor::copy_to_host(std::vector<float>& h_vector) const { copy_to_host(&h_vector[0]); }
 
+	inline void Tensor::set_random(float range                                   ) { set_random(-range, +range);                        }
+	inline void Tensor::set_random(float range,                          int seed) { srand(seed); set_random(range);                    }
 	inline void Tensor::set_random(float lower_limit, float upper_limit, int seed) { srand(seed); set_random(lower_limit, upper_limit); }
 
 	// GETTERS

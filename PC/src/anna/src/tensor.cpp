@@ -63,12 +63,17 @@ namespace Anna
 		copy_from_host(h_data);
 	}
 
+	void Tensor::clear(void)
+	{
+		Cuda::allocator.clear(m_d_data, m_shape.hypervolume());
+	}
+
 	uint64_t Tensor::shape_to_idx(Shape location) const
 	{
 		return location.width() +
-		       location.height()        * m_shape.width() +
-		       location.channel_count() * m_shape.width() * m_shape.height() +
-		       location.time()          * m_shape.width() * m_shape.height() * m_shape.channel_count();
+		       location.height()* m_shape.width() +
+		       location.depth() * m_shape.width() * m_shape.height() +
+		       location.time()  * m_shape.width() * m_shape.height() * m_shape.depth();
 	}
 
 	Tensor::operator std::string() const
@@ -80,7 +85,7 @@ namespace Anna
 		std::vector<float>::iterator it = h_data.begin();
 		for (uint64_t time = 0; time < m_shape.time(); time++)
 		{
-			for (uint64_t channel_count = 0; channel_count < m_shape.channel_count(); channel_count++)
+			for (uint64_t channel_count = 0; channel_count < m_shape.depth(); channel_count++)
 			{
 				for (uint64_t height = 0; height < m_shape.height(); height++)
 				{

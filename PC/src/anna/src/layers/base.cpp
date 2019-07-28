@@ -24,6 +24,8 @@ namespace Anna
 			if (initial_input_shape.is_valid() ) m_input_shape     = initial_input_shape;
 			if (initial_output_shape.is_valid()) m_output_shape    = initial_output_shape;
 			if (true                           ) m_hyperparameters = initial_hyperparameters;
+
+			init();
 		}
 	}
 }

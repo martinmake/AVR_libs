@@ -8,6 +8,7 @@
 
 #include "anna/cuda/device.cuh"
 #include "anna/hyperparameters.h"
+#include "anna/tensor.h"
 #include "anna/layers/all.h"
 
 namespace Anna
@@ -30,16 +31,14 @@ namespace Anna
 			~NeuralNetwork(void);
 
 		public:
-			template <typename L>
-			void add_layer(        L& layer,      Shape shape = Shape::INVALID);
-			template <typename L>
-			void add_layer(        L* layer,      Shape shape = Shape::INVALID);
+			template <typename L> void add_layer(L& layer, Shape shape = Shape::INVALID);
+			template <typename L> void add_layer(L* layer, Shape shape = Shape::INVALID);
 			void add_layer(const std::string& layer_name, Shape shape = Shape::INVALID);
 
-			void forward();
-			void train();
+			void forward(const Tensor& input, Tensor& output);
+			void train(); // TODO
 
-			void generate_random_weights(void);
+			void set_random_trainable_parameters(void);
 
 		public: // OPERATORS
 			template <typename LayerType>
@@ -47,14 +46,11 @@ namespace Anna
 
 		public: // GETTERS
 			Hyperparameters& hyperparameters(void);
+			const Shape& input_shape (void) const;
+			const Shape& output_shape(void) const;
 		public: // SETTERS
 			void input_shape (Shape new_input_shape );
 			void output_shape(Shape new_output_shape);
-
-		/*
-			void train(float* dataset);
-			float* forward(const float* d_input, float* d_output, const float* d_weights);
-		*/
 	};
 
 	template <typename L>
@@ -66,10 +62,28 @@ namespace Anna
 		if (m_layers.size() == 0 && !layer.is_input())
 			add_layer(new Layer::Input());
 
+		if (layer.is_output() && m_output_shape.is_valid())
+		{
+			add_layer(new Layer::FullConnected(m_output_shape));
+			return;
+		}
+		else
+		{
+			std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" set output_shape of NeuralNetwork before this call"  << std::endl;
+			exit(1);
+		}
+
 		if (m_layers.size())
 			input_shape = (*m_layers.rbegin())->output_shape();
-		else
+		else if (m_input_shape.is_valid())
 			input_shape = m_input_shape;
+		else if (layer.output_shape().is_valid())
+			input_shape = layer.output_shape();
+		else
+		{
+			std::cerr << "[NeuralNetwork] add_layer: when using Layer::Intput/\"input\" set input_shape of NeuralNetwork before this call or construct/pass with output_shape"  << std::endl;
+			exit(1);
+		}
 
 		if (!layer.output_shape().is_valid())
 		{
@@ -77,17 +91,7 @@ namespace Anna
 				output_shape = shape;
 			else
 			{
-				if (layer.is_input())
-				{
-					if (m_input_shape.is_valid())
-						output_shape = m_input_shape;
-					else
-					{
-						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Input/\"input\" call this->input_shape(Shape shape) before this call"  << std::endl;
-						exit(1);
-					}
-				}
-				else if (layer.is_output())
+				if (layer.is_output())
 				{
 					if (m_output_shape.is_valid())
 						output_shape = m_output_shape;
@@ -120,6 +124,8 @@ namespace Anna
 
 	// GETTERS
 	inline Hyperparameters& NeuralNetwork::hyperparameters(void) { return *m_hyperparameters; }
+	inline const Shape& NeuralNetwork::input_shape (void) const { return m_input_shape;  }
+	inline const Shape& NeuralNetwork::output_shape(void) const { return m_output_shape; }
 	// SETTERS
 	inline void NeuralNetwork::input_shape (Shape new_input_shape ) { m_input_shape  = new_input_shape;  }
 	inline void NeuralNetwork::output_shape(Shape new_output_shape) { m_output_shape = new_output_shape; }

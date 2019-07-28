@@ -9,10 +9,6 @@ int main(void)
 {
 	using namespace Anna;
 
-	Tensor tensor({2, 2});
-	tensor.set_random(0.0, 1.0, time(NULL));
-	std::cout << (std::string) tensor;
-
 	NeuralNetwork nn;
 
 	nn.input_shape ({ 4, 1, 1, 1 });
@@ -40,9 +36,16 @@ int main(void)
 	nn.hyperparameters().weight_generation_lower_limit(-0.01);
 	nn.hyperparameters().weight_generation_upper_limit(+0.01);
 	nn.hyperparameters().weight_generation_seed(time(NULL));
-	nn.generate_random_weights();
+	nn.set_random_trainable_parameters();
 
-//	nn.forward();
+	Tensor input(nn.input_shape());
+	Tensor output(nn.output_shape());
+
+	input.set_random(0, 10);
+	nn.forward(input, output);
+
+	std::cout << "[INPUT]"  << std::endl << (std::string) input;
+	std::cout << "[OUTPUT]" << std::endl << (std::string) output;
 
 //	nn.learning_rate(0.05);
 //	nn.momentum(0.01);

@@ -9,9 +9,8 @@
 namespace Anna
 {
 	NeuralNetwork::NeuralNetwork(void)
-		: m_device(0)
+		: m_hyperparameters(std::make_shared<Hyperparameters>()), m_device(0)
 	{
-		m_hyperparameters = std::make_shared<Hyperparameters>();
 	}
 
 	NeuralNetwork::~NeuralNetwork(void)
@@ -21,7 +20,7 @@ namespace Anna
 	void NeuralNetwork::add_layer(const std::string& layer_name, Shape shape)
 	{
 		if (Layer::is_valid(layer_name))
-			add_layer(*Layer::data(layer_name).constructor(Shape::INVALID), shape);
+			add_layer(Layer::construct(layer_name), shape);
 		else
 		{
 			std::cerr << "[NeuralNetwork] add_layer: invalid layer name `" << layer_name << "'" << std::endl;
@@ -29,9 +28,18 @@ namespace Anna
 		}
 	}
 
-	void NeuralNetwork::generate_random_weights(void)
+	void NeuralNetwork::forward(const Tensor& input, Tensor& output)
 	{
 		// TODO
+	}
+
+	void NeuralNetwork::set_random_trainable_parameters(void)
+	{
+		for (std::shared_ptr<Layer::Base>& layer : m_layers)
+		{
+			if (layer->has_trainable_parameters())
+				layer->set_random_trainable_parameters();
+		}
 	}
 }
 
