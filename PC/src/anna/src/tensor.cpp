@@ -54,10 +54,9 @@ namespace Anna
 
 	void Tensor::set_random(float lower_limit, float upper_limit)
 	{
-		std::vector<float> h_data(m_shape.hypervolume());
+		std::vector<float> h_data(m_shape.hypervolume(), 0);
 
 		for (std::vector<float>::iterator it = h_data.begin(); it < h_data.end(); it++)
-		for (uint64_t i = 0; i < m_shape.hypervolume(); i++)
 			*it = (upper_limit - lower_limit) * ((float) std::rand() / RAND_MAX) + lower_limit;
 
 		copy_from_host(h_data);
