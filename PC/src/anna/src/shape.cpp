@@ -19,6 +19,17 @@ namespace Anna
 	{
 	}
 
+	// OPERATORS
+	bool Shape::operator==(const Shape& other) const
+	{
+		if (m_width  == other.width ())
+		if (m_height == other.height())
+		if (m_depth  == other.depth ())
+		if (m_time   == other.time  ())
+			return true;
+
+		return false;
+	}
 	Shape::operator std::string() const
 	{
 		std::stringstream output;

@@ -30,6 +30,8 @@ namespace Anna
 			uint64_t hypervolume(void) const;
 
 		public: // OPERATORS
+			bool operator==(const Shape& other) const;
+			bool operator!=(const Shape& other) const;
 			operator std::string() const;
 
 		public: // GETTERS
@@ -48,6 +50,9 @@ namespace Anna
 
 	inline bool Shape::is_valid(void) const { return m_width && m_height && m_depth && m_time; }
 	inline uint64_t Shape::hypervolume(void) const { return m_width * m_height * m_depth * m_time; }
+
+	// OPERATORS
+	inline bool Shape::operator!=(const Shape& other) const { return !(*this == other); }
 
 	// GETTERS
 	inline uint64_t Shape::width         (void) const { return m_width;          }
