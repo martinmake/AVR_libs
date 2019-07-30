@@ -34,15 +34,9 @@ namespace Anna
 		{
 			switch (direction)
 			{
-				case HOST_TO_DEVICE:
-					cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyHostToDevice));
-					return;
-				case DEVICE_TO_HOST:
-					cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyDeviceToHost));
-					return;
-				case DEVICE_TO_DEVICE:
-					cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyDeviceToDevice));
-					return;
+				case HOST_TO_DEVICE:   cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyHostToDevice  )); return;
+				case DEVICE_TO_HOST:   cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyDeviceToHost  )); return;
+				case DEVICE_TO_DEVICE: cudaCall(cudaMemcpy(destination_pointer, source_pointer, size, cudaMemcpyDeviceToDevice)); return;
 			}
 		}
 

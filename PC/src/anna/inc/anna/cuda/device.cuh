@@ -1,5 +1,5 @@
-#ifndef _ANNA_CUDA_DEVICE_H_
-#define _ANNA_CUDA_DEVICE_H_
+#ifndef _ANNA_CUDA_DEVICE_CUH_
+#define _ANNA_CUDA_DEVICE_CUH_
 
 #include <inttypes.h>
 
