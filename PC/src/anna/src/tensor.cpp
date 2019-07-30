@@ -16,8 +16,12 @@ namespace Anna
 	Tensor::Tensor(Shape initial_shape)
 		: m_d_data(nullptr)
 	{
-		if (initial_shape.is_valid())
-			shape(initial_shape);
+		shape(initial_shape);
+	}
+	Tensor::Tensor(const Tensor& other)
+		: m_d_data(nullptr)
+	{
+		*this = other;
 	}
 
 	Tensor::~Tensor(void)
@@ -90,26 +94,42 @@ namespace Anna
 				{
 					for (uint64_t width = 0; width < m_shape.width(); width++)
 					{
-						output << std::fixed << std::setfill(' ') << std::setw(7) << (*it < 0 ? '-' : '+') << std::setprecision(3) << *it << " ";
+						output << std::fixed << std::setfill(' ') << std::setw(7) << (*it < 0 ? '\0' : '+') << std::setprecision(3) << *it << " ";
 						it++;
 					}
-					output << std::endl;
+					if (it != h_data.end()) output << std::endl;
 				}
-				output << std::endl;
+				if (it != h_data.end()) output << std::endl;
 			}
-			output << std::endl;
+			if (it != h_data.end()) output << std::endl;
 		}
+		output << std::endl;
 
 		return output.str();
+	}
+
+	// OPERATORS
+	Tensor& Tensor::operator=(const Tensor& other)
+	{
+		shape(other.shape());
+		Cuda::allocator.memcpy(other.d_data(), m_d_data, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_DEVICE);
+
+		return *this;
 	}
 
 	// SETTERS
 	void Tensor::shape(Shape new_shape) // TODO: COPY DATA TO THE NEW MEMORY IF ANY
 	{
-		m_shape = new_shape;
+		if (m_shape.hypervolume() == new_shape.hypervolume())
+		{
+			m_shape = new_shape;
+			return;
+		}
 
+		m_shape = new_shape;
 		if (m_d_data) Cuda::allocator.deallocate(m_d_data);
 
-		m_d_data = Cuda::allocator.allocate(m_shape.hypervolume());
+		if (m_shape.is_valid()) m_d_data = Cuda::allocator.allocate(m_shape.hypervolume());
+		else                    m_d_data = nullptr;
 	}
 }

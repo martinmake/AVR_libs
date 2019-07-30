@@ -17,6 +17,7 @@ namespace Anna
 
 		public:
 			Tensor(Shape initial_shape = Shape::INVALID);
+			Tensor(const Tensor&  other);
 			~Tensor(void);
 
 		public:
@@ -42,13 +43,15 @@ namespace Anna
 			uint64_t shape_to_idx(Shape location) const;
 
 		public: // OPERATORS
+			Tensor& operator=(const Tensor& other);
 			operator std::string() const;
 
 		public: // GETTERS
-			const Shape& shape(void) const;
+			const Shape& shape(void)  const;
+			      float* d_data(void);
+			const float* d_data(void) const;
 		public: // SETTERS
 			void shape(Shape new_shape);
-
 	};
 
 	inline void Tensor::copy_from_host(const std::vector<float>& h_vector) { copy_from_host(&h_vector[0]); }
@@ -59,7 +62,9 @@ namespace Anna
 	inline void Tensor::set_random(float range) { set_random(-range, +range); }
 
 	// GETTERS
-	inline const Shape& Tensor::shape(void) const { return m_shape; }
+	inline const Shape& Tensor::shape (void) const { return m_shape;  }
+	inline       float* Tensor::d_data(void)       { return m_d_data; }
+	inline const float* Tensor::d_data(void) const { return m_d_data; }
 }
 
 #endif
