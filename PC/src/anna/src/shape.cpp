@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "shape.h"
 
 namespace Anna
@@ -15,5 +17,14 @@ namespace Anna
 
 	Shape::~Shape(void)
 	{
+	}
+
+	Shape::operator std::string() const
+	{
+		std::stringstream output;
+
+		output << m_width << ", " << m_height << ", " << m_depth << ", " << m_time;
+
+		return output.str();
 	}
 }

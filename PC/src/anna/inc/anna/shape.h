@@ -29,6 +29,9 @@ namespace Anna
 			bool is_valid(void) const;
 			uint64_t hypervolume(void) const;
 
+		public: // OPERATORS
+			operator std::string() const;
+
 		public: // GETTERS
 			uint64_t width         (void) const;
 			uint64_t height        (void) const;
