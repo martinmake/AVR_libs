@@ -29,7 +29,6 @@ namespace Anna
 				~FullConnected(void);
 
 			public:
-				void set_random_trainable_parameters(void) override;
 				void init(void) override;
 
 			public:

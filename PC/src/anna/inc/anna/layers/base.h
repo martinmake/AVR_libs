@@ -65,8 +65,8 @@ namespace Anna
 			#endif
 		}
 
-		inline void Base::cuda_forward(const Tensor& input) { (void) input; }
-		inline void Base::cpu_forward (const Tensor& input) { (void) input; }
+		inline void Base::cuda_forward(const Tensor& input) { m_output = input; }
+		inline void Base::cpu_forward (const Tensor& input) { m_output = input; }
 
 		// GETTERS
 		inline const Shape&   Base::input_shape         (void) const { return m_input_shape;  }

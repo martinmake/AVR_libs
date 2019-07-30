@@ -12,6 +12,8 @@ namespace Anna
 		const bool        FullConnected::IS_OUTPUT                =  false;
 		const bool        FullConnected::HAS_TRAINABLE_PARAMETERS =  true;
 
+		static void cpu_forward_kernel(void);
+
 		FullConnected::FullConnected(Shape initial_output_shape)
 			: Base(initial_output_shape)
 		{
@@ -35,5 +37,8 @@ namespace Anna
 			m_biases.shape({ m_output_shape.hypervolume() });
 			m_biases.clear();
 		}
+
+		void FullConnected::cpu_forward(const Tensor& input) { (void) input; assert(false); }
+		static void cpu_forward_kernel(void) { assert(false); }
 	}
 }
