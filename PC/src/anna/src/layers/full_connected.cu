@@ -1,7 +1,6 @@
 #include "layers/full_connected.h"
 #include "cuda/debug.cuh"
-
-extern cudaError_t cudaConfigureCall(dim3 gridDim, dim3 blockDim, size_t sharedMem=0, cudaStream_t stream=0);
+#include "cuda/std.cuh"
 
 namespace Anna
 {
@@ -26,9 +25,9 @@ namespace Anna
 			dim3 grid((output_count + block.x - 1) / block.x);
 
 			cuda_forward_kernel<<<grid, block>>>(
-					input.d_data(),
-					m_output.d_data(),
-					m_weights.d_data(),
+					input.data(),
+					m_output.data(),
+					m_weights.data(),
 					input_count,
 					output_count);
 

@@ -35,8 +35,16 @@ namespace Anna
 			template <typename L> void add_layer(L* layer, Shape shape = Shape::INVALID);
 			void add_layer(const std::string& layer_name, Shape shape = Shape::INVALID);
 
-			const Tensor& forward(const Tensor& input);
-			// void train(); // TODO
+			const Tensor& forward(const             Tensor& input);
+			const Tensor& forward(const std::vector<float>& input);
+
+			void backward(const Tensor& error);
+
+			void train(const             Tensor& input, const             Tensor& desired_output);
+			void train(const std::vector<float>& input, const std::vector<float>& desired_output);
+
+			void train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
+			void train(const std::vector<float>&  inputs, const std::vector<float>&  desired_outputs, uint64_t epochs = 1, bool verbose = true);
 
 		public: // OPERATORS
 			template <typename LayerType>

@@ -1,5 +1,6 @@
 #include <time.h>
 #include <iostream>
+#include <vector>
 
 #include <anna/neural_network.h>
 #include <anna/tensor.h>
@@ -36,21 +37,18 @@ int main(void)
 		nn << new Layer::FullConnected    ({ 3, 1, 1 });
 		*/
 
-		Tensor input(nn.input_shape());
-		Tensor output(nn.output_shape());
+		std::vector<Tensor> inputs         (10, nn.input_shape() );
+		std::vector<Tensor> desired_outputs(10, nn.output_shape());
 
-		input.set_random(0, 10);
-		output = nn.forward(input);
+		for (Tensor& input : inputs)
+			input.set_random(0, 10);
+		for (Tensor& desired_output : desired_outputs)
+			desired_output.set_random(0, 10);
 
-		std::cout << "[INPUT] " << (std::string) input;
-		std::cout << "[OUTPUT]" << (std::string) output;
-
-	//	nn.learning_rate(0.05);
-	//	nn.momentum(0.01);
-	//	nn.max_epochs(1000);
-	//	nn.batch_size(10);
+		nn.hyperparameters().learning_rate(0.05);
+		nn.hyperparameters().batch_size(10);
 
 	//	nn.dataset(Dataset::Iris("datasets/iris"));
-	//	nn.train();
+		nn.train(inputs, desired_outputs);
 	}
 }

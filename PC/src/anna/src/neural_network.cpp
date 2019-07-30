@@ -40,6 +40,23 @@ namespace Anna
 		current_layer--;
 		return (*current_layer)->output();
 	}
+	const Tensor& NeuralNetwork::forward(const std::vector<float>& input)
+	{
+		static Tensor input_tensor;
+		if (input_tensor.shape() != m_input_shape)
+			input_tensor.shape(m_input_shape);
+	}
+
+	void NeuralNetwork::train(const Tensor& input, const Tensor& desired_output)
+	{
+		static Tensor error;
+		const Tensor& output = forward(input);
+
+		error  = desired_output;
+		error -=         output;
+
+		backward(error);
+	}
 }
 
 /*
