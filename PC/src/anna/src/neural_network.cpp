@@ -8,8 +8,8 @@
 
 namespace Anna
 {
-	NeuralNetwork::NeuralNetwork(void)
-		: m_hyperparameters(std::make_shared<Hyperparameters>()), m_device(0)
+	NeuralNetwork::NeuralNetwork(Cuda::Device& initial_device)
+		: m_hyperparameters(std::make_shared<Hyperparameters>()), m_device(initial_device)
 	{
 	}
 
@@ -28,18 +28,17 @@ namespace Anna
 		}
 	}
 
-	void NeuralNetwork::forward(const Tensor& input, Tensor& output)
+	const Tensor& NeuralNetwork::forward(const Tensor& input)
 	{
 		std::list<std::shared_ptr<Layer::Base>>::iterator previous_layer = m_layers.begin(); previous_layer--;
 		std::list<std::shared_ptr<Layer::Base>>::iterator current_layer  = m_layers.begin();
 
-		(*current_layer)->output(input);
-
+		(*current_layer)->output(input); current_layer++; previous_layer++;
 		for (; current_layer != m_layers.end(); current_layer++, previous_layer++)
 			(*current_layer)->forward((*previous_layer)->output());
 
 		current_layer--;
-		output = (*current_layer)->output();
+		return (*current_layer)->output();
 	}
 }
 

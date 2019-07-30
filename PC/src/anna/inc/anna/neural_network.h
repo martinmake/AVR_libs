@@ -22,10 +22,10 @@ namespace Anna
 		private:
 			std::list<std::shared_ptr<Layer::Base>> m_layers;
 		private:
-			Cuda::Device m_device;
+			Cuda::Device& m_device;
 
 		public:
-			NeuralNetwork(void);
+			NeuralNetwork(Cuda::Device& initial_device);
 			NeuralNetwork(const std::string& config_filepath);
 			// NeuralNetwork(const Json::Value& config);
 			~NeuralNetwork(void);
@@ -35,7 +35,7 @@ namespace Anna
 			template <typename L> void add_layer(L* layer, Shape shape = Shape::INVALID);
 			void add_layer(const std::string& layer_name, Shape shape = Shape::INVALID);
 
-			void forward(const Tensor& input, Tensor& output);
+			const Tensor& forward(const Tensor& input);
 			// void train(); // TODO
 
 		public: // OPERATORS
