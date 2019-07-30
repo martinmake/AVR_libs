@@ -5,6 +5,7 @@
 
 #include "cuda/allocator.h"
 #include "tensor.h"
+#include "tensor.cuh"
 
 namespace Anna
 {
@@ -12,14 +13,13 @@ namespace Anna
 	{
 		Allocator<float> allocator;
 	}
-
 	Tensor::Tensor(Shape initial_shape)
-		: m_d_data(nullptr)
+		: m_data(nullptr)
 	{
 		shape(initial_shape);
 	}
 	Tensor::Tensor(const Tensor& other)
-		: m_d_data(nullptr)
+		: m_data(nullptr)
 	{
 		*this = other;
 	}
@@ -31,19 +31,19 @@ namespace Anna
 
 	void Tensor::copy_from_host(const float* h_pointer)
 	{
-		Cuda::allocator.memcpy(h_pointer, m_d_data, m_shape.hypervolume(), Cuda::CopyDirection::HOST_TO_DEVICE);
+		Cuda::allocator.memcpy(h_pointer, m_data, m_shape.hypervolume(), Cuda::CopyDirection::HOST_TO_DEVICE);
 	}
 
 	void Tensor::copy_to_host(float* h_pointer) const
 	{
-		Cuda::allocator.memcpy(m_d_data, h_pointer, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_HOST);
+		Cuda::allocator.memcpy(m_data, h_pointer, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_HOST);
 	}
 
 	void Tensor::set(Shape location, float value)
 	{
 		uint64_t idx = shape_to_idx(location);
 
-		Cuda::allocator.memcpy(&value, m_d_data + idx, 1, Cuda::CopyDirection::HOST_TO_DEVICE);
+		Cuda::allocator.memcpy(&value, m_data + idx, 1, Cuda::CopyDirection::HOST_TO_DEVICE);
 	}
 
 	float Tensor::get(Shape location) const
@@ -51,7 +51,7 @@ namespace Anna
 		float value;
 		uint64_t idx = shape_to_idx(location);
 
-		Cuda::allocator.memcpy(m_d_data + idx, &value, 1, Cuda::CopyDirection::DEVICE_TO_HOST);
+		Cuda::allocator.memcpy(m_data + idx, &value, 1, Cuda::CopyDirection::DEVICE_TO_HOST);
 
 		return value;
 	}
@@ -68,7 +68,7 @@ namespace Anna
 
 	void Tensor::clear(void)
 	{
-		Cuda::allocator.clear(m_d_data, m_shape.hypervolume());
+		Cuda::allocator.clear(m_data, m_shape.hypervolume());
 	}
 
 	uint64_t Tensor::shape_to_idx(Shape location) const
@@ -112,7 +112,17 @@ namespace Anna
 	Tensor& Tensor::operator=(const Tensor& other)
 	{
 		shape(other.shape());
-		Cuda::allocator.memcpy(other.d_data(), m_d_data, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_DEVICE);
+		Cuda::allocator.memcpy(other.data(), m_data, m_shape.hypervolume(), Cuda::CopyDirection::DEVICE_TO_DEVICE);
+
+		return *this;
+	}
+	Tensor& Tensor::operator-=(const Tensor& other)
+	{
+		#ifdef ANNA_USE_CUDA
+			Cuda::substract(m_data, other.data(), m_shape.hypervolume());
+		#else
+			// TODO
+		#endif
 
 		return *this;
 	}
@@ -127,9 +137,9 @@ namespace Anna
 		}
 
 		m_shape = new_shape;
-		if (m_d_data) Cuda::allocator.deallocate(m_d_data);
+		if (m_data) Cuda::allocator.deallocate(m_data);
 
-		if (m_shape.is_valid()) m_d_data = Cuda::allocator.allocate(m_shape.hypervolume());
-		else                    m_d_data = nullptr;
+		if (m_shape.is_valid()) m_data = Cuda::allocator.allocate(m_shape.hypervolume());
+		else                    m_data = nullptr;
 	}
 }
