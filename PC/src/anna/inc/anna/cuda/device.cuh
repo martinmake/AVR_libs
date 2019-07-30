@@ -11,7 +11,6 @@ namespace Anna
 		{
 			private:
 				int m_idx;
-
 			public:
 				Device(int initial_idx);
 				~Device(void);
