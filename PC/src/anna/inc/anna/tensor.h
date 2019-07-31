@@ -48,9 +48,9 @@ namespace Anna
 			operator std::string() const;
 
 		public: // GETTERS
-			const Shape& shape(void)  const;
-			      float* data(void);
-			const float* data(void) const;
+			const Shape& shape(void) const;
+			      float* data (void);
+			const float* data (void) const;
 		public: // SETTERS
 			void shape(Shape new_shape);
 	};
@@ -63,9 +63,9 @@ namespace Anna
 	inline void Tensor::set_random(float range) { set_random(-range, +range); }
 
 	// GETTERS
-	inline const Shape& Tensor::shape (void) const { return m_shape;  }
-	inline       float* Tensor::data(void)       { return m_data; }
-	inline const float* Tensor::data(void) const { return m_data; }
+	inline const Shape& Tensor::shape(void) const { return m_shape; }
+	inline       float* Tensor::data (void)       { return m_data;  }
+	inline const float* Tensor::data (void) const { return m_data;  }
 }
 
 #endif

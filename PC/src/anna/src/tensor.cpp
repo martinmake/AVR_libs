@@ -118,10 +118,10 @@ namespace Anna
 	}
 	Tensor& Tensor::operator-=(const Tensor& other)
 	{
-		#ifdef ANNA_USE_CUDA
+		#ifdef USE_CUDA
 			Cuda::substract(m_data, other.data(), m_shape.hypervolume());
 		#else
-			// TODO
+			(void) other; // TODO
 		#endif
 
 		return *this;
@@ -130,7 +130,7 @@ namespace Anna
 	// SETTERS
 	void Tensor::shape(Shape new_shape) // TODO: COPY DATA TO THE NEW MEMORY IF ANY
 	{
-		if (m_shape.hypervolume() == new_shape.hypervolume())
+		if (m_data && m_shape.hypervolume() == new_shape.hypervolume())
 		{
 			m_shape = new_shape;
 			return;
