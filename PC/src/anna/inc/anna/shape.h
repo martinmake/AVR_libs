@@ -48,8 +48,8 @@ namespace Anna
 			void time          (uint64_t new_time          );
 	};
 
-	inline bool Shape::is_valid(void) const { return m_width && m_height && m_depth && m_time; }
-	inline uint64_t Shape::hypervolume(void) const { return m_width * m_height * m_depth * m_time; }
+	inline bool     Shape::is_valid   (void) const { return m_width && m_height && m_depth && m_time; }
+	inline uint64_t Shape::hypervolume(void) const { return m_width *  m_height *  m_depth *  m_time; }
 
 	// OPERATORS
 	inline bool Shape::operator!=(const Shape& other) const { return !(*this == other); }
