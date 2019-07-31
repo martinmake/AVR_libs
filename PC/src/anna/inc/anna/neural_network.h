@@ -21,12 +21,10 @@ namespace Anna
 			std::shared_ptr<Hyperparameters> m_hyperparameters;
 		private:
 			std::list<std::shared_ptr<Layer::Base>> m_layers;
-		private:
-			Cuda::Device& m_device;
 
 		public:
-			NeuralNetwork(Cuda::Device& initial_device);
-			NeuralNetwork(const std::string& config_filepath);
+			NeuralNetwork(void);
+			// NeuralNetwork(const std::string& config_filepath);
 			// NeuralNetwork(const Json::Value& config);
 			~NeuralNetwork(void);
 
@@ -38,13 +36,13 @@ namespace Anna
 			const Tensor& forward(const             Tensor& input);
 			const Tensor& forward(const std::vector<float>& input);
 
-			void backward(const Tensor& error);
+			const Tensor& backward(const Tensor& error);
 
 			void train(const             Tensor& input, const             Tensor& desired_output);
 			void train(const std::vector<float>& input, const std::vector<float>& desired_output);
 
-			void train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
-			void train(const std::vector<float>&  inputs, const std::vector<float>&  desired_outputs, uint64_t epochs = 1, bool verbose = true);
+			void train(const std::vector<            Tensor>& inputs, const std::vector<            Tensor>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
+			void train(const std::vector<std::vector<float>>& inputs, const std::vector<std::vector<float>>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
 
 		public: // OPERATORS
 			template <typename LayerType>
@@ -60,10 +58,10 @@ namespace Anna
 	};
 
 	template <typename L>
-	void NeuralNetwork::add_layer(L& layer, Shape shape)
+	void NeuralNetwork::add_layer(L& layer, Shape specific_shape)
 	{
-		Shape input_shape  = Shape::INVALID;
-		Shape output_shape = Shape::INVALID;
+		Shape input_shape = Shape::INVALID;
+		Shape       shape = Shape::INVALID;
 
 		if (m_layers.size() == 0 && !layer.is_input())
 			add_layer(new Layer::Input());
@@ -77,33 +75,31 @@ namespace Anna
 			}
 			else
 			{
-				std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" set output_shape of NeuralNetwork before this call"  << std::endl;
+				std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" set shape of NeuralNetwork before this call"  << std::endl;
 				exit(1);
 			}
 		}
 
 		if (m_layers.size())
-			input_shape = (*m_layers.rbegin())->output_shape();
+			input_shape = (*m_layers.rbegin())->output().shape();
 		else if (m_input_shape.is_valid())
 			input_shape = m_input_shape;
-		else if (layer.output_shape().is_valid())
-			input_shape = layer.output_shape();
 		else
 		{
-			std::cerr << "[NeuralNetwork] add_layer: when using Layer::Intput/\"input\" set input_shape of NeuralNetwork before this call or construct/pass with output_shape"  << std::endl;
+			std::cerr << "[NeuralNetwork] add_layer: when using Layer::Intput/\"input\" set input_shape of NeuralNetwork before this call or construct/pass with shape"  << std::endl;
 			exit(1);
 		}
 
-		if (!layer.output_shape().is_valid())
+		if (!layer.shape().is_valid())
 		{
-			if (shape.is_valid())
-				output_shape = shape;
+			if (specific_shape.is_valid())
+				shape = specific_shape;
 			else
 			{
 				if (layer.is_input())
 				{
 					if (m_input_shape.is_valid())
-						output_shape = m_input_shape;
+						shape = m_input_shape;
 					else
 					{
 						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Input/\"input\" call this->input_shape(Shape shape) before this call"  << std::endl;
@@ -113,25 +109,26 @@ namespace Anna
 				else if (layer.is_output())
 				{
 					if (m_output_shape.is_valid())
-						output_shape = m_output_shape;
+						shape = m_output_shape;
 					else
 					{
-						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" call this->output_shape(Shape shape) before this call"  << std::endl;
+						std::cerr << "[NeuralNetwork] add_layer: when using Layer::Output/\"output\" call this->shape(Shape shape) before this call"  << std::endl;
 						exit(1);
 					}
 				}
 				else if (!layer.changes_data_shape())
-					output_shape = (*m_layers.rbegin())->output_shape();
+					shape = (*m_layers.rbegin())->output().shape();
 				else
 				{
-					std::cerr << "[NeuralNetwork] add_layer: output_shape must be specified for `" << layer.name() << "'"  << std::endl;
+					std::cerr << "[NeuralNetwork] add_layer: shape must be specified for `" << layer.name() << "'"  << std::endl;
 					exit(1);
 				}
 			}
 		}
 
-		layer.attach_to_neural_network(input_shape, output_shape, m_hyperparameters);
+		layer.attach_to_neural_network(input_shape, shape, m_hyperparameters);
 		m_layers.push_back(std::make_shared<L>(std::move(layer)));
+		// m_layers.emplace_back(&layer);
 	}
 
 	template <typename L>

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
@@ -8,8 +9,8 @@
 
 namespace Anna
 {
-	NeuralNetwork::NeuralNetwork(Cuda::Device& initial_device)
-		: m_hyperparameters(std::make_shared<Hyperparameters>()), m_device(initial_device)
+	NeuralNetwork::NeuralNetwork(void)
+		: m_hyperparameters(std::make_shared<Hyperparameters>())
 	{
 	}
 
@@ -43,8 +44,34 @@ namespace Anna
 	const Tensor& NeuralNetwork::forward(const std::vector<float>& input)
 	{
 		static Tensor input_tensor;
-		if (input_tensor.shape() != m_input_shape)
-			input_tensor.shape(m_input_shape);
+		if (input_tensor.shape() != m_input_shape) input_tensor.shape(m_input_shape);
+
+		input_tensor.copy_from_host(input);
+		return forward(input_tensor);
+	}
+
+	const Tensor& NeuralNetwork::backward(const Tensor& error)
+	{
+		static uint16_t batch_index = 0;
+		bool update_trainable_parameters;
+
+		batch_index++;
+		if (batch_index >= m_hyperparameters->batch_size())
+		{
+			batch_index = 0;
+			update_trainable_parameters = true;
+		}
+		else
+			update_trainable_parameters = false;
+
+		std::list<std::shared_ptr<Layer::Base>>::reverse_iterator current_layer  = m_layers.rbegin();
+		std::list<std::shared_ptr<Layer::Base>>::reverse_iterator next_layer     = m_layers.rbegin(); next_layer++;
+
+		(*current_layer)->error(error);
+		for (; next_layer != m_layers.rend(); current_layer++, next_layer++)
+			(*current_layer)->backward((*next_layer)->error(), update_trainable_parameters);
+
+		return (*current_layer)->error();
 	}
 
 	void NeuralNetwork::train(const Tensor& input, const Tensor& desired_output)
@@ -56,6 +83,58 @@ namespace Anna
 		error -=         output;
 
 		backward(error);
+	}
+	void NeuralNetwork::train(const std::vector<float>& input, const std::vector<float>& desired_output)
+	{
+		static Tensor input_tensor;
+		static Tensor desired_output_tensor;
+
+		if (         input_tensor.shape() != m_input_shape )          input_tensor.shape(m_input_shape );
+		if (desired_output_tensor.shape() != m_output_shape) desired_output_tensor.shape(m_output_shape);
+
+		input_tensor.copy_from_host(input);
+		desired_output_tensor.copy_from_host(desired_output);
+
+		train(input_tensor, desired_output_tensor);
+	}
+
+	void NeuralNetwork::train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs, bool verbose)
+	{
+		int epoch_max_digits = std::to_string(epochs).size();
+
+		uint64_t print_every = inputs.size() / 100;
+		if (print_every == 0) print_every = 1;
+
+		for (uint64_t epoch = 0; epoch < epochs; epoch++)
+		{
+			std::vector<uint64_t> shuffle_indexer(inputs.size());
+			for (uint64_t i = 0; i < shuffle_indexer.size(); i++)
+				shuffle_indexer[i] = i;
+			std::random_shuffle(shuffle_indexer.begin(), shuffle_indexer.end());
+
+
+			for (uint64_t i = 0; i < inputs.size(); i++)
+			{
+				train(inputs[shuffle_indexer[i]], desired_outputs[shuffle_indexer[i]]);
+
+				if (verbose)
+				if ((i % print_every) == 0)
+					printf("[EPOCH:%*lu/%*lu] %3lu%%\n", epoch_max_digits, epoch + 1, epoch_max_digits, epochs, (i + 1) * 100 / desired_outputs.size());
+			}
+		}
+	}
+	void NeuralNetwork::train(const std::vector<std::vector<float>>& inputs, const std::vector<std::vector<float>>& desired_outputs, uint64_t epochs, bool verbose)
+	{
+		std::vector<Tensor> input_tensors         (         inputs.size(),  m_input_shape);
+		std::vector<Tensor> desired_output_tensors(desired_outputs.size(), m_output_shape);
+
+		for(uint64_t i = 0; i < inputs.size(); i++)
+		{
+			         input_tensors[i].copy_from_host(         inputs[i]);
+			desired_output_tensors[i].copy_from_host(desired_outputs[i]);
+		}
+
+		train(input_tensors, desired_output_tensors, epochs, verbose);
 	}
 }
 
