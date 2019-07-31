@@ -19,7 +19,7 @@ namespace Anna
 				static const bool        HAS_TRAINABLE_PARAMETERS;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				HyperbolicTangent(Shape initial_output_shape = Shape(0, 0, 0));
+				HyperbolicTangent(Shape initial_output_shape = Shape::INVALID);
 				~HyperbolicTangent(void);
 
 			public: // GETTERS FOR STATIC VARIABLES
