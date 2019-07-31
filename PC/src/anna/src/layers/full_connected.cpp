@@ -25,20 +25,19 @@ namespace Anna
 
 		void FullConnected::init(void)
 		{
-			Base::init();
+			m_output.shape({ m_shape.hypervolume() });
+			m_error .shape({ m_shape.hypervolume() });
 
-			output_shape({ m_output_shape.hypervolume() });
-
-			m_weights.shape({ m_input_shape.hypervolume(), m_output_shape.hypervolume() });
-			m_weights.set_random(sqrt(2.0 / m_input_shape.hypervolume()));
+			m_weights.shape({ m_input.shape().hypervolume(), m_output.shape().hypervolume() });
+			m_weights.set_random(sqrt(2.0 / m_input.shape().hypervolume()));
 
 			m_weighted_gradients.shape(m_weights.shape());
 
-			m_biases.shape({ m_output_shape.hypervolume() });
+			m_biases.shape({ m_output.shape().hypervolume() });
 			m_biases.clear();
 		}
 
-		void FullConnected::cpu_forward(const Tensor& input) { (void) input; assert(false); }
-		static void cpu_forward_kernel(void) { assert(false); }
+		void FullConnected::cpu_forward(void) { assert(false); }
+		static void cpu_forward_kernel(void)  { assert(false); }
 	}
 }

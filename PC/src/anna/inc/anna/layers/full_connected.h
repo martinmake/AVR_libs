@@ -25,15 +25,15 @@ namespace Anna
 				Tensor m_weighted_gradients;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				FullConnected(Shape initial_output_shape = Shape(0, 0, 0));
+				FullConnected(Shape initial_output_shape = Shape::INVALID);
 				~FullConnected(void);
 
-			public:
+			private:
 				void init(void) override;
 
-			public:
-				void cuda_forward(const Tensor& input) override;
-				void cpu_forward (const Tensor& input) override;
+			private:
+				void cuda_forward(void) override;
+				void  cpu_forward(void) override;
 
 			public: // GETTERS
 				uint64_t trainable_parameters(void) const override;

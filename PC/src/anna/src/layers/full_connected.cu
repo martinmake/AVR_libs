@@ -14,9 +14,9 @@ namespace Anna
 					      uint64_t input_count,
 					      uint64_t output_count);
 
-		void FullConnected::cuda_forward(const Tensor& input)
+		void FullConnected::cuda_forward(void)
 		{
-			uint64_t input_count  = input.shape().hypervolume();
+			uint64_t input_count  = m_input .shape().hypervolume();
 			uint64_t output_count = m_output.shape().hypervolume();
 
 			m_output = m_biases;
@@ -25,8 +25,8 @@ namespace Anna
 			dim3 grid((output_count + block.x - 1) / block.x);
 
 			cuda_forward_kernel<<<grid, block>>>(
-					input.data(),
-					m_output.data(),
+					m_input  .data(),
+					m_output .data(),
 					m_weights.data(),
 					input_count,
 					output_count);
