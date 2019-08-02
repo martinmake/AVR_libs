@@ -10,6 +10,7 @@
 #include "anna/hyperparameters.h"
 #include "anna/tensor.h"
 #include "anna/layers/all.h"
+#include "anna/datasets/all.h"
 
 namespace Anna
 {
@@ -43,6 +44,7 @@ namespace Anna
 
 			void train(const std::vector<            Tensor>& inputs, const std::vector<            Tensor>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
 			void train(const std::vector<std::vector<float>>& inputs, const std::vector<std::vector<float>>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
+			void train(const Dataset::Base& dataset,                                                                          uint64_t epochs = 1, bool verbose = true);
 
 		public: // OPERATORS
 			template <typename LayerType>
