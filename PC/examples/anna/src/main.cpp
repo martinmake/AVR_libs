@@ -6,6 +6,7 @@
 #include <anna/tensor.h>
 #include <anna/cuda/device.cuh>
 #include <anna/layers/all.h>
+#include <anna/datasets/all.h>
 
 static Anna::Cuda::Device g_device(0);
 
@@ -37,17 +38,10 @@ int main(void)
 //	nn << new Layer::FullConnected    ({ 1, 1, 3 });
 //	ALTERNATIVE SYNTAX
 
-	std::vector<Tensor> inputs         (10, nn.input_shape() );
-	std::vector<Tensor> desired_outputs(10, nn.output_shape());
-
-	for (Tensor& input : inputs)
-		input.set_random(0, 10);
-	for (Tensor& desired_output : desired_outputs)
-		desired_output.set_random(0, 10);
+	Dataset::Iris dataset(PROJECT_DATASET_DIRECTORY"/iris");
 
 	nn.hyperparameters().learning_rate(0.05);
 	nn.hyperparameters().batch_size(5);
 
-//	nn.dataset(Dataset::Iris("datasets/iris"));
-	nn.train(inputs, desired_outputs, 10000);
+	nn.train(dataset, 10);
 }
