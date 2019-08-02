@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include <assert.h>
 
 #include "neural_network.h"
@@ -69,7 +70,7 @@ namespace Anna
 
 		(*current_layer)->error(error);
 		for (; next_layer != m_layers.rend(); current_layer++, next_layer++)
-			(*current_layer)->backward((*next_layer)->error(), update_trainable_parameters);
+			(*current_layer)->backward((*next_layer)->output(), (*next_layer)->error(), update_trainable_parameters);
 
 		return (*current_layer)->error();
 	}
@@ -101,6 +102,7 @@ namespace Anna
 	void NeuralNetwork::train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs, bool verbose)
 	{
 		int epoch_max_digits = std::to_string(epochs).size();
+		// int epoch_max_digits = std::log(epochs);
 
 		uint64_t print_every = inputs.size() / 100;
 		if (print_every == 0) print_every = 1;
@@ -108,8 +110,7 @@ namespace Anna
 		for (uint64_t epoch = 0; epoch < epochs; epoch++)
 		{
 			std::vector<uint64_t> shuffle_indexer(inputs.size());
-			for (uint64_t i = 0; i < shuffle_indexer.size(); i++)
-				shuffle_indexer[i] = i;
+			for (uint64_t i = 0; i < shuffle_indexer.size(); i++) shuffle_indexer[i] = i;
 			std::random_shuffle(shuffle_indexer.begin(), shuffle_indexer.end());
 
 
