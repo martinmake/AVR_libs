@@ -1,4 +1,4 @@
-MAKEFILE:=../Makefile.lib.gpu
+MAKEFILE:=../Makefile.lib
 
 export MAKEFILE
 
