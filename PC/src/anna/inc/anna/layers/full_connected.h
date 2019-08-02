@@ -22,7 +22,7 @@ namespace Anna
 			private: // MEMBER VARIABLES
 				Tensor m_weights;
 				Tensor m_biases;
-				Tensor m_weighted_gradients;
+				Tensor m_gradients;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
 				FullConnected(Shape initial_output_shape = Shape::INVALID);
@@ -31,9 +31,17 @@ namespace Anna
 			private:
 				void init(void) override;
 
+			public:
+				void  forward(const Tensor& input) override;
+				void backward(const Tensor& input, Tensor& error_back, bool update_trainable_parameters) override;
+
 			private:
-				void cuda_forward(void) override;
-				void  cpu_forward(void) override;
+				void weigh_input(const Tensor& input);
+				void accumulate_gradients(const Tensor& input);
+				void update_biases();
+				void update_weights();
+				void calculate_error_back(Tensor& error_back);
+
 
 			public: // GETTERS
 				uint64_t trainable_parameters(void) const override;
