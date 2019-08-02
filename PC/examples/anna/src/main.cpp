@@ -1,4 +1,6 @@
 #include <time.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <iostream>
 #include <vector>
 
@@ -7,6 +9,10 @@
 #include <anna/cuda/device.cuh>
 #include <anna/layers/all.h>
 #include <anna/datasets/all.h>
+
+#include "colors.h"
+
+void ask_to_proceed(void);
 
 static Anna::Cuda::Device g_device(0);
 
@@ -43,5 +49,20 @@ int main(void)
 	nn.hyperparameters().learning_rate(0.05);
 	nn.hyperparameters().batch_size(5);
 
+	ask_to_proceed();
 	nn.train(dataset, 10);
+	nn.test(dataset);
+}
+
+void ask_to_proceed(void)
+{
+	std::cout << Color::BOLD_RED << "Proceed? [Y/n] " << Color::RESET;
+	fflush(stdin);
+	char c = getchar();
+
+	if (c == 'n' || c == 'N')
+	{
+		std::cout << Color::BOLD_GREEN << "ABORTING" << Color::RESET << std::endl;
+		abort();
+	}
 }

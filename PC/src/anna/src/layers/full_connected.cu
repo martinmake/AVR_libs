@@ -79,12 +79,12 @@ namespace Anna
 		void FullConnected::accumulate_gradients(const Tensor& input)
 		{
 			uint64_t input_count   = m_input_shape.hypervolume();
-			uint64_t neurons_count = m_shape.hypervolume();
+			uint64_t neurons_count =       m_shape.hypervolume();
 
 			#ifdef USE_CUDA
-				dim3 block( input_count < 32 ?  input_count : 32,
+				dim3 block(  input_count < 32 ?   input_count : 32,
 				           neurons_count < 32 ? neurons_count : 32);
-				dim3 grid(( input_count + block.x - 1) / block.x,
+				dim3 grid((  input_count + block.x - 1) / block.x,
 				          (neurons_count + block.y - 1) / block.y);
 
 				cuda_accumulate_gradients_kernel<<<grid, block>>>(
@@ -162,9 +162,9 @@ namespace Anna
 			uint64_t neurons_count =       m_shape.hypervolume();
 
 			#ifdef USE_CUDA
-				dim3 block( input_count < 32 ?  input_count : 32,
+				dim3 block(  input_count < 32 ?   input_count : 32,
 				           neurons_count < 32 ? neurons_count : 32);
-				dim3 grid(( input_count + block.x - 1) / block.x,
+				dim3 grid((  input_count + block.x - 1) / block.x,
 				          (neurons_count + block.y - 1) / block.y);
 
 				cuda_update_weights_kernel<<<grid, block>>>(
