@@ -1,5 +1,5 @@
-#ifndef _ANNA_LAYER_HYPERBOLIC_TANGENT_H_
-#define _ANNA_LAYER_HYPERBOLIC_TANGENT_H_
+#ifndef _ANNA_LAYER_RELU_H_
+#define _ANNA_LAYER_RELU_H_
 
 #include <inttypes.h>
 
@@ -9,7 +9,7 @@ namespace Anna
 {
 	namespace Layer
 	{
-		class HyperbolicTangent final : public Base
+		class Relu final : public Base
 		{
 			public: // STATIC VARIABLES
 				static const std::string NAME;
@@ -19,8 +19,8 @@ namespace Anna
 				static const bool        HAS_TRAINABLE_PARAMETERS;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				HyperbolicTangent(Shape initial_output_shape = Shape::INVALID);
-				~HyperbolicTangent(void);
+				Relu(Shape initial_output_shape = Shape::INVALID);
+				~Relu(void);
 
 			public:
 				void  forward(const Tensor& input) override;
@@ -39,11 +39,11 @@ namespace Anna
 		};
 
 		// GETTERS FOR STATIC VARIABLES
-		inline const std::string& HyperbolicTangent::name                    (void) const { return NAME;                     }
-		inline       bool         HyperbolicTangent::changes_data_shape      (void) const { return CHANGES_DATA_SHAPE;       }
-		inline       bool         HyperbolicTangent::is_input                (void) const { return IS_INPUT;                 }
-		inline       bool         HyperbolicTangent::is_output               (void) const { return IS_OUTPUT;                }
-		inline       bool         HyperbolicTangent::has_trainable_parameters(void) const { return HAS_TRAINABLE_PARAMETERS; }
+		inline const std::string& Relu::name                    (void) const { return NAME;                     }
+		inline       bool         Relu::changes_data_shape      (void) const { return CHANGES_DATA_SHAPE;       }
+		inline       bool         Relu::is_input                (void) const { return IS_INPUT;                 }
+		inline       bool         Relu::is_output               (void) const { return IS_OUTPUT;                }
+		inline       bool         Relu::has_trainable_parameters(void) const { return HAS_TRAINABLE_PARAMETERS; }
 	}
 }
 

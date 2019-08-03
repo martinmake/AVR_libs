@@ -44,14 +44,14 @@ namespace Anna
 			weigh_input(input);
 		}
 
-		void FullConnected::backward(const Tensor& input, Tensor& error_back, bool update_trainable_parameters)
+		void FullConnected::backward(const Tensor& input, Tensor& error_back, bool update_weights)
 		{
 			accumulate_gradients(input);
 			update_biases();
 
-			if (update_trainable_parameters)
+			if (update_weights)
 			{
-				update_weights();
+				this->update_weights();
 				m_gradients.clear();
 			}
 

@@ -34,7 +34,7 @@ namespace Anna
 
 			public:
 				virtual void  forward(const Tensor& input);
-				virtual void backward(const Tensor& input, Tensor& error_back, bool update_trainable_parameters);
+				virtual void backward(const Tensor& input, Tensor& error_back, bool update_weights);
 
 			public: // GETTERS
 				        const Shape&   shape               (void) const;
@@ -58,7 +58,7 @@ namespace Anna
 		};
 
 		inline void Base:: forward(const Tensor& input) { (void) input; }
-		inline void Base::backward(const Tensor& input, Tensor& error_back, bool update_trainable_parameters) { (void) input; (void) update_trainable_parameters; error_back = m_error; }
+		inline void Base::backward(const Tensor& input, Tensor& error_back, bool update_weights) { (void) input; (void) update_weights; error_back = m_error; }
 
 		// GETTERS
 		inline const Shape&   Base::shape               (void) const { return m_shape;  }

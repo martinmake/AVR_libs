@@ -18,5 +18,20 @@ namespace Anna
 		HyperbolicTangent::~HyperbolicTangent(void)
 		{
 		}
+
+		void HyperbolicTangent::forward(const Tensor& input)
+		{
+			m_output = input;
+
+			activate();
+		}
+
+		void HyperbolicTangent::backward(const Tensor& input, Tensor& error_back, bool update_weights)
+		{
+			(void) input;
+			(void) update_weights;
+
+			calculate_error_back(error_back);
+		}
 	}
 }
