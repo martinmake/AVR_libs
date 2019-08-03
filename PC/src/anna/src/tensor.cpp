@@ -11,7 +11,7 @@ namespace Anna
 {
 	namespace Cuda
 	{
-		Allocator<float> allocator;
+		static Allocator<float> allocator;
 	}
 	Tensor::Tensor(Shape initial_shape)
 		: m_data(nullptr)

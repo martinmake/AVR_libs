@@ -1,10 +1,9 @@
 #include <time.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <iostream>
 #include <vector>
 
-#include <anna/neural_network.h>
+#include <anna/neural_networks/classifier.h>
 #include <anna/tensor.h>
 #include <anna/cuda/device.cuh>
 #include <anna/layers/all.h>
@@ -20,38 +19,42 @@ int main(void)
 {
 	using namespace Anna;
 
-	NeuralNetwork nn;
+	NeuralNetwork::Classifier classifier;
 
-	nn.input_shape ({ 1, 1, 1, 4 });
-	nn.output_shape({ 1, 1, 1, 3 });
+	classifier.input_shape ({ 1, 1, 1, 4 });
+	classifier.output_shape({ 1, 1, 1, 3 });
 
 // 	SYNTAX
-// 	nn.add_layer("input"              /*  input   */);
-// 	nn.add_layer("full_connected",    Shape(7, 1, 1));
-// 	nn.add_layer("hyperbolic_tangent" /* constant */);
-// 	nn.add_layer("output"             /*  output  */);
+// 	classifier.add_layer("input"              /*  input   */);
+// 	classifier.add_layer("full_connected",    Shape(7, 1, 1));
+// 	classifier.add_layer("hyperbolic_tangent" /* constant */);
+// 	classifier.add_layer("output"             /*  output  */);
 // 	SYNTAX
 //	ALTERNATIVE SYNTAX
-	nn << new Layer::Input            (                ); // optional
-	nn << new Layer::FullConnected    (Shape{ 1, 1, 7 });
-	nn << new Layer::HyperbolicTangent(                );
-	nn << new Layer::Output           (                );
+	classifier << new Layer::Input            (                ); // optional
+	classifier << new Layer::FullConnected    (Shape{ 1, 1, 7 });
+	classifier << new Layer::HyperbolicTangent(                );
+	classifier << new Layer::Output           (                );
 //	ALTERNATIVE SYNTAX
 //	ALTERNATIVE SYNTAX
-//	nn << new Layer::Input            ({ 1, 1, 4 });
-//	nn << new Layer::FullConnected    ({ 1, 1, 7 });
-//	nn << new Layer::HyperbolicTangent({ 1, 1, 7 });
-//	nn << new Layer::FullConnected    ({ 1, 1, 3 });
+//	classifier << new Layer::Input            ({ 1, 1, 4 });
+//	classifier << new Layer::FullConnected    ({ 1, 1, 7 });
+//	classifier << new Layer::HyperbolicTangent({ 1, 1, 7 });
+//	classifier << new Layer::FullConnected    ({ 1, 1, 3 });
 //	ALTERNATIVE SYNTAX
 
 	Dataset::Iris dataset(PROJECT_DATASET_DIRECTORY"/iris");
 
-	nn.hyperparameters().learning_rate(0.05);
-	nn.hyperparameters().batch_size(5);
+	classifier.hyperparameters().learning_rate(0.05);
+	classifier.hyperparameters().batch_size(5);
 
 	ask_to_proceed();
-	nn.train(dataset, 10);
-	nn.test(dataset);
+	classifier.train(dataset, 10);
+	std::cout << "[ACCURACY TRAINING] " << classifier.accuracy_training() * 100 << "%" << std::endl;
+
+	ask_to_proceed();
+	classifier.test(dataset);
+	std::cout << "[ACCURACY TESTING] "  << classifier.accuracy_testing()  * 100 << "%" << std::endl;
 }
 
 void ask_to_proceed(void)
@@ -59,6 +62,7 @@ void ask_to_proceed(void)
 	std::cout << Color::BOLD_RED << "Proceed? [Y/n] " << Color::RESET;
 	fflush(stdin);
 	char c = getchar();
+	if (c != '\n') while (getchar() != '\n');
 
 	if (c == 'n' || c == 'N')
 	{
