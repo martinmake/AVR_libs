@@ -26,8 +26,12 @@ int main(void)
 	classifier.output_shape({  1,  1, 10, 1 });
 
 //	/*
-	classifier << new Layer::Input ();
-	classifier << new Layer::Output();
+	classifier << new Layer::Input              (          );
+	classifier << new Layer::FullConnected(Shape(1, 1, 800));
+	classifier << new Layer::Relu               (          );
+	classifier << new Layer::FullConnected(Shape(1, 1, 800));
+	classifier << new Layer::Relu               (          );
+	classifier << new Layer::Output             (          );
 //	*/
 
 	/*
@@ -44,8 +48,9 @@ int main(void)
 	classifier.hyperparameters().batch_size(32);
 
 	ask_to_proceed();
-	classifier.train(dataset, 10);
+	classifier.train(dataset, 2);
 	std::cout << "[ACCURACY TRAINING] " << classifier.accuracy_training() * 100 << "%" << std::endl;
+	return 0;
 
 	ask_to_proceed();
 	classifier.test(dataset);

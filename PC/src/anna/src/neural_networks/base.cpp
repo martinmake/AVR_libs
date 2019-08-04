@@ -52,7 +52,7 @@ namespace Anna
 			return forward(input_tensor);
 		}
 
-		const Tensor& Base::backward(const Tensor& error)
+		const Tensor& Base::backward(const Tensor& error, bool force_update_weights)
 		{
 			static uint16_t batch_index = 0;
 			bool update_weights;
@@ -70,12 +70,12 @@ namespace Anna
 
 			(*current_layer)->error(error);
 			for (; current_layer != last_layer; current_layer++)
-				(*current_layer)->backward(current_layer, update_weights);
+				(*current_layer)->backward(current_layer, update_weights || force_update_weights);
 
 			return (*last_layer)->error();
 		}
 
-		void Base::train(const Tensor& input, const Tensor& desired_output)
+		void Base::train(const Tensor& input, const Tensor& desired_output, bool force_update_weights)
 		{
 			static Tensor error;
 			const Tensor& output = forward(input);
@@ -84,9 +84,9 @@ namespace Anna
 			error  = desired_output;
 			error -=         output;
 
-			backward(error);
+			backward(error, force_update_weights);
 		}
-		void Base::train(const std::vector<float>& input, const std::vector<float>& desired_output)
+		void Base::train(const std::vector<float>& input, const std::vector<float>& desired_output, bool force_update_weights)
 		{
 			static Tensor input_tensor;
 			static Tensor desired_output_tensor;
@@ -97,7 +97,7 @@ namespace Anna
 			input_tensor.copy_from_host(input);
 			desired_output_tensor.copy_from_host(desired_output);
 
-			train(input_tensor, desired_output_tensor);
+			train(input_tensor, desired_output_tensor, force_update_weights);
 		}
 
 		void Base::train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs, bool verbose)
@@ -117,7 +117,7 @@ namespace Anna
 
 				for (uint64_t i = 0; i < inputs.size(); i++)
 				{
-					train(inputs[shuffle_indexer[i]], desired_outputs[shuffle_indexer[i]]);
+					train(inputs[shuffle_indexer[i]], desired_outputs[shuffle_indexer[i]], i == inputs.size() - 1);
 
 					if (verbose)
 					if ((i % print_every) == 0)

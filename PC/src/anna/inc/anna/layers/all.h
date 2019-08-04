@@ -6,3 +6,4 @@
 #include "anna/layers/full_connected.h"
 
 #include "anna/layers/hyperbolic_tangent.h"
+#include "anna/layers/relu.h"

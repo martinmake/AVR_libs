@@ -42,10 +42,10 @@ namespace Anna
 				const Tensor& forward(const             Tensor& input);
 				const Tensor& forward(const std::vector<float>& input);
 
-				const Tensor& backward(const Tensor& error);
+				const Tensor& backward(const Tensor& error, bool force_update_weights);
 
-				void train(const             Tensor& input, const             Tensor& desired_output);
-				void train(const std::vector<float>& input, const std::vector<float>& desired_output);
+				void train(const             Tensor& input, const             Tensor& desired_output, bool force_update_weights);
+				void train(const std::vector<float>& input, const std::vector<float>& desired_output, bool force_update_weights);
 
 				void train(const std::vector<            Tensor>& inputs, const std::vector<            Tensor>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
 				void train(const std::vector<std::vector<float>>& inputs, const std::vector<std::vector<float>>& desired_outputs, uint64_t epochs = 1, bool verbose = true);
