@@ -29,7 +29,7 @@ namespace Anna
 				~Base(void);
 
 			protected:
-				virtual void load(const std::string& filepath, std::vector<Item>& destination_items);
+				virtual void load(const std::string& path, std::vector<Item>& destination_items);
 
 			public: // GETTERS
 				const std::vector<Item>& training_items (void) const;
@@ -37,7 +37,7 @@ namespace Anna
 				const std::vector<Item>& unlabeled_items(void);
 		};
 
-		inline void Base::load(const std::string& filepath, std::vector<Item>& destination_items) { (void) filepath; (void) destination_items; assert(false && "THIS IS JUST AN INTERFACE"); }
+		inline void Base::load(const std::string& path, std::vector<Item>& destination_items) { (void) path; (void) destination_items; assert(false && "THIS IS JUST AN INTERFACE"); }
 
 		// GETTERS
 		inline const std::vector<Item>& Base::training_items (void) const { return m_training_items;  }

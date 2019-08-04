@@ -16,7 +16,7 @@ namespace Anna
 				~Iris(void);
 
 			private:
-				void load(const std::string& filepath, std::vector<Item>& destination_items) override;
+				void load(const std::string& path, std::vector<Item>& destination_items) override;
 		};
 	}
 }

@@ -23,13 +23,12 @@ namespace Anna
 		{
 		}
 
-		void Iris::load(const std::string& filepath, std::vector<Item>& destination_items)
+		void Iris::load(const std::string& path, std::vector<Item>& destination_items)
 		{
-			std::ifstream items_csv(filepath);
-
+			std::ifstream items_csv(path);
 			if (!items_csv.is_open())
 			{
-				std::cout << "[DATASET:IRIS] load: Failed:     " << filepath << ": No such file" << std::endl;
+				std::cout << "[DATASET:IRIS] load: Failed:     " << path << ": No such file" << std::endl;
 				return;
 			}
 
@@ -76,7 +75,7 @@ namespace Anna
 				}
 			}
 
-			std::cout << "[DATASET:IRIS] load: Successful: " << filepath << std::endl;
+			std::cout << "[DATASET:IRIS] load: Successful: " << path << std::endl;
 		}
 	}
 }
