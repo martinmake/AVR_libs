@@ -19,10 +19,11 @@ int main(void)
 {
 	using namespace Anna;
 
+	srand(time(NULL));
 	NeuralNetwork::Classifier classifier;
 
-	classifier.input_shape ({ 1, 1, 1, 4 });
-	classifier.output_shape({ 1, 1, 1, 3 });
+	classifier.input_shape ({ 1, 1, 4, 1 });
+	classifier.output_shape({ 1, 1, 3, 1 });
 
 // 	SYNTAX
 // 	classifier.add_layer("input"              /*  input   */);
@@ -45,11 +46,11 @@ int main(void)
 
 	Dataset::Iris dataset(PROJECT_DATASET_DIRECTORY"/iris");
 
-	classifier.hyperparameters().learning_rate(0.05);
-	classifier.hyperparameters().batch_size(5);
+	classifier.hyperparameters().learning_rate(0.01);
+	classifier.hyperparameters().batch_size(10);
 
 	ask_to_proceed();
-	classifier.train(dataset, 10);
+	classifier.train(dataset, 1000);
 	std::cout << "[ACCURACY TRAINING] " << classifier.accuracy_training() * 100 << "%" << std::endl;
 
 	ask_to_proceed();
@@ -60,7 +61,6 @@ int main(void)
 void ask_to_proceed(void)
 {
 	std::cout << Color::BOLD_RED << "Proceed? [Y/n] " << Color::RESET;
-	fflush(stdin);
 	char c = getchar();
 	if (c != '\n') while (getchar() != '\n');
 
