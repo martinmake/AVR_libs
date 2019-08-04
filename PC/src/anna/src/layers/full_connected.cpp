@@ -25,13 +25,12 @@ namespace Anna
 
 		void FullConnected::init(void)
 		{
-			m_output.shape({ m_shape.hypervolume() });
-			m_error .shape({ m_shape.hypervolume() });
+			Base::init();
 
-			m_weights.shape({ m_input_shape.hypervolume(), m_output.shape().hypervolume() });
+			m_weights.shape({ m_input_shape.hypervolume(), 1, m_output.shape().hypervolume() });
 			m_weights.set_random(sqrt(2.0 / m_input_shape.hypervolume()));
 
-			m_biases.shape({ m_output.shape().hypervolume() });
+			m_biases.shape(m_output.shape());
 			m_biases.clear();
 
 			m_gradients.shape(m_weights.shape());
@@ -44,18 +43,18 @@ namespace Anna
 			weigh_input(input);
 		}
 
-		void FullConnected::backward(const Tensor& input, Tensor& error_back, bool update_weights)
+		void FullConnected::backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input)
 		{
-			accumulate_gradients(input);
+			if (!is_next_layer_input) calculate_error_back(error_back);
+
 			update_biases();
 
+			accumulate_gradients(input);
 			if (update_weights)
 			{
 				this->update_weights();
 				m_gradients.clear();
 			}
-
-			calculate_error_back(error_back);
 		}
 	}
 }

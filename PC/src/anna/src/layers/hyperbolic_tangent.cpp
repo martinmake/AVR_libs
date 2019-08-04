@@ -26,10 +26,11 @@ namespace Anna
 			activate();
 		}
 
-		void HyperbolicTangent::backward(const Tensor& input, Tensor& error_back, bool update_weights)
+		void HyperbolicTangent::backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input)
 		{
 			(void) input;
 			(void) update_weights;
+			(void) is_next_layer_input;
 
 			calculate_error_back(error_back);
 		}

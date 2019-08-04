@@ -33,7 +33,7 @@ namespace Anna
 
 			public:
 				void  forward(const Tensor& input) override;
-				void backward(const Tensor& input, Tensor& error_back, bool update_weights) override;
+				void backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input) override;
 
 			private:
 				void weigh_input(const Tensor& input);

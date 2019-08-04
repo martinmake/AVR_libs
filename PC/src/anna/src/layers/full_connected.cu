@@ -64,8 +64,8 @@ namespace Anna
 		{
 			uint16_t  input_idx = threadIdx.x +
 			                       blockIdx.x * blockDim.x;
-			uint16_t neuron_idx = threadIdx.x +
-			                       blockIdx.x * blockDim.x;
+			uint16_t neuron_idx = threadIdx.y +
+			                       blockIdx.y * blockDim.y;
 
 			if ( input_idx <  input_count)
 			if (neuron_idx < neurons_count)
@@ -73,7 +73,7 @@ namespace Anna
 				float* gradient = gradients  +
 				                   input_idx +
 				                  neuron_idx * input_count;
-				*gradient += error[neuron_idx] + input[input_idx];
+				*gradient += error[neuron_idx] * input[input_idx];
 			}
 		}
 		void FullConnected::accumulate_gradients(const Tensor& input)
@@ -144,8 +144,8 @@ namespace Anna
 		{
 			uint16_t  input_idx = threadIdx.x +
 			                       blockIdx.x * blockDim.x;
-			uint16_t neuron_idx = threadIdx.x +
-			                       blockIdx.x * blockDim.x;
+			uint16_t neuron_idx = threadIdx.y +
+			                       blockIdx.y * blockDim.y;
 
 			if ( input_idx <  input_count)
 			if (neuron_idx < neurons_count)
@@ -182,7 +182,7 @@ namespace Anna
 			#endif
 		}
 
-		__global__ static void cuda_calculate_error_back_kernel( // TODO
+		__global__ static void cuda_calculate_error_back_kernel(
 						const float* error,
 						      float* error_back,
 						const float* weights,
@@ -196,18 +196,18 @@ namespace Anna
 			if (idx < input_count)
 			{
 				const float* p_error  = error;
-				const float* p_weight = weights + idx * input_count;
+				const float* p_weight = weights + idx;
 				const float* p_error_end = p_error + neurons_count;
 
-				float error = 0.0;
+				float err = 0.0;
 				while (p_error != p_error_end)
 				{
-					error += *p_error * *p_weight;
+					err      += *p_error * *p_weight;
 					p_error  += 1;
 					p_weight += input_count;
 				}
 
-				error_back[idx] = error;
+				error_back[idx] = err;
 			}
 		}
 		void FullConnected::calculate_error_back(Tensor& error_back)

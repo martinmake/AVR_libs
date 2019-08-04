@@ -34,6 +34,7 @@ namespace Anna
 		}
 
 		__global__ static void cuda_calculate_error_back_kernel(
+				const float* error,
 				      float* error_back,
 				const float* output,
 				uint64_t count)
@@ -43,15 +44,12 @@ namespace Anna
 
 			if (idx < count)
 			{
-				if      (output[idx] < -20.0) error_back[idx] = -1;
-				else if (output[idx] > +20.0) error_back[idx] = +1;
+				if      (output[idx] < -20.0) error_back[idx] = 0;
+				else if (output[idx] > +20.0) error_back[idx] = 0;
 				else
 				{
-					float cache;
-					if      (output[idx] < -20.0) cache = -1;
-					else if (output[idx] > +20.0) cache = +1;
-					else                          cache = tanh(output[idx]);
-					error_back[idx] = 1 - cache * cache;
+					float cache = tanh(output[idx]);
+					error_back[idx] = error[idx] * (1 - cache * cache);
 				}
 			}
 		}
@@ -64,6 +62,7 @@ namespace Anna
 				dim3 grid((count + block.x - 1) / block.x);
 
 				cuda_calculate_error_back_kernel<<<grid, block>>>(
+						m_error   .data(),
 						error_back.data(),
 						m_output  .data(),
 
