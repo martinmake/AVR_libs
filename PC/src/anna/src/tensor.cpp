@@ -94,7 +94,7 @@ namespace Anna
 				{
 					for (uint64_t width = 0; width < m_shape.width(); width++)
 					{
-						output << std::fixed << std::setfill(' ') << std::setw(7) << (*it < 0 ? '\0' : '+') << std::setprecision(3) << *it << " ";
+						output << std::fixed << std::setprecision(3) << std::showpos << std::setw(10) << *it << " ";
 						it++;
 					}
 					if (it != h_data.end()) output << std::endl;

@@ -90,6 +90,7 @@ namespace Anna
 			{
 				if (m_output_shape.is_valid())
 				{
+					if (specific_shape.is_valid()) m_output_shape = specific_shape;
 					add_output_layer();
 					return;
 				}

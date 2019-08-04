@@ -72,7 +72,7 @@ namespace Anna
 
 			(*current_layer)->error(error);
 			for (; next_layer != m_layers.rend(); current_layer++, next_layer++)
-				(*current_layer)->backward((*next_layer)->output(), (*next_layer)->error(), update_weights);
+				(*current_layer)->backward((*next_layer)->output(), (*next_layer)->error(), update_weights, (*next_layer)->is_input());
 
 			return (*current_layer)->error();
 		}
@@ -104,7 +104,7 @@ namespace Anna
 
 		void Base::train(const std::vector<Tensor>& inputs, const std::vector<Tensor>& desired_outputs, uint64_t epochs, bool verbose)
 		{
-			int epoch_max_digits = std::log(epochs);
+			int epoch_max_digits = std::to_string(epochs).size();
 
 			uint64_t print_every = inputs.size() / 100;
 			if (print_every == 0) print_every = 1;
