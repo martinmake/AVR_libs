@@ -19,19 +19,23 @@ namespace Anna
 		{
 		}
 
-		void HyperbolicTangent::forward(const Tensor& input)
+		inline void HyperbolicTangent::forward(const std::list<std::shared_ptr<Base>>::iterator& current_layer)
 		{
+			std::list<std::shared_ptr<Base>>::iterator previous_layer = current_layer; previous_layer--;
+
+			const Tensor& input = (*previous_layer)->output();
 			m_output = input;
 
 			activate();
 		}
 
-		void HyperbolicTangent::backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input)
+		inline void HyperbolicTangent::backward(const std::list<std::shared_ptr<Base>>::reverse_iterator& current_layer, bool update_weights)
 		{
-			(void) input;
 			(void) update_weights;
-			(void) is_next_layer_input;
 
+			std::list<std::shared_ptr<Base>>::reverse_iterator next_layer = current_layer; next_layer++;
+
+			Tensor& error_back = (*next_layer)->error();
 			calculate_error_back(error_back);
 		}
 	}

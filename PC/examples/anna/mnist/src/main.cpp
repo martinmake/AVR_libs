@@ -25,16 +25,18 @@ int main(void)
 	classifier.input_shape ({ 28, 28,  1, 1 });
 	classifier.output_shape({  1,  1, 10, 1 });
 
-	/*
+//	/*
 	classifier << new Layer::Input ();
 	classifier << new Layer::Output();
-	*/
+//	*/
 
+	/*
 	classifier << new Layer::Input      (               );
 	classifier << new Layer::Convolution(Shape(3, 3, 32));
 	classifier << new Layer::Relu       (               );
 //	classifier << new Layer::MaxPooling (Shape(2, 2)    );
 	classifier << new Layer::Output     (               );
+	*/
 
 	Dataset::Mnist dataset(PROJECT_DATASET_DIRECTORY"/mnist");
 

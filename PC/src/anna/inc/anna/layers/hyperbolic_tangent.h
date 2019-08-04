@@ -23,8 +23,8 @@ namespace Anna
 				~HyperbolicTangent(void);
 
 			public:
-				void  forward(const Tensor& input) override;
-				void backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input) override;
+				void  forward(const std::list<std::shared_ptr<Base>>::        iterator& current_layer                     ) override;
+				void backward(const std::list<std::shared_ptr<Base>>::reverse_iterator& current_layer, bool update_weights) override;
 
 			private:
 				void activate(void);

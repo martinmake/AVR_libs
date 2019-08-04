@@ -12,8 +12,6 @@ namespace Anna
 		const bool        FullConnected::IS_OUTPUT                =  false;
 		const bool        FullConnected::HAS_TRAINABLE_PARAMETERS =  true;
 
-		static void cpu_forward_kernel(void);
-
 		FullConnected::FullConnected(Shape initial_output_shape)
 			: Base(initial_output_shape)
 		{
@@ -36,19 +34,29 @@ namespace Anna
 			m_gradients.shape(m_weights.shape());
 		}
 
-		void FullConnected::forward(const Tensor& input)
+		void FullConnected::forward(const std::list<std::shared_ptr<Layer::Base>>::iterator& current_layer)
 		{
 			m_output = m_biases;
 
+			std::list<std::shared_ptr<Layer::Base>>::iterator previous_layer = current_layer; previous_layer--;
+
+			const Tensor& input = (*previous_layer)->output();
 			weigh_input(input);
 		}
 
-		void FullConnected::backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input)
+		void FullConnected::backward(const std::list<std::shared_ptr<Layer::Base>>::reverse_iterator& current_layer, bool update_weights)
 		{
-			if (!is_next_layer_input) calculate_error_back(error_back);
+			std::list<std::shared_ptr<Layer::Base>>::reverse_iterator next_layer = current_layer; next_layer++;
+
+			if (!(*next_layer)->is_input())
+			{
+				Tensor& error_back = (*next_layer)->error();
+				calculate_error_back(error_back);
+			}
 
 			update_biases();
 
+			const Tensor& input = (*next_layer)->output();
 			accumulate_gradients(input);
 			if (update_weights)
 			{

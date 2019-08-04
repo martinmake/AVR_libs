@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include <functional>
+#include <list>
 #include <memory>
 #include <assert.h>
 
@@ -33,8 +34,8 @@ namespace Anna
 				virtual void init(void);
 
 			public:
-				virtual void  forward(const Tensor& input);
-				virtual void backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input);
+				virtual void  forward(const std::list<std::shared_ptr<Base>>::        iterator& current_layer                     );
+				virtual void backward(const std::list<std::shared_ptr<Base>>::reverse_iterator& current_layer, bool update_weights);
 
 			public: // GETTERS
 				        const Shape&   shape               (void) const;
@@ -57,9 +58,16 @@ namespace Anna
 				virtual       bool         has_trainable_parameters(void) const;
 		};
 
-		inline void Base:: forward(const Tensor& input) { (void) input; }
-		inline void Base::backward(const Tensor& input, Tensor& error_back, bool update_weights, bool is_next_layer_input)
-		{ (void) input; (void) update_weights; (void) is_next_layer_input; error_back = m_error; }
+		inline void Base::forward(const std::list<std::shared_ptr<Base>>::iterator& current_layer)
+		{
+			(void) current_layer;
+			assert(false && "THIS IS JUST AN INTERFACE");
+		}
+		inline void Base::backward(const std::list<std::shared_ptr<Base>>::reverse_iterator& current_layer, bool update_weights)
+		{
+			(void) current_layer; (void) update_weights;
+			assert(false && "THIS IS JUST AN INTERFACE");
+		}
 
 		// GETTERS
 		inline const Shape&   Base::shape               (void) const { return m_shape;  }

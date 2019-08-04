@@ -34,15 +34,14 @@ namespace Anna
 
 		const Tensor& Base::forward(const Tensor& input)
 		{
-			std::list<std::shared_ptr<Layer::Base>>::iterator previous_layer = m_layers.begin(); previous_layer--;
-			std::list<std::shared_ptr<Layer::Base>>::iterator current_layer  = m_layers.begin();
+			std::list<std::shared_ptr<Layer::Base>>::iterator current_layer = m_layers.begin();
+			std::list<std::shared_ptr<Layer::Base>>::iterator    last_layer = m_layers.end(); last_layer--;
 
-			(*current_layer)->output(input); current_layer++; previous_layer++;
-			for (; current_layer != m_layers.end(); current_layer++, previous_layer++)
-				(*current_layer)->forward((*previous_layer)->output());
+			(*current_layer)->output(input); current_layer++;
+			for (; current_layer != m_layers.end(); current_layer++)
+				(*current_layer)->forward(current_layer);
 
-			current_layer--;
-			return (*current_layer)->output();
+			return (*last_layer)->output();
 		}
 		const Tensor& Base::forward(const std::vector<float>& input)
 		{
@@ -64,17 +63,16 @@ namespace Anna
 				batch_index = 0;
 				update_weights = true;
 			}
-			else
-				update_weights = false;
+			else    update_weights = false;
 
-			std::list<std::shared_ptr<Layer::Base>>::reverse_iterator current_layer  = m_layers.rbegin();
-			std::list<std::shared_ptr<Layer::Base>>::reverse_iterator next_layer     = m_layers.rbegin(); next_layer++;
+			std::list<std::shared_ptr<Layer::Base>>::reverse_iterator current_layer = m_layers.rbegin();
+			std::list<std::shared_ptr<Layer::Base>>::reverse_iterator last_layer    = m_layers.rend(); last_layer--;
 
 			(*current_layer)->error(error);
-			for (; next_layer != m_layers.rend(); current_layer++, next_layer++)
-				(*current_layer)->backward((*next_layer)->output(), (*next_layer)->error(), update_weights, (*next_layer)->is_input());
+			for (; current_layer != last_layer; current_layer++)
+				(*current_layer)->backward(current_layer, update_weights);
 
-			return (*current_layer)->error();
+			return (*last_layer)->error();
 		}
 
 		void Base::train(const Tensor& input, const Tensor& desired_output)
