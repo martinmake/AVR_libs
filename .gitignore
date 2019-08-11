@@ -6,6 +6,7 @@
 *.cuo
 *.oc
 *.obj
+*.pyc
 
 # Object dependencies
 *.d
@@ -51,4 +52,5 @@ cscope
 ARM/inc/*
 AVR/inc/*
 PC/inc/*
+PC/int/*
 compile_commands.json
