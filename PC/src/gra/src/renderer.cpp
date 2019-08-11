@@ -4,6 +4,7 @@
 #include <vendor/imgui/impl_opengl3.h>
 
 #include "renderer.h"
+#include "glstd.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -52,13 +53,13 @@ namespace Gra
 		glfwTerminate();
 	}
 
-	void Renderer::draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader) const
+	void Renderer::draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const
 	{
 		vertex_array.bind();
 		index_buffer.bind();
 		shader.bind();
 
-		glCall(glDrawElements(GL_TRIANGLES, index_buffer.count(), GL_UNSIGNED_INT, nullptr));
+		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.count(), GL_UNSIGNED_INT, nullptr));
 	}
 
 	void Renderer::start_frame() const

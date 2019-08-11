@@ -1,8 +1,8 @@
 #ifndef _GRA_RENDERER_H_
 #define _GRA_RENDERER_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "gra/glstd.h"
+#include "gra/gldebug.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -28,7 +28,7 @@ namespace Gra
 			~Renderer(void);
 
 		public:
-			void draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader) const;
+			void draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const;
 			void start_frame() const;
 			void   end_frame() const;
 
