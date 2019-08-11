@@ -1,11 +1,9 @@
 #ifndef _GRA_INDEX_BUFFER_H_
 #define _GRA_INDEX_BUFFER_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <inttypes.h>
 
+#include "gra/glstd.h"
 #include "gra/gldebug.h"
 
 namespace Gra
