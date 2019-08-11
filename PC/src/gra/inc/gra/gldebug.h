@@ -1,11 +1,11 @@
 #ifndef _GRA_GLDEBUG_H_
 #define _GRA_GLDEBUG_H_
 
-#include <GL/glew.h>
-
 #include <iostream>
 #include <assert.h>
 #include <stdio.h>
+
+#include "gra/glstd.h"
 
 namespace Gra
 {
