@@ -1,11 +1,9 @@
 #ifndef _GRA_TEXTURE_H_
 #define _GRA_TEXTURE_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <inttypes.h>
 
+#include "gra/glstd.h"
 #include "gra/gldebug.h"
 
 namespace Gra
