@@ -1,15 +1,13 @@
 #ifndef _GRA_VERTEX_ARRAY_H_
 #define _GRA_VERTEX_ARRAY_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <inttypes.h>
+
+#include "gra/glstd.h"
+#include "gra/gldebug.h"
 
 #include "gra/vertex_buffer.h"
 #include "gra/vertex_buffer_layout.h"
-
-#include "gra/gldebug.h"
 
 namespace Gra
 {
@@ -20,13 +18,16 @@ namespace Gra
 
 		public:
 			VertexArray(void);
+			VertexArray(const VertexBuffer& initial_vertex_buffer, const VertexBufferLayout& initial_layout);
 			~VertexArray(void);
 
 		public:
-			void add_buffer(const VertexBuffer& vertex_buffer, const VertexBufferLayout& layout);
-
 			void bind(void)   const;
 			void unbind(void) const;
+
+		public: // SETTERS
+			void vertex_buffer(const VertexBuffer      & new_vertex_buffer);
+			void layout       (const VertexBufferLayout& new_layout       );
 	};
 
 	inline void VertexArray::bind(void) const

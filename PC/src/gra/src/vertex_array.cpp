@@ -8,18 +8,28 @@ namespace Gra
 	{
 		glCall(glGenVertexArrays(1, &m_renderer_id));
 	}
+	VertexArray::VertexArray(const VertexBuffer& initial_vertex_buffer, const VertexBufferLayout& initial_layout)
+		: VertexArray()
+	{
+		vertex_buffer(initial_vertex_buffer);
+		layout(initial_layout);
+	}
 
 	VertexArray::~VertexArray(void)
 	{
 		glCall(glDeleteVertexArrays(1, &m_renderer_id));
 	}
 
-	void VertexArray::add_buffer(const VertexBuffer& vertex_buffer, const VertexBufferLayout& layout)
+	// SETTERS
+	void VertexArray::vertex_buffer(const VertexBuffer& new_vertex_buffer)
 	{
 		bind();
-		vertex_buffer.bind();
-
-		const std::vector<VertexBufferLayoutElement>& elements = layout.elements();
+		new_vertex_buffer.bind();
+	}
+	void VertexArray::layout(const VertexBufferLayout& new_layout)
+	{
+		bind();
+		const std::vector<VertexBufferLayoutElement>& elements = new_layout.elements();
 		uint64_t offset = 0;
 
 		for (uint32_t i = 0; i < elements.size(); i++)
@@ -27,7 +37,7 @@ namespace Gra
 			const VertexBufferLayoutElement& element = elements[i];
 
 			glCall(glEnableVertexAttribArray(i));
-			glCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.stride(), (const void*) offset));
+			glCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, new_layout.stride(), (const void*) offset));
 
 			offset += glSizeOf(element.type) * element.count;
 		}

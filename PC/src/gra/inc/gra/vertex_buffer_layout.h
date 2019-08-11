@@ -1,14 +1,12 @@
 #ifndef _GRA_VERTEX_BUFFER_LAYOUT_H_
 #define _GRA_VERTEX_BUFFER_LAYOUT_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <vector>
 #include <inttypes.h>
 
-#include "gra/gldebug.h"
 #include "gra/glstd.h"
+#include "gra/gldebug.h"
+
 
 namespace Gra
 {

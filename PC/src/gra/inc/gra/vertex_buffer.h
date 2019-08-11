@@ -1,11 +1,9 @@
 #ifndef _GRA_VERTEX_BUFFER_H_
 #define _GRA_VERTEX_BUFFER_H_
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
 #include <inttypes.h>
 
+#include "gra/glstd.h"
 #include "gra/gldebug.h"
 
 namespace Gra
@@ -17,8 +15,11 @@ namespace Gra
 
 		public:
 			VertexBuffer(void);
-			VertexBuffer(const void* data, uint32_t size);
+			VertexBuffer(const void* initial_data, uint32_t size);
 			~VertexBuffer(void);
+
+		public:
+			void data(const void* new_data, uint32_t size);
 
 		public:
 			void bind(void)   const;
