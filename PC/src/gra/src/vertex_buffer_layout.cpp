@@ -1,4 +1,4 @@
-#include "vertex_buffer_layout.h"
+#include "gra/vertex_buffer_layout.h"
 
 namespace Gra
 {

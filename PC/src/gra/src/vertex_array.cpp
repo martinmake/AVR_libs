@@ -1,6 +1,6 @@
-#include "glstd.h"
-#include "vertex_array.h"
-#include "vertex_buffer_layout.h"
+#include "gra/glstd.h"
+#include "gra/vertex_array.h"
+#include "gra/vertex_buffer_layout.h"
 
 namespace Gra
 {

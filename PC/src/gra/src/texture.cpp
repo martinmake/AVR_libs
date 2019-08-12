@@ -3,7 +3,7 @@
 
 #include <vendor/stb/image.h>
 
-#include "texture.h"
+#include "gra/texture.h"
 
 namespace Gra
 {

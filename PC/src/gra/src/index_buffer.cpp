@@ -1,8 +1,9 @@
-#include "index_buffer.h"
+#include "gra/index_buffer.h"
 
 namespace Gra
 {
 	IndexBuffer::IndexBuffer(void)
+		: m_renderer_id(0)
 	{
 	}
 	IndexBuffer::IndexBuffer(const unsigned int* data, uint32_t count)
@@ -15,6 +16,7 @@ namespace Gra
 
 	IndexBuffer::~IndexBuffer(void)
 	{
+		if (!m_renderer_id) return;
 		glCall(glDeleteBuffers(1, &m_renderer_id));
 	}
 }

@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <inttypes.h>
 
+#include "gra/math.h"
 #include "gra/glstd.h"
 #include "gra/gldebug.h"
 
@@ -33,12 +34,11 @@ namespace Gra
 			void set_uniform(const std::string& name, float val0, float val1, float val2, float val3);
 			void set_uniform(const std::string& name, int val0);
 			void set_uniform(const std::string& name, glm::vec4 vec0);
+			void set_uniform(const std::string& name, Math::vec4<float> vec0);
 			void set_uniform(const std::string& name, glm::mat4 mat0);
 
 			void bind(void)   const;
 			void unbind(void) const;
-		public:
-			static Shader& load(const std::string& dirpath);
 	};
 
 	inline void Shader::bind(void) const

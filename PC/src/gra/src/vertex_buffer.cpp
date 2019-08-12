@@ -1,4 +1,4 @@
-#include "vertex_buffer.h"
+#include "gra/vertex_buffer.h"
 
 namespace Gra
 {

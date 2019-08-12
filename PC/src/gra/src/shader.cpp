@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "shader.h"
+#include "gra/shader.h"
 
 static unsigned int compile_shader(unsigned int type, const std::string& source, const std::string& key = "");
 static unsigned int create_shader(const std::string& dirpath);
@@ -11,6 +11,7 @@ static unsigned int link_shader(const unsigned int vertex_shader_object, unsigne
 namespace Gra
 {
 	Shader::Shader(void)
+		: m_renderer_id(0)
 	{
 	}
 	Shader::Shader(const std::string& dirpath)
@@ -28,6 +29,7 @@ namespace Gra
 
 	Shader::~Shader(void)
 	{
+		if (!m_renderer_id) return;
 		glCall(glDeleteProgram(m_renderer_id));
 	}
 
@@ -77,6 +79,16 @@ namespace Gra
 			return;
 
 		glCall(glUniform1i(location, val0));
+	}
+	void Shader::set_uniform(const std::string& name, Math::vec4<float> vec0)
+	{
+		bind();
+		int location = get_uniform_location(name);
+
+		if (location == -1)
+			return;
+
+		glCall(glUniform4fv(location, 1, &vec0.x));
 	}
 	void Shader::set_uniform(const std::string& name, glm::vec4 vec0)
 	{

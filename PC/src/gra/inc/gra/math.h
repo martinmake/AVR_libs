@@ -1,0 +1,26 @@
+#ifndef _GRA_MATH_H_
+#define _GRA_MATH_H_
+
+namespace Gra
+{
+	namespace Math
+	{
+		template<typename T>
+		struct vec3
+		{
+			T x, y, z;
+			vec3(void)                                      : x(0),         y(0),         z(0)         {}
+			vec3(T initial_x, T initial_y, T initial_z = 0) : x(initial_x), y(initial_y), z(initial_z) {}
+		};
+
+		template<typename T>
+		struct vec4
+		{
+			T x, y, z, w;
+			vec4(void)                                               : x(0),         y(0),         z(0),         w(0)         {}
+			vec4(T initial_x, T initial_y, T initial_z, T initial_w) : x(initial_x), y(initial_y), z(initial_z), w(initial_w) {}
+		};
+	}
+}
+
+#endif

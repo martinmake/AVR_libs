@@ -3,8 +3,8 @@
 #include <vendor/imgui/impl_glfw.h>
 #include <vendor/imgui/impl_opengl3.h>
 
-#include "renderer.h"
-#include "glstd.h"
+#include "gra/renderer.h"
+#include "gra/glstd.h"
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -13,9 +13,31 @@ static void glfw_error_callback(int error, const char* description)
 
 namespace Gra
 {
-	Renderer::Renderer(int initial_width, int initial_height, const std::string& title)
-		: m_width(initial_width), m_height(initial_height)
+	Renderer::Renderer(void)
 	{
+	}
+	Renderer::Renderer(int initial_width, int initial_height, const std::string& title)
+	{
+		init(initial_width, initial_height, title);
+	}
+
+	Renderer::~Renderer(void)
+	{
+		if (!m_window) return;
+
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
+		glfwDestroyWindow(m_window);
+		glfwTerminate();
+	}
+
+	void Renderer::init(int initial_width, int initial_height, const std::string& title)
+	{
+		m_width  = initial_width;
+		m_height = initial_height;
+
 		glfwSetErrorCallback(glfw_error_callback);
 		assert(glfwInit() && "GLFW init");
 
@@ -41,16 +63,6 @@ namespace Gra
 
 		ImGui_ImplGlfw_InitForOpenGL(m_window, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
-	}
-
-	Renderer::~Renderer(void)
-	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-
-		glfwDestroyWindow(m_window);
-		glfwTerminate();
 	}
 
 	void Renderer::draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const

@@ -19,20 +19,24 @@ namespace Gra
 	class Renderer
 	{
 		private:
-			GLFWwindow* m_window;
-			unsigned int m_width,
-				     m_height;
+			GLFWwindow*  m_window;
+			unsigned int m_width;
+			unsigned int m_height;
 
 		public:
+			Renderer(void);
 			Renderer(int width, int height, const std::string& title);
 			~Renderer(void);
 
 		public:
+			void init(int width, int height, const std::string& title);
+
 			void draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const;
+
 			void start_frame() const;
 			void   end_frame() const;
 
-			bool         should_close  (void) const;
+			bool should_close(void) const;
 
 		public: // GETTERS
 			unsigned int width (void) const;
