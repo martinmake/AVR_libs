@@ -1,9 +1,10 @@
 #include <gra/shader.h>
 
-#include "static_initializer.h"
+#include "gpl/static_initializer.h"
+#include "gpl/primitives/all.h"
+#include "gpl/primitive.h"
+
 #include "primitives_shader.h"
-#include "primitives/all.h"
-#include "primitive.h"
 
 namespace Gpl
 {

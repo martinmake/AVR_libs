@@ -11,32 +11,32 @@ namespace Gpl
 		class Point : public Base
 		{
 			private:
-				glm::vec3 m_position;
+				Gra::Math::vec3<float> m_position;
 				float m_size;
 			public:
 				static Gra::VertexBufferLayout s_vertex_buffer_layout;
 				static Gra::IndexBuffer        s_index_buffer;
 
 			public:
-				Point(const glm::vec3& initial_position, const glm::vec4& initial_color, float initial_size);
+				Point(const Gra::Math::vec3<float>& initial_position, const Gra::Math::vec4<float>& initial_color, float initial_size);
 				virtual ~Point(void);
 
 			public:
 				void draw(const Gra::Renderer& renderer, const glm::mat4& mvp) const override;
 
 			public: // GETTERS
-				const glm::vec3& position(void) const;
-				      float     size     (void) const;
+				const Gra::Math::vec3<float>& position(void) const;
+				                      float   size     (void) const;
 			public: // SETTERS
-				void position(const glm::vec3& new_position);
-				void size    (      float     new_size    );
+				void position(const Gra::Math::vec3<float>& new_position);
+				void size    (                      float   new_size    );
 		};
 
 		// GETTERS
-		inline const glm::vec3& Point::position(void) const { return m_position; }
-		inline       float      Point::size    (void) const { return m_size;     }
+		inline const Gra::Math::vec3<float>& Point::position(void) const { return m_position; }
+		inline                       float   Point::size    (void) const { return m_size;     }
 		// SETTERS
-		inline void Point::size    (      float      new_size    ) { m_size     = new_size;     }
+		inline void Point::size(float new_size) { m_size = new_size; }
 	}
 }
 

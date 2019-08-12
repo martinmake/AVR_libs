@@ -1,10 +1,11 @@
 #include <memory>
+#include <utility>
 
 #include <gra/shader.h>
 
-#include "primitives/point.h"
-#include "primitive.h"
-#include "gpl.h"
+#include "gpl/primitives/point.h"
+#include "gpl/primitive.h"
+#include "gpl/gpl.h"
 
 namespace Gpl
 {
@@ -13,7 +14,7 @@ namespace Gpl
 		Gra::VertexBufferLayout Point::s_vertex_buffer_layout;
 		Gra::IndexBuffer        Point::s_index_buffer;
 
-		Point::Point(const glm::vec3& initial_position, const glm::vec4& initial_color, float initial_size)
+		Point::Point(const Gra::Math::vec3<float>& initial_position, const Gra::Math::vec4<float>& initial_color, float initial_size)
 			: Base(initial_color), m_size(initial_size)
 		{
 			m_vertex_array.vertex_buffer(m_vertex_buffer       );
@@ -33,7 +34,7 @@ namespace Gpl
 		}
 
 		// SETTERS
-		void Point::position(const glm::vec3& new_position)
+		void Point::position(const Gra::Math::vec3<float>& new_position)
 		{
 			m_position = new_position;
 			m_vertex_buffer.data(&m_position.x, 3 * sizeof(float));

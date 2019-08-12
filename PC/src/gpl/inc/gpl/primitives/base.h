@@ -3,13 +3,13 @@
 
 #include <assert.h>
 
+#include <gra/math.h>
 #include <gra/renderer.h>
 #include <gra/shader.h>
 #include <gra/vertex_array.h>
 #include <gra/vertex_buffer.h>
 
 #include "gpl/static_initializer.h"
-
 
 namespace Gpl
 {
@@ -18,13 +18,14 @@ namespace Gpl
 		class Base : private StaticInitializer
 		{
 			protected:
-				glm::vec4 m_color;
+				Gra::Math::vec4<float> m_color;
 			protected:
 				Gra::VertexArray  m_vertex_array;
 				Gra::VertexBuffer m_vertex_buffer;
 
 			public:
-				Base(const glm::vec4& initial_color);
+				Base(const Gra::Math::vec4<float>& initial_color);
+				Base(Base&& other);
 				virtual ~Base(void);
 
 			public:

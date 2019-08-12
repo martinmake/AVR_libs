@@ -26,7 +26,7 @@ namespace Gpl
 			void render(void);
 
 		public: // OPERATORS
-			Canvas& operator<<(Primitive::Base* primitive);
+			Canvas& operator<<(Primitive::Base*  primitive);
 	};
 }
 

@@ -1,7 +1,9 @@
-#include "canvas.h"
+#include "gpl/canvas.h"
 
 namespace Gpl
 {
+	Gra::Renderer Canvas::s_renderer;
+
 	Canvas::Canvas(void)
 	{
 	}
@@ -24,7 +26,6 @@ namespace Gpl
 	Canvas& Canvas::operator<<(Primitive::Base* primitive)
 	{
 		m_primitives.emplace_back(primitive);
-
 		return *this;
 	}
 }

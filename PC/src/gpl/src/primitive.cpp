@@ -1,6 +1,6 @@
 #include <gra/shader.h>
 
-#include "primitive.h"
+#include "gpl/primitive.h"
 
 namespace Gpl
 {

@@ -1,4 +1,4 @@
-#include "gpl.h"
+#include "gpl/gpl.h"
 
 namespace Gpl
 {
