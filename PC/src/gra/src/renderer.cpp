@@ -65,15 +65,6 @@ namespace Gra
 		ImGui_ImplOpenGL3_Init("#version 330");
 	}
 
-	void Renderer::draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const
-	{
-		vertex_array.bind();
-		index_buffer.bind();
-		shader.bind();
-
-		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.count(), GL_UNSIGNED_INT, nullptr));
-	}
-
 	void Renderer::start_frame() const
 	{
 		glCall(glClear(GL_COLOR_BUFFER_BIT));

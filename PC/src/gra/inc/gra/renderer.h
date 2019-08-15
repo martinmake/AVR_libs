@@ -7,12 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "gra/vertex_array.h"
-#include "gra/vertex_buffer.h"
-#include "gra/vertex_buffer_layout.h"
-#include "gra/index_buffer.h"
-#include "gra/shader.h"
-#include "gra/texture.h"
+#include "gra/graphics_objects/all.h"
 
 namespace Gra
 {
@@ -31,7 +26,8 @@ namespace Gra
 		public:
 			void init(int width, int height, const std::string& title);
 
-			void draw(const VertexArray& vertex_array, const IndexBuffer& index_buffer, const Shader& shader, DrawMode mode) const;
+			template <typename T>
+			void draw(const GraphicsObject::VertexArray& vertex_array, const GraphicsObject::Buffer::Index<T>& index_buffer, const GraphicsObject::Program& program, DrawMode mode) const;
 
 			void start_frame() const;
 			void   end_frame() const;
@@ -42,6 +38,16 @@ namespace Gra
 			unsigned int width (void) const;
 			unsigned int height(void) const;
 	};
+
+	template <typename T>
+	void Renderer::draw(const GraphicsObject::VertexArray& vertex_array, const GraphicsObject::Buffer::Index<T>& index_buffer, const GraphicsObject::Program& program, DrawMode mode) const
+	{
+		vertex_array.bind();
+		index_buffer.bind();
+		program     .bind();
+
+		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.indices().size(), GL_UNSIGNED_INT, nullptr));
+	}
 
 	inline bool Renderer::should_close(void) const { return glfwWindowShouldClose(m_window); }
 
