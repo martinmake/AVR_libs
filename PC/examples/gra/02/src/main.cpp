@@ -11,6 +11,7 @@
 int main(void)
 {
 	using namespace Gra;
+	using namespace GraphicsObject;
 
 	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT, "EXAMPLE WINDOW");
 
@@ -21,7 +22,7 @@ int main(void)
 		MODEL_WIDTH, MODEL_HEIGHT,
 			  0, MODEL_HEIGHT
 	};
-	VertexBuffer vertex_buffer1(positions1, 2 * 4 * sizeof(float));
+	Buffer::Vertex vertex_buffer1(positions1, 2 * 4 * sizeof(float));
 
 	float positions2[2 * 3] =
 	{
@@ -29,35 +30,35 @@ int main(void)
 		MODEL_WIDTH +     10,            0 + OFFSET,
 		MODEL_WIDTH + OFFSET, MODEL_HEIGHT +     10,
 	};
-	VertexBuffer vertex_buffer2(positions2, 2 * 3 * sizeof(float));
+	Buffer::Vertex vertex_buffer2(positions2, 2 * 3 * sizeof(float));
 
-	VertexBufferLayout vertex_buffer_layout;
+	VertexArray::Layout vertex_buffer_layout;
 	vertex_buffer_layout.push<float>(2);
 
 	VertexArray vertex_array(vertex_buffer1, vertex_buffer_layout);
 
-	unsigned int indices1[2 * 3] =
+	std::vector<uint32_t> indices1 =
 	{
 		0, 1, 2,
 		2, 3, 0
 	};
-	IndexBuffer index_buffer1(indices1, 2 * 3);
+	Buffer::Index<uint32_t> index_buffer1(indices1);
 
-	unsigned int indices2[1 * 3] =
+	std::vector<uint32_t> indices2 =
 	{
 		0, 1, 2,
 	};
-	IndexBuffer index_buffer2(indices2, 1 * 3);
+	Buffer::Index<uint32_t> index_buffer2(indices2);
 
-	Shader shader("res/shaders/basic");
+	Program program("res/shaders/basic");
 	{
 		glm::mat4 model      = glm::mat4(1.0);
 		glm::mat4 view       = glm::mat4(1.0);
 		glm::mat4 projection = glm::ortho<float>(0.0, renderer.width(), 0.0, renderer.height());
 		glm::mat4 mvp = projection * view * model;
 
-		shader.set_uniform_mat4f("u_mvp", mvp);
-		shader.set_uniform_4f("u_color", 0.7, 0.1, 0.5, 1.0);
+		program.set_uniform("u_mvp", mvp);
+		program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
 	}
 
 	vertex_array.vertex_buffer(vertex_buffer2);
@@ -65,7 +66,7 @@ int main(void)
 	{
 		renderer.start_frame();
 
-		renderer.draw(vertex_array, index_buffer2, shader, DrawMode::TRIANGLES);
+		renderer.draw(vertex_array, index_buffer2, program, DrawMode::TRIANGLES);
 
 		renderer.end_frame();
 	}
