@@ -1,6 +1,9 @@
 #ifndef _GRA_MATH_H_
 #define _GRA_MATH_H_
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace Gra
 {
 	namespace Math

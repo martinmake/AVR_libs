@@ -42,8 +42,11 @@ namespace Gra
 	}
 }
 
-#define glCall(call)                     \
-	Gra::glClearError();             \
-	call;                            \
-	assert(Gra::glLogCall() && #call);
+#define glCall(call)                       \
+{                                          \
+	Gra::glClearError();               \
+	call;                              \
+	assert(Gra::glLogCall() && #call); \
+}
+
 #endif

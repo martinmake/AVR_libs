@@ -3,8 +3,7 @@
 
 namespace Gra
 {
-	enum class DrawMode
-	{ TRIANGLES, LINES, POINTS };
+	enum class DrawMode { TRIANGLES, LINES, POINTS };
 }
 
 #endif
