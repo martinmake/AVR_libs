@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "layers/full_connected.h"
+#include "anna/layers/full_connected.h"
 
 namespace Anna
 {
@@ -12,8 +12,8 @@ namespace Anna
 		const bool        FullConnected::IS_OUTPUT                =  false;
 		const bool        FullConnected::HAS_TRAINABLE_PARAMETERS =  true;
 
-		FullConnected::FullConnected(Shape initial_output_shape)
-			: Base(initial_output_shape)
+		FullConnected::FullConnected(Shape initial_shape)
+			: Base(initial_shape)
 		{
 		}
 
@@ -23,7 +23,8 @@ namespace Anna
 
 		void FullConnected::init(void)
 		{
-			Base::init();
+			m_output.shape(m_shape);
+			m_error .shape(m_shape);
 
 			m_weights.shape({ m_input_shape.hypervolume(), 1, m_output.shape().hypervolume() });
 			m_weights.set_random(sqrt(2.0 / m_input_shape.hypervolume()));

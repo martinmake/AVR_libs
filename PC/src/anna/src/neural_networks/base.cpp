@@ -5,8 +5,8 @@
 #include <math.h>
 #include <assert.h>
 
-#include "neural_networks/base.h"
-#include "layer.h"
+#include "anna/neural_networks/base.h"
+#include "anna/layer.h"
 
 namespace Anna
 {

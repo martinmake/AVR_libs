@@ -1,9 +1,9 @@
 #include <float.h>
 
-#include "neural_networks/classifier.h"
-#include "cuda/allocator.h"
-#include "cuda/debug.cuh"
-#include "cuda/std.cuh"
+#include "anna/neural_networks/classifier.h"
+#include "anna/cuda/allocator.h"
+#include "anna/cuda/debug.cuh"
+#include "anna/cuda/std.cuh"
 
 namespace Anna
 {

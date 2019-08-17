@@ -1,4 +1,4 @@
-#include "layers/hyperbolic_tangent.h"
+#include "anna/layers/hyperbolic_tangent.h"
 
 namespace Anna
 {

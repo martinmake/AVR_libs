@@ -1,6 +1,6 @@
-#include "layers/relu.h"
-#include "cuda/debug.cuh"
-#include "cuda/std.cuh"
+#include "anna/layers/relu.h"
+#include "anna/cuda/debug.cuh"
+#include "anna/cuda/std.cuh"
 
 namespace Anna
 {

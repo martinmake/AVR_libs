@@ -1,6 +1,6 @@
-#include "layers/hyperbolic_tangent.h"
-#include "cuda/debug.cuh"
-#include "cuda/std.cuh"
+#include "anna/layers/hyperbolic_tangent.h"
+#include "anna/cuda/debug.cuh"
+#include "anna/cuda/std.cuh"
 
 namespace Anna
 {

@@ -3,7 +3,7 @@
 #include <string>
 #include <sstream>
 
-#include "datasets/mnist.h"
+#include "anna/datasets/mnist.h"
 
 #define  INPUT_COUNT (28 * 28)
 #define OUTPUT_COUNT 10

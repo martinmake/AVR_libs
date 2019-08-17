@@ -3,9 +3,9 @@
 #include <memory>
 #include <iomanip>
 
-#include "cuda/allocator.h"
-#include "tensor.h"
-#include "tensor.cuh"
+#include "anna/cuda/allocator.h"
+#include "anna/tensor.h"
+#include "anna/tensor.cuh"
 
 namespace Anna
 {

@@ -4,8 +4,8 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 
-#include "cuda/allocator.cuh"
-#include "cuda/debug.cuh"
+#include "anna/cuda/allocator.cuh"
+#include "anna/cuda/debug.cuh"
 
 namespace Anna
 {

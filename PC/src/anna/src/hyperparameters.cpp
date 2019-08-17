@@ -1,4 +1,4 @@
-#include "hyperparameters.h"
+#include "anna/hyperparameters.h"
 
 namespace Anna
 {

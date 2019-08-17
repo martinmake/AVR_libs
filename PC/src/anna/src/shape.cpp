@@ -1,6 +1,6 @@
 #include <sstream>
 
-#include "shape.h"
+#include "anna/shape.h"
 
 namespace Anna
 {

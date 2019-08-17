@@ -25,7 +25,7 @@ namespace Anna
 				Tensor m_gradients;
 
 			public: // CONSTRUCTORS AND DESTRUCTOR
-				FullConnected(Shape initial_output_shape = Shape::INVALID);
+				FullConnected(Shape initial_shape = Shape::INVALID);
 				~FullConnected(void);
 
 			private:

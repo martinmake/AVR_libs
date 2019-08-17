@@ -1,7 +1,7 @@
 #include <mutex>
 
-#include "cuda/allocator.h"
-#include "cuda/allocator.cuh"
+#include "anna/cuda/allocator.h"
+#include "anna/cuda/allocator.cuh"
 
 namespace Anna
 {

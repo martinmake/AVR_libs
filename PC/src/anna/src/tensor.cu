@@ -1,7 +1,7 @@
-#include "tensor.h"
-#include "tensor.cuh"
-#include "cuda/debug.cuh"
-#include "cuda/std.cuh"
+#include "anna/tensor.h"
+#include "anna/tensor.cuh"
+#include "anna/cuda/debug.cuh"
+#include "anna/cuda/std.cuh"
 
 namespace Anna
 {

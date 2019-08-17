@@ -3,8 +3,8 @@
 #include <cuda_runtime.h>
 #include <cuda_profiler_api.h>
 
-#include "cuda/device.cuh"
-#include "cuda/debug.cuh"
+#include "anna/cuda/device.cuh"
+#include "anna/cuda/debug.cuh"
 
 namespace Anna
 {
