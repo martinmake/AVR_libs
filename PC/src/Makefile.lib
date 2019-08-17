@@ -1,0 +1,141 @@
+# vim: filetype=make
+
+NAME_LIB:=$(notdir $(realpath .))
+
+include $(MAKEFILE).config
+include Makefile.config
+
+DIR_INC_PUBLIC:=inc/$(NAME_LIB)
+
+ARC:=$(DIR_LIB_LIB)/lib$(NAME_LIB).a
+SO :=$(DIR_LIB_LIB)/lib$(NAME_LIB).so
+
+DEFS    +=$(EDEFS)
+DIRS_INC+=$(DIR_INC_LIB)
+
+LIBS:=$(addprefix -l,$(LIBS)    )
+DEFS:=$(addprefix -D,$(DEFS)    )
+INC :=$(addprefix -I,$(DIRS_INC))
+
+INTS:=$(subst python,$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py,$(INTS))
+INT :=$(DIR_INT)/$(NAME_LIB).i
+
+HEADERS_PUBLIC:=$(shell find $(DIR_INC_PUBLIC) -name '*.h' )
+HEADERS_PUBLIC+=$(shell find $(DIR_INC_PUBLIC) -name '*.cuh')
+HEADERS_PUBLIC:=$(patsubst $(DIR_INC_PUBLIC)/%,$(DIR_INC_LIB)/$(NAME_LIB)/%,$(HEADERS_PUBLIC))
+
+SRCS_C   :=$(shell find $(DIR_SRC) -name '*.c'  )
+SRCS_CXX :=$(shell find $(DIR_SRC) -name '*.cpp')
+SRCS_ASM :=$(shell find $(DIR_SRC) -name '*.S'  )
+SRCS_CUDA:=$(shell find $(DIR_SRC) -name '*.cu' )
+
+OBJS_C   :=$(patsubst $(DIR_SRC)/%.c,  $(DIR_OBJ)/%.o,  $(SRCS_C)   )
+OBJS_CXX :=$(patsubst $(DIR_SRC)/%.cpp,$(DIR_OBJ)/%.o,  $(SRCS_CXX) )
+OBJS_ASM :=$(patsubst $(DIR_SRC)/%.S,  $(DIR_OBJ)/%.o,  $(SRCS_ASM) )
+OBJS_CUDA:=$(patsubst $(DIR_SRC)/%.cu, $(DIR_OBJ)/%.cuo,$(SRCS_CUDA))
+OBJS     :=$(OBJS_C) $(OBJS_CXX) $(OBJS_ASM) $(OBJS_CUDA)
+
+FLAGS_CC  :=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -fPIC -std=c99
+FLAGS_CXX :=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -fPIC -std=c++14
+FLAGS_ASM :=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -fPIC
+FLAGS_NVCC:=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -fPIC -Wno-pedantic
+FLAGS_NVCC:=$(addprefix -Xcompiler ,$(FLAGS_NVCC))
+FLAGS_SO  :=$(WARNING) $(OPTIMIZATION)                         -fPIC -shared
+FLAGS_SWIG:=$(INC) -cppext cpp -c++
+FLAGS_AR  :=rUucv
+
+.SECONDARY: $(OBJS)
+
+.PHONY: all
+all: $(ARC) $(INTS) $(HEADERS_PUBLIC)
+
+$(ARC): $(OBJS)
+	@echo "> ARCHIVING"
+	$(AR) $(FLAGS_AR) $(ARC) $(OBJS)
+	@echo "> ARCHIVING DONE"
+	@echo "> COMPILING INTO SHARED LIBRARY"
+	$(CXX) $(FLAGS_SO) -Wl,--whole-archive $(OBJS) -Wl,--no-whole-archive -o $(SO)
+	@echo "> COMPILING INTO SHARED LIBRARY DONE"
+	@echo "> BULDING $(NAME_LIB) FOR $(shell uname -sm)"
+	$(SIZE) $(ARC) -t | sed -e 's/^/* /'
+	@echo '*'
+	$(SIZE) $(SO)     | sed -e 's/^/* /'
+	@echo "< BULDING $(NAME_LIB) FOR $(shell uname -sm) DONE"
+
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py: $(ARC) $(INT)
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py: WRP :=$(DIR_INT_PYTHON)/$(NAME_LIB)_wrap.cpp
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py: CWRP:=$(WRP:.cpp=.o)
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py: MOD :=$(DIR_INT_PYTHON)/_$(NAME_LIB).so
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py: PY  :=$(DIR_INT_PYTHON)/$(NAME_LIB).py
+$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py:
+	@echo "> CREATING INTERFACE TO PYTHON"
+	$(SWIG) $(FLAGS_SWIG) -I/usr/include -python -o $(WRP) -outdir $(DIR_INT_PYTHON) $(INT)
+	$(CXX) $(FLAGS_CXX) $(shell python-config --cflags)  -c $(WRP) -o $(CWRP)
+	$(CXX) $(FLAGS_SO)  $(shell python-config --ldflags) -L$(DIR_LIB_LIB) -Wl,-R$(DIR_LIB_LIB) $(CWRP) -Wl,--whole-archive $(ARC) -Wl,--no-whole-archive $(LIBS) -o $(MOD)
+	mv $(MOD) $(PY) -t $(DIR_INT_PYTHON_LIB)
+	rm $(WRP) $(CWRP)
+	@echo "> CREATING INTERFACE TO PYTHON DONE"
+
+$(DIR_INC_LIB)/$(NAME_LIB)/%.h:   $(DIR_INC_PUBLIC)/%.h
+	@echo "> STORING PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@) && cp $< $@
+	@echo "< STORING PUBLIC LIBRARY HEADER $< DONE"
+$(DIR_INC_LIB)/$(NAME_LIB)/%.cuh: $(DIR_INC_PUBLIC)/%.cuh
+	@echo "> STORING PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@) && cp $< $@
+	@echo "< STORING PUBLIC LIBRARY HEADER $< DONE"
+
+$(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
+	@echo "> COMPILING $<"
+	$(CC)   $(FLAGS_CC)   -c $< -o $@
+	@echo "< COMPILING $< DONE"
+$(DIR_OBJ)/%.o: $(DIR_SRC)/%.cpp
+	@echo "> COMPILING $<"
+	$(CXX)  $(FLAGS_CXX)  -c $< -o $@
+	@echo "< COMPILING $< DONE"
+$(DIR_OBJ)/%.o: $(DIR_SRC)/%.S
+	@echo "> COMPILING $<"
+	$(ASMC) $(FLAGS_ASM)  -c $< -o $@
+	@echo "< COMPILING $< DONE"
+$(DIR_OBJ)/%.cuo: $(DIR_SRC)/%.cu
+	@echo "> COMPILING: $<"
+	$(NVCC) $(FLAGS_NVCC) -c $< -o $@
+	@echo "< COMPILING: $< DONE"
+
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.c
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(CC)   $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/%.o,$@)'     > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.cpp
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(CXX)  $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/%.o,$@)'     > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.S
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/%.o,$@)'     > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+$(DIR_DEP)/%.cud: $(DIR_SRC)/%.cu
+	@echo "> BUILDING DEPENDENCY: $<"
+	$(NVCC) $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.cud,$(DIR_OBJ)/%.cuo,$@)' > $@
+	@echo "< BUILDING DEPENDENCY: $< DONE"
+
+.PHONY: bear
+bear:
+	@better-bear $(DIR_SRC) $(DIRS_INC)
+
+.PHONY: clean
+clean: CLEAN_FILES:=$(ARC) $(SO) $(DIR_INC_LIB)/$(NAME_LIB) $(wildcard $(DIR_INT_LIB)/$(NAME_LIB).*) $(shell find ./$(DIR_OBJ) ./$(DIR_DEP) -type f -name '[!.]*')
+clean:
+	@echo "> CLEANING"
+	-rm -vfr $(shell echo $(CLEAN_FILES) | tr " " "\n") | sort | sed -e 's/^/* /'
+	@echo "< CLEANING DONE"
+
+%/:
+	mkdir -p $(dir $@)
+
+ifeq ($(NO_DEPENDENCIES),)
+-include $(patsubst $(DIR_SRC)/%.c,  $(DIR_DEP)/%.d,  $(SRCS_C)   )
+-include $(patsubst $(DIR_SRC)/%.cpp,$(DIR_DEP)/%.d,  $(SRCS_CXX) )
+-include $(patsubst $(DIR_SRC)/%.S,  $(DIR_DEP)/%.d,  $(SRCS_ASM) )
+-include $(patsubst $(DIR_SRC)/%.cu, $(DIR_DEP)/%.cud,$(SRCS_CUDA))
+endif
