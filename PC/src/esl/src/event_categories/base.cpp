@@ -1,10 +1,8 @@
-#include <utility>
-
-#include "esl/events/base.h"
+#include "esl/event_categories/base.h"
 
 namespace Esl
 {
-	namespace Event
+	namespace EventCategories
 	{
 		Base::Base(void)
 		{
@@ -17,14 +15,10 @@ namespace Esl
 		void Base::copy(const Base& other)
 		{
 			(void) other;
-
-			m_is_handled = other.m_is_handled;
 		}
 		void Base::move(Base&& other)
 		{
 			(void) other;
-
-			m_is_handled = std::exchange(other.m_is_handled, true);
 		}
 	}
 }
