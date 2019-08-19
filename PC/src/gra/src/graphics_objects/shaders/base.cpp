@@ -1,3 +1,5 @@
+#include "logging.h"
+
 #include "gra/graphics_objects/shaders/base.h"
 
 namespace Gra
@@ -13,6 +15,7 @@ namespace Gra
 				: m_type(initial_type)
 			{
 				glCall(m_renderer_id = glCreateShader(m_type));
+				TRACE("GL: SHADER: CREATED: {0}", m_renderer_id);
 			}
 			Base::Base(GLenum initial_type, const std::string& filepath_or_source)
 				: Base(initial_type)
@@ -26,7 +29,10 @@ namespace Gra
 			Base::~Base(void)
 			{
 				if (m_renderer_id)
+				{
 					glCall(glDeleteShader(m_renderer_id));
+					TRACE("GL: SHADER: DELETED: {0}", m_renderer_id);
+				}
 			}
 
 			bool Base::load(const std::string& filepath)
@@ -34,7 +40,7 @@ namespace Gra
 				std::ifstream stream(filepath);
 				if (!stream.is_open())
 				{
-					std::cout << "[SHADER] SHADER NOT FOUND '" << filepath << '`' << std::endl;
+					ERROR("SHADER: ERROR: FILE NOT FOUND '{0}`", filepath.c_str());
 					return false;
 				}
 
@@ -73,12 +79,11 @@ namespace Gra
 						glCall(glGetShaderiv(m_renderer_id, GL_INFO_LOG_LENGTH, &length));
 						char* message = (char *) alloca(length * sizeof(char));
 						glCall(glGetShaderInfoLog(m_renderer_id, length, &length, message));
-						std::cout << "[SHADER] FAILED TO COMPILE '" << type_to_string(m_type) << "` SHADER" << std::endl;
+						ERROR("SHADER: ERROR: FAILED TO COMPILE '{0}` SHADER", type_to_string(m_type));
 						std::cout << message << std::endl;
 						return false;
 					}
 				}
-
 				return true;
 			}
 
