@@ -7,6 +7,7 @@ namespace Gra
 	namespace GraphicsObject
 	{
 		Base::Base(void)
+			: m_renderer_id(0)
 		{
 		}
 

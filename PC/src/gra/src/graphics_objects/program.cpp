@@ -2,6 +2,8 @@
 
 #include <boost/filesystem.hpp>
 
+#include "logging.h"
+
 #include "gra/graphics_objects/program.h"
 #include "gra/graphics_objects/shader.h"
 
@@ -12,6 +14,8 @@ namespace Gra
 		Program::Program(void)
 		{
 			glCall(m_renderer_id = glCreateProgram());
+			TRACE("GL: PROGRAM: CREATED: {0}", m_renderer_id);
+			TRACE("PROGRAM: CONSTRUCTED: {0}", (void*) this);
 		}
 		Program::Program(const std::string& dirpath)
 			: Program()
@@ -27,7 +31,11 @@ namespace Gra
 		Program::~Program(void)
 		{
 			if (m_renderer_id)
+			{
 				glCall(glDeleteProgram(m_renderer_id));
+				TRACE("GL: PROGRAM: DELETED: {0}", m_renderer_id);
+			}
+			TRACE("PROGRAM: DESTRUCTED: {0}", (void*) this);
 		}
 
 		int Program::get_uniform_location(const std::string& name)

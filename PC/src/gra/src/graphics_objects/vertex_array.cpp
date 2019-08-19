@@ -1,24 +1,34 @@
+#include "logging.h"
+
 #include "gra/graphics_objects/vertex_array.h"
 
 namespace Gra
 {
 	namespace GraphicsObject
 	{
-		VertexArray::VertexArray(void)
+		VertexArray::VertexArray(const Window& initial_window)
+			: m_window(initial_window)
 		{
 			glCall(glGenVertexArrays(1, &m_renderer_id));
+			Window::detatch_current_context();
+			TRACE("GL: VERTEX ARRAY: GENERATED: {0}", m_renderer_id);
+			TRACE("VERTEX ARRAY: CONSTRUCTED: {0}", (void*) this);
 		}
-		VertexArray::VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Layout& initial_layout)
-			: VertexArray()
+		VertexArray::VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout, const Window& initial_window)
+			: VertexArray(initial_window)
 		{
 			vertex_buffer(initial_vertex_buffer);
-			layout(initial_layout);
+			layout(initial_vertex_buffer_layout);
 		}
 
 		VertexArray::~VertexArray(void)
 		{
 			if (m_renderer_id)
+			{
 				glCall(glDeleteVertexArrays(1, &m_renderer_id));
+				TRACE("GL: VERTEX ARRAY: DELETED: {0}", m_renderer_id);
+			}
+			TRACE("VERTEX ARRAY: DESTRUCTED: {0}", (void*) this);
 		}
 
 		// SETTERS
@@ -26,41 +36,24 @@ namespace Gra
 		{
 			bind();
 			new_vertex_buffer.bind();
+			Window::detatch_current_context();
 		}
-		void VertexArray::layout(const Layout& new_layout)
+		void VertexArray::layout(const Buffer::Vertex::Layout& new_layout)
 		{
-			m_layout = new_layout;
+			m_vertex_buffer_layout = new_layout;
 			uint64_t offset = 0;
 
 			bind();
-			for (uint32_t i = 0; i < m_layout.elements.size(); i++)
+			for (uint32_t i = 0; i < m_vertex_buffer_layout.elements.size(); i++)
 			{
-				const Layout::Element& element = m_layout.elements[i];
+				const Buffer::Vertex::Layout::Element& element = m_vertex_buffer_layout.elements[i];
 
 				glCall(glEnableVertexAttribArray(i));
-				glCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, m_layout.stride, (const void*) offset));
+				glCall(glVertexAttribPointer(i, element.count, element.type, element.normalized, m_vertex_buffer_layout.stride, (const void*) offset));
 
 				offset += glSizeOf(element.type) * element.count;
 			}
-		}
-
-		template <>
-		void VertexArray::Layout::push<float>(uint32_t count)
-		{
-			elements.push_back({ GL_FLOAT, count, GL_FALSE });
-			stride += count * glSizeOf(GL_FLOAT);
-		}
-		template <>
-		void VertexArray::Layout::push<unsigned int>(uint32_t count)
-		{
-			elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-			stride += count * glSizeOf(GL_UNSIGNED_INT);
-		}
-		template <>
-		void VertexArray::Layout::push<unsigned char>(uint32_t count)
-		{
-			elements.push_back({ GL_UNSIGNED_BYTE, count, GL_FALSE });
-			stride += count * glSizeOf(GL_UNSIGNED_BYTE);
+			Window::detatch_current_context();
 		}
 	}
 }
