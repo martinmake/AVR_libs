@@ -4,6 +4,8 @@
 
 #include <vendor/stb/image.h>
 
+#include "logging.h"
+
 #include "gra/graphics_objects/textures/plane.h"
 
 namespace Gra {
@@ -18,6 +20,7 @@ namespace Gra {
 				glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
 				glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
 				glCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+				TRACE("TEXTURE: PLANE: CONSTRUCTED: {0}", (void*) this);
 			}
 			Plane::Plane(const std::string& filepath, unsigned int initial_slot)
 				: Plane(initial_slot)
@@ -28,6 +31,9 @@ namespace Gra {
 			Plane::~Plane(void)
 			{
 				stbi_image_free(m_local_buffer);
+				if (m_local_buffer)
+					TRACE("STB: IMAGE: FREED: {0}", m_local_buffer);
+				TRACE("TEXTURE: PLANE: DESTRUCTED: {0}", (void*) this);
 			}
 
 			void Plane::load(std::string filepath)
@@ -35,6 +41,7 @@ namespace Gra {
 				stbi_set_flip_vertically_on_load(true);
 
 				m_local_buffer = stbi_load(filepath.c_str(), &m_width, &m_height, nullptr, 4);
+				TRACE("STB: IMAGE: LOADED: {0}", m_local_buffer);
 
 				if (!m_local_buffer)
 				{
@@ -51,7 +58,9 @@ namespace Gra {
 				Texture::Base::copy(other);
 
 				stbi_image_free(m_local_buffer);
+				TRACE("STB: IMAGE: FREED: {0}", m_local_buffer);
 				m_local_buffer = stbi_load_from_memory(other.m_local_buffer, 1, &m_width, &m_height, nullptr, 4);
+				TRACE("STB: IMAGE: LOADED FROM MEMORY: {0}", m_local_buffer);
 
 				bind();
 				glCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_local_buffer));
@@ -59,6 +68,7 @@ namespace Gra {
 			void Plane::move(Plane&& other)
 			{
 				stbi_image_free(m_local_buffer);
+				TRACE("STB: IMAGE: FREED: {0}", m_local_buffer);
 				Texture::Base::move(std::move(other));
 
 				m_width  = std::exchange(other.m_width,  0);

@@ -3,9 +3,7 @@
 
 #include <inttypes.h>
 
-#include "gra/glstd.h"
-#include "gra/gldebug.h"
-
+#include "gra/gra.h"
 #include "gra/graphics_objects/base.h"
 
 namespace Gra
@@ -19,8 +17,7 @@ namespace Gra
 				protected:
 					GLenum m_type;
 
-				public:
-					Base(void);
+				protected:
 					Base(GLenum initial_type);
 
 					Base(const Base&  other);

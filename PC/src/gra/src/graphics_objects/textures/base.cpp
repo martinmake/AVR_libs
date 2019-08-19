@@ -1,5 +1,7 @@
 #include <utility>
 
+#include "logging.h"
+
 #include "gra/graphics_objects/textures/base.h"
 
 namespace Gra
@@ -13,6 +15,7 @@ namespace Gra
 			{
 				assert(m_slot < 32);
 				glCall(glGenTextures(1, &m_renderer_id));
+				TRACE("OPENGL: TEXTURE: GENERATED: {0}", m_renderer_id);
 			}
 			Base::Base(GLenum initial_type, uint8_t initial_slot)
 				: Base(initial_slot)
@@ -23,7 +26,10 @@ namespace Gra
 			Base::~Base(void)
 			{
 				if (m_renderer_id)
+				{
 					glCall(glDeleteTextures(1, &m_renderer_id));
+					TRACE("OPENGL: TEXTURE: DELETED: {0}", m_renderer_id);
+				}
 			}
 
 			void Base::copy(const Base& other)

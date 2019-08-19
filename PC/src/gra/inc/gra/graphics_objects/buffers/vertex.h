@@ -3,10 +3,9 @@
 
 #include <inttypes.h>
 #include <memory>
+#include <vector>
 
-#include "gra/glstd.h"
-#include "gra/gldebug.h"
-
+#include "gra/gra.h"
 #include "gra/graphics_objects/buffers/base.h"
 
 namespace Gra
@@ -17,44 +16,53 @@ namespace Gra
 		{
 			class Vertex : public Buffer::Base
 			{
-				private:
-					void*    m_data;
-					uint32_t m_size;
-
 				public:
 					Vertex(void);
 					Vertex(const void* initial_data, uint32_t initial_size);
 
-					Vertex(const Vertex&  other);
-					Vertex(      Vertex&& other);
-
-					~Vertex(void);
-
-				public:
-					void copy(const Vertex&  other);
-					void move(      Vertex&& other);
-
-				public: // OPERATORS
-					Vertex& operator=(const Vertex&  rhs);
-					Vertex& operator=(      Vertex&& rhs);
-
 				public: // GETTERS
-					const void*    data(void) const;
-					      uint32_t size(void) const;
+					const void* data(void) const; uint32_t size(void) const;
 				public: // SETTERS
 					void data(const void* new_data, uint32_t new_size);
+
+				public:
+					struct Layout
+					{
+						struct Element
+						{
+							unsigned int  type;
+							unsigned int  count;
+							unsigned char normalized;
+						};
+
+						std::vector<Element> elements;
+						unsigned int         stride = 0;
+
+						template <typename T>
+						void push(uint32_t count);
+					};
+
+				private:
+					void*    m_data;
+					uint32_t m_size;
+
+				DECLARATION_MANDATORY(Vertex)
 			};
-
-			inline Vertex::Vertex(const Vertex&  other) : Base() { copy(          other ); }
-			inline Vertex::Vertex(      Vertex&& other) : Base() { move(std::move(other)); }
-
-			// OPERATORS
-			inline Vertex& Vertex::operator=(const Vertex&  rhs) { copy(          rhs ); return *this; }
-			inline Vertex& Vertex::operator=(      Vertex&& rhs) { move(std::move(rhs)); return *this; }
 
 			// GETTERS
 			inline const void*    Vertex::data(void) const { return m_data; }
 			inline       uint32_t Vertex::size(void) const { return m_size; }
+
+			template <typename T> void Vertex::Layout::push(uint32_t count)
+			{
+				(void) count;
+				static_assert(sizeof(T) && false, "[VERTEX LAYOUT] TYPE UNAVAIBLE!");
+			}
+			template <> void Vertex::Layout::push<         float>(uint32_t count);
+			template <> void Vertex::Layout::push<unsigned int  >(uint32_t count);
+			template <> void Vertex::Layout::push<unsigned char >(uint32_t count);
+
+			DEFINITION_MANDATORY(Vertex, )
 		}
 	}
 }
