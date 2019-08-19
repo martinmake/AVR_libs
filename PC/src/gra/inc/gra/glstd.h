@@ -7,7 +7,7 @@
 #include <inttypes.h>
 #include <assert.h>
 
-#include "gra/gra.h"
+#include "gra/draw_mode.h"
 
 namespace Gra
 {
@@ -18,7 +18,7 @@ namespace Gra
 			case GL_FLOAT:         return 4;
 			case GL_UNSIGNED_INT:  return 4;
 			case GL_UNSIGNED_BYTE: return 1;
-			default:               assert(false);
+			default: assert(false && "[GRA] glSizeOf: INVALID ENUM");
 		}
 
 		return 0;
