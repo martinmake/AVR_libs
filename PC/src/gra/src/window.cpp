@@ -43,6 +43,5 @@ namespace Gra
 			(void) window;
 			glViewport(0, 0, width, height);
 		});
-		detatch_current_context();
 	}
 }

@@ -29,7 +29,6 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
@@ -49,8 +48,17 @@ cscope
 .ycm_extra_conf.py
 
 # Other
-ARM/inc/*
-AVR/inc/*
 PC/inc/*
+AVR/inc/*
+ARM/inc/*
+
 PC/int/*
+
+PC/src/tmp
+PC/examples/tmp
+AVR/src/tmp
+AVR/examples/tmp
+ARM/src/tmp
+ARM/examples/tmp
+
 compile_commands.json

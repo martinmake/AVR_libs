@@ -19,7 +19,7 @@ int main(void)
 	using namespace GraphicsObject;
 
 	Renderer renderer;
-	Window master_window = Window(1, 1, ""); master_window.make_current();
+	Window master_window = Window(1, 1, "");
 
 	Buffer::Vertex vertex_buffer;
 	{
@@ -46,14 +46,14 @@ int main(void)
 		};
 		index_buffer.indices(indices);
 	}
+	Window::detatch_current_context();
 
-	Window rendering_window1 = Window(WINDOW_WIDTH, WINDOW_HEIGHT, "RENDERING WINDOW", master_window);
 	std::thread t1([&]()
 	{
-		rendering_window1.make_current();
+		Window rendering_window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, "RENDERING WINDOW", master_window);
 		Program program("res/shaders/basic");
-		VertexArray vertex_array(vertex_buffer, vertex_buffer_layout, rendering_window1);
-		while (!rendering_window1.should_close()) renderer.render(rendering_window1, [&]()
+		VertexArray vertex_array(vertex_buffer, vertex_buffer_layout, rendering_window);
+		while (!rendering_window.should_close()) renderer.render(rendering_window, [&]()
 		{
 			glm::mat4 model      = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 			glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
@@ -65,13 +65,12 @@ int main(void)
 		});
 	});
 
-	Window rendering_window2 = Window(WINDOW_WIDTH, WINDOW_HEIGHT, "RENDERING WINDOW", master_window);
 	std::thread t2([&]()
 	{
-		rendering_window2.make_current();
+		Window rendering_window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, "RENDERING WINDOW", master_window);
 		Program program("res/shaders/basic");
-		VertexArray vertex_array(vertex_buffer, vertex_buffer_layout, rendering_window2);
-		while (!rendering_window2.should_close()) renderer.render(rendering_window2, [&]()
+		VertexArray vertex_array(vertex_buffer, vertex_buffer_layout, rendering_window);
+		while (!rendering_window.should_close()) renderer.render(rendering_window, [&]()
 		{
 			glm::mat4 model      = glm::translate(glm::mat4(1.0), glm::vec3(MODEL_TRANSLATION_X, MODEL_TRANSLATION_Y, 0.0));
 			glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0,                 0.0,                 0.0));
