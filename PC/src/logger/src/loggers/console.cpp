@@ -4,6 +4,9 @@
 
 namespace Logger
 {
+	Console::Console(void)
+	{
+	}
 	Console::Console(const std::string& initial_name)
 		: Base(initial_name)
 	{

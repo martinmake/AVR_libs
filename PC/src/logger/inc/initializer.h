@@ -1,11 +1,13 @@
 #ifndef _INITIALIZER_H_
 #define _INITIALIZER_H_
 
-class Initializer
+namespace Logger
 {
-	public:
-		Initializer(void);
+	struct Initializer
+	{
+		 Initializer(void);
 		~Initializer(void);
-};
+	};
+}
 
 #endif

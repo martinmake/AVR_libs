@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "logger/loggers/base.h"
 
 namespace Logger
@@ -21,10 +23,12 @@ namespace Logger
 
 	void Base::copy(const Base& other)
 	{
-		(void) other;
+		m_underlying_logger = other.m_underlying_logger;
+		m_name              = other.m_name;
 	}
 	void Base::move(Base&& other)
 	{
-		(void) other;
+		m_underlying_logger = std::move(other.m_underlying_logger);
+		m_name              = other.m_name;
 	}
 }

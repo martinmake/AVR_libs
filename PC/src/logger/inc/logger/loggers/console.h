@@ -8,6 +8,7 @@ namespace Logger
 	class Console : public Base
 	{
 		public:
+			Console(void);
 			Console(const std::string& initial_name);
 
 			Console(const Console&  other);

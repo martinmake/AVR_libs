@@ -4,13 +4,16 @@
 
 #define DEFAULT_LOG_PATTERN "%^[%T] %n: %v%$"
 
-static Initializer initializer;
-
-Initializer::Initializer(void)
+namespace Logger
 {
-	spdlog::set_pattern(DEFAULT_LOG_PATTERN);
-}
+	static Initializer initializer;
 
-Initializer::~Initializer(void)
-{
+	Initializer::Initializer(void)
+	{
+		spdlog::set_pattern(DEFAULT_LOG_PATTERN);
+	}
+
+	Initializer::~Initializer(void)
+	{
+	}
 }
