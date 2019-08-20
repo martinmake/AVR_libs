@@ -1,10 +1,10 @@
 #ifndef _GRA_WINDOW_H_
 #define _GRA_WINDOW_H_
 
-#include <sml/sml.h>
+#include <functional>
 
-#include "gra/glstd.h"
-#include "gra/gldebug.h"
+#include "gra/gra.h"
+#include "gra/events/window/all.h"
 
 namespace Gra
 {
@@ -18,6 +18,17 @@ namespace Gra
 			      unsigned int  width (void) const;
 			      unsigned int  height(void) const;
 			const std::string & title (void) const;
+			      bool          vsync (void) const;
+		public: // SETTERS
+			void vsync(bool new_vsync);
+
+			void on_resize        (Event::Window::Resize       ::callback new_on_resize        );
+			void on_close         (Event::Window::Close        ::callback new_on_close         );
+			void on_key           (Event::Window::Key          ::callback new_on_key           );
+			void on_key_typed     (Event::Window::KeyTyped     ::callback new_on_key_typed     );
+			void on_mouse_button  (Event::Window::MouseButton  ::callback new_on_mouse_button  );
+			void on_mouse_scrolled(Event::Window::MouseScrolled::callback new_on_mouse_scrolled);
+			void on_mouse_moved   (Event::Window::MouseMoved   ::callback new_on_mouse_moved   );
 
 		public: // FUNCTIONS
 			bool should_close(void) const;
@@ -33,6 +44,15 @@ namespace Gra
 			std::string  m_title;
 			bool         m_share_resources;
 			bool         m_is_visible;
+			bool         m_vsync;
+		private:
+			Event::Window::Resize       ::callback m_on_resize;
+			Event::Window::Close        ::callback m_on_close;
+			Event::Window::Key          ::callback m_on_key;
+			Event::Window::KeyTyped     ::callback m_on_key_typed;
+			Event::Window::MouseButton  ::callback m_on_mouse_button;
+			Event::Window::MouseScrolled::callback m_on_mouse_scrolled;
+			Event::Window::MouseMoved   ::callback m_on_mouse_moved;
 		public:
 			static Window* sharing_window;
 
@@ -49,6 +69,16 @@ namespace Gra
 	DEFINITION_DEFAULT_GETTER(Window, width,        unsigned int )
 	DEFINITION_DEFAULT_GETTER(Window, height,       unsigned int )
 	DEFINITION_DEFAULT_GETTER(Window, title,  const std::string &)
+	DEFINITION_DEFAULT_GETTER(Window, vsync,        bool         )
+	// SETTERS
+	inline void Window::vsync(bool new_vsync) { m_vsync = new_vsync; glfwSwapInterval(m_vsync); }
+	DEFINITION_DEFAULT_SETTER(Window, on_resize,         Event::Window::Resize       ::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_close,          Event::Window::Close        ::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_key,            Event::Window::Key          ::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_key_typed,      Event::Window::KeyTyped     ::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_mouse_button,   Event::Window::MouseButton  ::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_mouse_scrolled, Event::Window::MouseScrolled::callback)
+	DEFINITION_DEFAULT_SETTER(Window, on_mouse_moved,    Event::Window::MouseMoved   ::callback)
 }
 
 #endif
