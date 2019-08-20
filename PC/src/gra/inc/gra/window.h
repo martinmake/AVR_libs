@@ -61,7 +61,6 @@ namespace Gra
 
 	// FUNCTIONS
 	inline bool Window::should_close(void)            const { return glfwWindowShouldClose(m_window);      }
-	inline void Window::make_current(void)            const { glfwMakeContextCurrent(m_window);            }
 	inline void Window::clear(void)                   const { glCall(glClear(GL_COLOR_BUFFER_BIT));        }
 	inline void Window::on_update(void)               const { glfwSwapBuffers(m_window); glfwPollEvents(); }
 	inline void Window::detatch_current_context(void)       { glfwMakeContextCurrent(NULL);                }

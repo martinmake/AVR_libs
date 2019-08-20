@@ -32,8 +32,9 @@ namespace Gra
 		// SETTERS
 		void VertexArray::vertex_buffer(const Buffer::Vertex& new_vertex_buffer)
 		{
+			m_vertex_buffer = new_vertex_buffer;
 			bind();
-			new_vertex_buffer.bind();
+			m_vertex_buffer.bind();
 		}
 		void VertexArray::layout(const Buffer::Vertex::Layout& new_layout)
 		{

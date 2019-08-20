@@ -8,5 +8,6 @@
 #include "gra/glstd.h"
 #include "gra/gldebug.h"
 #endif
+#include "gra/math.h"
 
 #endif

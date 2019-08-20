@@ -24,8 +24,6 @@ namespace Gra
 		});
 
 		assert(glfwInit() && "GLFW init");
-		INFO("GLFW: INITIALIZED");
-
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -33,14 +31,13 @@ namespace Gra
 
 		Window::s_sharing_window = new Window(1, 1, "", false, false);
 
+		INFO("GLFW: INITIALIZED");
+
 		assert(glewInit() == GLEW_OK && "GLEW init");
+		INFO("GLEW: INITIALIZED");
 
 		TRACE("GL: VERSION: {0}",   glGetString(GL_VERSION)                 );
 		TRACE("GLSL: VERSION: {0}", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-		glCall(glEnable(GL_BLEND));
-		glCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-		TRACE("GL: BLENDING ENABLED");
 
 	//	IMGUI_CHECKVERSION();
 	//	ImGui::CreateContext();

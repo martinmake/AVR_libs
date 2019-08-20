@@ -122,4 +122,15 @@ namespace Gra
 		}
 		TRACE("WINDOW: DESTRUCTED: {0}", (void*) this);
 	}
+
+	// FUNCTIONS
+	void Window::make_current(void) const
+	{
+		glfwMakeContextCurrent(m_window);
+
+		glCall(glEnable(GL_BLEND));
+		glCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+		glCall(glEnable(GL_PROGRAM_POINT_SIZE));
+	}
 }

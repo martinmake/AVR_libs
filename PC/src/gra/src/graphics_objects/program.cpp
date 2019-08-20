@@ -52,7 +52,7 @@ namespace Gra
 			uniform_location_cache[name] = location;
 
 			if (location == -1)
-				std::cerr << "[INVALID UNIFORM] " << name << std::endl;
+				WARN("GL: UNIFORM LOCATION NOT FOUND: {0}", name.c_str());
 
 			return location;
 		}
