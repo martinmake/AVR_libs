@@ -1,131 +1,67 @@
-#include <thread>
-
 #include <gra/renderer.h>
 
 #define WINDOW_WIDTH  640.0
 #define WINDOW_HEIGHT 420.0
 
-#define MODEL_WIDTH  100.0
-#define MODEL_HEIGHT 100.0
+#define ZOOM 1
 
-#define MODEL_TRANSLATION_X 100.0
-#define MODEL_TRANSLATION_Y  50.0
-
-#define ZOOM 1.0
-
-void window1(void)
-{
-	using namespace Gra;
-	using namespace GraphicsObject;
-
-	Renderer renderer;
-	Window window(WINDOW_WIDTH, WINDOW_HEIGHT, "EXAMPLE WINDOW");
-
-	Buffer::Vertex vertex_buffer;
-	{
-		float positions[2 * 4] =
-		{
-				  0,            0,
-			MODEL_WIDTH,            0,
-			MODEL_WIDTH, MODEL_HEIGHT,
-				  0, MODEL_HEIGHT
-		};
-
-		vertex_buffer.data(positions, 2 * 4 * sizeof(float));
-	}
-
-	Buffer::Vertex::Layout vertex_buffer_layout;
-	vertex_buffer_layout.push<float>(2);
-	VertexArray vertex_array(vertex_buffer, vertex_buffer_layout);
-	{
-	}
-
-	Buffer::Index index_buffer;
-	{
-		std::vector<Buffer::Index::type> indices =
-		{
-			0, 1, 2,
-			2, 3, 0
-		};
-		index_buffer.indices(indices);
-	}
-
-	Program program("res/shaders/basic");
-	{
-		glm::mat4 model      = glm::translate(glm::mat4(1.0), glm::vec3(MODEL_TRANSLATION_X, MODEL_TRANSLATION_Y, 0.0));
-		glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0,                 0.0,                 0.0));
-		glm::mat4 projection = glm::ortho(0.0, window.width() / ZOOM, 0.0, window.height() / ZOOM);
-		glm::mat4 mvp = projection * view * model;
-
-		program.set_uniform("u_mvp", mvp);
-		program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
-	}
-
-	while (!window.should_close()) renderer.render(window, [&]()
-	{
-		renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
-	});
-}
-void window2(void)
-{
-	using namespace Gra;
-	using namespace GraphicsObject;
-
-	Renderer renderer;
-	Window window(WINDOW_WIDTH, WINDOW_HEIGHT, "EXAMPLE WINDOW");
-
-	Buffer::Vertex vertex_buffer;
-	{
-		float positions[2 * 4] =
-		{
-				  0,            0,
-			MODEL_WIDTH,            0,
-			MODEL_WIDTH, MODEL_HEIGHT,
-				  0, MODEL_HEIGHT
-		};
-
-		vertex_buffer.data(positions, 2 * 4 * sizeof(float));
-	}
-
-	Buffer::Vertex::Layout vertex_buffer_layout;
-	vertex_buffer_layout.push<float>(2);
-	VertexArray vertex_array(vertex_buffer, vertex_buffer_layout);
-	{
-	}
-
-	Buffer::Index index_buffer;
-	{
-		std::vector<Buffer::Index::type> indices =
-		{
-			0, 1, 2,
-			2, 3, 0
-		};
-		index_buffer.indices(indices);
-	}
-
-	Program program("res/shaders/basic");
-	{
-		glm::mat4 model      = glm::translate(glm::mat4(1.0), glm::vec3(MODEL_TRANSLATION_X, MODEL_TRANSLATION_Y, 0.0));
-		glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0,                 0.0,                 0.0));
-		glm::mat4 projection = glm::ortho(0.0, window.width() / ZOOM, 0.0, window.height() / ZOOM);
-		glm::mat4 mvp = projection * view * model;
-
-		program.set_uniform("u_mvp", mvp);
-		program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
-	}
-
-	while (!window.should_close()) renderer.render(window, [&]()
-	{
-		renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
-	});
-}
+#define DEFAULT_POINT_SIZE ((float) 1.0)
+#define SCROLLING_SPEED    ((float) 1.0)
 
 int main(void)
 {
-	std::thread t1(window1);
-	std::thread t2(window2);
-	t1.join();
-	t2.join();
+	using namespace Gra;
+	using namespace GraphicsObject;
+
+	Window window(WINDOW_WIDTH, WINDOW_HEIGHT, "EXAMPLE WINDOW");
+
+	VertexArray vertex_array;
+	{
+		Buffer::Vertex vertex_buffer;
+		{
+			float positions[2 * 6] =
+			{
+				 10,  10,
+				100,  10,
+				 10, 100,
+				100, 100,
+				200, 200,
+				300, 300,
+			};
+
+			vertex_buffer.data(positions, 2 * 6 * sizeof(float));
+		}
+		vertex_array.vertex_buffer(vertex_buffer);
+
+		Buffer::Vertex::Layout vertex_buffer_layout;
+		vertex_buffer_layout.push<float>(2);
+		vertex_array.layout(vertex_buffer_layout);
+	}
+
+	Program program("res/shaders/basic");
+	{
+		glm::mat4 model      = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
+		glm::mat4 projection = glm::ortho<float>(0.0, window.width() / ZOOM, 0.0, window.height() / ZOOM);
+		glm::mat4 mvp = projection * view * model;
+
+		program.set_uniform("u_mvp", mvp);
+		program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
+		program.set_uniform("u_point_size", DEFAULT_POINT_SIZE);
+	}
+	window.on_mouse_scrolled([&](Event::Window::MouseScrolled event)
+	{
+		static float point_size = DEFAULT_POINT_SIZE;
+
+		point_size += event.yoffset() * SCROLLING_SPEED;
+		program.set_uniform("u_point_size", point_size);
+	});
+
+	Renderer renderer;
+	while (!window.should_close()) renderer.render(window, [&]()
+	{
+		renderer.draw(DrawMode::POINTS, program, vertex_array);
+	});
 
 	return 0;
 }
