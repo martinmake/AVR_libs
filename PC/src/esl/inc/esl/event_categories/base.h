@@ -5,14 +5,17 @@
 
 namespace Esl
 {
-	namespace EventCategories
+	namespace EventCategory
 	{
 		class Base
 		{
-			DECLARATION_MANDATORY_DERIVE_ONLY(Base)
+			public: // CONSTRUCTORS
+				Base(void);
+
+			DECLARATION_MANDATORY_INTERFACE(Base)
 		};
 
-		DEFINITION_MANDATORY_DERIVE_ONLY(Base)
+		DEFINITION_MANDATORY(Base, )
 	}
 }
 

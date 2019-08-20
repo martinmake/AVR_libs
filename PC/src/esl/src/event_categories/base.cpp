@@ -2,7 +2,7 @@
 
 namespace Esl
 {
-	namespace EventCategories
+	namespace EventCategory
 	{
 		Base::Base(void)
 		{

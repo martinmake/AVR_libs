@@ -11,10 +11,8 @@ namespace Esl
 	{
 		class Base
 		{
-			public:
-				virtual const std::string& name(void) const = 0;
-				virtual operator std::string(void) const { return name(); };
-				std::ostream& operator<<(std::ostream& output_stream) const;
+			public: // CONSTRUCTORS
+				Base(void);
 
 			public: // GETTERS
 				bool is_handled(void) const;
@@ -24,16 +22,15 @@ namespace Esl
 			protected:
 				bool m_is_handled = false;
 
-			DECLARATION_MANDATORY_DERIVE_ONLY(Base)
+			DECLARATION_MANDATORY_INTERFACE(Base)
 		};
-		inline std::ostream& operator<<(std::ostream& output_stream, const Base& event) { return output_stream << (std::string) event; }
 
 		// GETTERS
 		DEFINITION_DEFAULT_GETTER(Base, is_handled, bool)
 		// SETTERS
 		DEFINITION_DEFAULT_SETTER(Base, is_handled, bool)
 
-		DEFINITION_MANDATORY_DERIVE_ONLY(Base)
+		DEFINITION_MANDATORY(Base, )
 	}
 }
 
