@@ -19,8 +19,7 @@ int main(void)
 		float positions[2 * 4] =
 		{
 				  0,            0,
-			MODEL_WIDTH,            0,
-			MODEL_WIDTH, MODEL_HEIGHT,
+			MODEL_WIDTH,            0, MODEL_WIDTH, MODEL_HEIGHT,
 				  0, MODEL_HEIGHT
 		};
 
@@ -47,6 +46,19 @@ int main(void)
 		std::thread t1([&]()
 		{
 			Window window(640, 400, "WINDOW1");
+			window.on_mouse_button([](Event::Window::MouseButton& e)
+			{
+				using namespace Event::Window;
+
+				if (e.button() == MouseButton::Button::LEFT)
+					std::cout << "LEFT MOUSE BUTTON";
+				if (e.action() == MouseButton::Action::PRESS)
+					std::cout << " PRESSED ";
+				if (e.mods() & MouseButton::Mod::ALT)
+					std::cout << "WITH ALT";
+
+				std::cout << std::endl;
+			});
 			Program program(SHADER_DIRPATH);
 			VertexArray vertex_array(vertex_buffer, vertex_buffer_layout);
 			while (!window.should_close()) renderer.render(window, [&]()
