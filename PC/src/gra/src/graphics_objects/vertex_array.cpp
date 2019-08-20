@@ -6,16 +6,14 @@ namespace Gra
 {
 	namespace GraphicsObject
 	{
-		VertexArray::VertexArray(const Window& initial_window)
-			: m_window(initial_window)
+		VertexArray::VertexArray(void)
 		{
 			glCall(glGenVertexArrays(1, &m_renderer_id));
-			Window::detatch_current_context();
 			TRACE("GL: VERTEX ARRAY: GENERATED: {0}", m_renderer_id);
 			TRACE("VERTEX ARRAY: CONSTRUCTED: {0}", (void*) this);
 		}
-		VertexArray::VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout, const Window& initial_window)
-			: VertexArray(initial_window)
+		VertexArray::VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout)
+			: VertexArray()
 		{
 			vertex_buffer(initial_vertex_buffer);
 			layout(initial_vertex_buffer_layout);
@@ -36,7 +34,6 @@ namespace Gra
 		{
 			bind();
 			new_vertex_buffer.bind();
-			Window::detatch_current_context();
 		}
 		void VertexArray::layout(const Buffer::Vertex::Layout& new_layout)
 		{
@@ -53,7 +50,6 @@ namespace Gra
 
 				offset += glSizeOf(element.type) * element.count;
 			}
-			Window::detatch_current_context();
 		}
 	}
 }

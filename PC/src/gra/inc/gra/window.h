@@ -12,7 +12,7 @@ namespace Gra
 	{
 		public: // CONSTRUCTORS
 			Window(void);
-			Window(int width, int height, const std::string& title, const Window& share_resources = Window());
+			Window(int initial_width, int initial_height, const std::string& initial_title, bool initial_share_resources = true, bool initial_is_visible = true);
 
 		public: // GETTERS
 			      unsigned int  width (void) const;
@@ -20,8 +20,6 @@ namespace Gra
 			const std::string & title (void) const;
 
 		public: // FUNCTIONS
-			void init(int initial_width, int initial_height, const std::string& initial_title, const Window& share_resources = Window());
-
 			bool should_close(void) const;
 			void make_current() const;
 			static void detatch_current_context();
@@ -33,19 +31,19 @@ namespace Gra
 			unsigned int m_width;
 			unsigned int m_height;
 			std::string  m_title;
+			bool         m_share_resources;
+			bool         m_is_visible;
+		public:
+			static Window* sharing_window;
 
 		DECLARATION_MANDATORY(Window)
 	};
 
-	inline bool Window::should_close(void) const { return glfwWindowShouldClose(m_window); }
-	inline void Window::make_current() const { glfwMakeContextCurrent(m_window); }
-	inline void Window::detatch_current_context() { glfwMakeContextCurrent(NULL); }
-	inline void Window::clear() const { glCall(glClear(GL_COLOR_BUFFER_BIT)); }
-	inline void Window::on_update() const
-	{
-		glfwSwapBuffers(m_window);
-		glfwPollEvents();
-	}
+	inline bool Window::should_close(void)            const { return glfwWindowShouldClose(m_window);      }
+	inline void Window::make_current(void)            const { glfwMakeContextCurrent(m_window);            }
+	inline void Window::clear(void)                   const { glCall(glClear(GL_COLOR_BUFFER_BIT));        }
+	inline void Window::on_update(void)               const { glfwSwapBuffers(m_window); glfwPollEvents(); }
+	inline void Window::detatch_current_context(void)       { glfwMakeContextCurrent(NULL);                }
 
 	// GETTERS
 	DEFINITION_DEFAULT_GETTER(Window, width,        unsigned int )

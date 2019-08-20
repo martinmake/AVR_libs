@@ -15,8 +15,8 @@ namespace Gra
 		class VertexArray : public GraphicsObject::Base
 		{
 			public:
-				VertexArray(const Window& window);
-				VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout, const Window& window);
+				VertexArray(void);
+				VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout);
 
 			public:
 				void   bind(void) const override;
@@ -29,16 +29,15 @@ namespace Gra
 			private:
 				Buffer::Vertex         m_vertex_buffer;
 				Buffer::Vertex::Layout m_vertex_buffer_layout;
-				const Window&          m_window;
 
 			DECLARATION_MANDATORY(VertexArray)
 
 		};
 
-		inline void VertexArray::  bind(void) const { m_window.make_current(); glCall(glBindVertexArray(m_renderer_id)); }
-		inline void VertexArray::unbind(void) const { m_window.make_current(); glCall(glBindVertexArray(            0)); }
+		inline void VertexArray::  bind(void) const { glCall(glBindVertexArray(m_renderer_id)); }
+		inline void VertexArray::unbind(void) const { glCall(glBindVertexArray(            0)); }
 
-		DEFINITION_MANDATORY(VertexArray, other.m_window)
+		DEFINITION_MANDATORY(VertexArray, )
 	}
 }
 
