@@ -19,7 +19,8 @@ int main(void)
 		float positions[2 * 4] =
 		{
 				  0,            0,
-			MODEL_WIDTH,            0, MODEL_WIDTH, MODEL_HEIGHT,
+			MODEL_WIDTH,            0,
+			MODEL_WIDTH, MODEL_HEIGHT,
 				  0, MODEL_HEIGHT
 		};
 
