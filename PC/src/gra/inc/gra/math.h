@@ -9,13 +9,19 @@ namespace Gra
 	namespace Math
 	{
 		template<typename T>
+		struct vec2
+		{
+			T x, y;
+			vec2(void)                     : x(0),         y(0)         {}
+			vec2(T initial_x, T initial_y) : x(initial_x), y(initial_y) {}
+		};
+		template<typename T>
 		struct vec3
 		{
 			T x, y, z;
 			vec3(void)                                      : x(0),         y(0),         z(0)         {}
 			vec3(T initial_x, T initial_y, T initial_z = 0) : x(initial_x), y(initial_y), z(initial_z) {}
 		};
-
 		template<typename T>
 		struct vec4
 		{

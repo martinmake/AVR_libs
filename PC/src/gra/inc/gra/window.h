@@ -3,7 +3,7 @@
 
 #include <functional>
 
-#include "gra/gra.h"
+#include "gra/core.h"
 #include "gra/events/window/all.h"
 
 namespace Gra
@@ -19,6 +19,8 @@ namespace Gra
 			      unsigned int  height(void) const;
 			const std::string & title (void) const;
 			      bool          vsync (void) const;
+
+			Math::vec2<float> mouse_position(void) const;
 		public: // SETTERS
 			void vsync(bool new_vsync);
 

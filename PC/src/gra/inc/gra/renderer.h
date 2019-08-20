@@ -22,7 +22,8 @@ namespace Gra
 		public:
 			void render(Window& window, std::function<void (void)> draw_calls) const;
 			void draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, const GraphicsObject::Buffer::Index & index_buffer) const;
-			void draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, uint32_t index_of_first_vertex = 0                ) const;
+			void draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, uint32_t index_of_first_vertex, uint32_t count    ) const;
+			void draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array                                                    ) const;
 	};
 
 	inline void Renderer::render(Window& window, std::function<void (void)> draw_calls) const
@@ -43,12 +44,19 @@ namespace Gra
 
 		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.indices().size(), GL_UNSIGNED_INT, nullptr));
 	}
-	inline void Renderer::draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, uint32_t index_of_first_vertex) const
+	inline void Renderer::draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, uint32_t index_of_first_vertex, uint32_t count) const
 	{
 		vertex_array.bind();
 		program     .bind();
 
-		glCall(glDrawArrays(DrawMode_to_GLenum(mode), index_of_first_vertex, vertex_array.count()));
+		glCall(glDrawArrays(DrawMode_to_GLenum(mode), index_of_first_vertex, count));
+	}
+	inline void Renderer::draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array) const
+	{
+		vertex_array.bind();
+		program     .bind();
+
+		glCall(glDrawArrays(DrawMode_to_GLenum(mode), 0, vertex_array.count()));
 	}
 }
 
