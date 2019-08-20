@@ -7,10 +7,12 @@
 
 #define ZOOM 1.0
 
+#define SHADER_DIRPATH "res/shaders/basic"
+
 int main(void)
 {
 	using namespace Gra;
-	using namespace GraphicsObject;
+	using namespace Gra::GraphicsObject;
 
 	Buffer::Vertex vertex_buffer;
 	{
@@ -44,8 +46,8 @@ int main(void)
 
 		std::thread t1([&]()
 		{
-			Window window(640, 400, "RENDERING WINDOW", true);
-			Program program("res/shaders/basic");
+			Window window(640, 400, "WINDOW1");
+			Program program(SHADER_DIRPATH);
 			VertexArray vertex_array(vertex_buffer, vertex_buffer_layout);
 			while (!window.should_close()) renderer.render(window, [&]()
 			{
@@ -53,6 +55,7 @@ int main(void)
 				glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(0.0, 0.0, 0.0));
 				glm::mat4 projection = glm::ortho(0.0, window.width() / ZOOM, 0.0, window.height() / ZOOM);
 				glm::mat4 mvp = projection * view * model;
+
 				program.set_uniform("u_mvp", mvp);
 				program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
 				renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
@@ -61,8 +64,8 @@ int main(void)
 
 		std::thread t2([&]()
 		{
-			Window window(400, 640, "RENDERING WINDOW", true);
-			Program program("res/shaders/basic");
+			Window window(400, 640, "WINDOW2");
+			Program program(SHADER_DIRPATH);
 			VertexArray vertex_array(vertex_buffer, vertex_buffer_layout);
 			while (!window.should_close()) renderer.render(window, [&]()
 			{
@@ -70,6 +73,7 @@ int main(void)
 				glm::mat4 view       = glm::translate(glm::mat4(1.0), glm::vec3(  0.0,   0.0, 0.0));
 				glm::mat4 projection = glm::ortho(0.0, window.width() / ZOOM, 0.0, window.height() / ZOOM);
 				glm::mat4 mvp = projection * view * model;
+
 				program.set_uniform("u_mvp", mvp);
 				program.set_uniform("u_color", 0., 0.8, 0.9, 1.0);
 				renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
