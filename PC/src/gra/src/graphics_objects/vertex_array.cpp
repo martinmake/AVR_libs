@@ -36,9 +36,9 @@ namespace Gra
 			bind();
 			m_vertex_buffer.bind();
 		}
-		void VertexArray::layout(const Buffer::Vertex::Layout& new_layout)
+		void VertexArray::layout(const Buffer::Vertex::Layout& new_vertex_buffer_layout)
 		{
-			m_vertex_buffer_layout = new_layout;
+			m_vertex_buffer_layout = new_vertex_buffer_layout;
 			uint64_t offset = 0;
 
 			bind();
