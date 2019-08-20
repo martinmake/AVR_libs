@@ -3,7 +3,8 @@
 
 #include <string>
 
-#include "gra/glstd.h"
+#include "gra/core.h"
+#include "gra/graphics_objects/shaders/base.h"
 
 namespace Gra
 {
@@ -11,7 +12,8 @@ namespace Gra
 	{
 		namespace Shader
 		{
-			extern GLenum filepath_to_type(const std::string& filepath);
+			extern GLenum         filepath_to_type(const std::string& filepath);
+			extern Shader::Base&& load            (const std::string& filepath);
 		}
 	}
 }

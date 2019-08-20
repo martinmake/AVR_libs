@@ -16,44 +16,36 @@ namespace Gra
 		{
 			class Base : public GraphicsObject::Base
 			{
+				public: // CONSTRUCTORS
+					Base(                     uint8_t initial_slot = 0);
+					Base(GLenum initial_type, uint8_t initial_slot = 0);
+
+				public: // GETTERS
+					unsigned int slot(void) const;
+
+				public: // FUNCTIONS
+					virtual void load(std::string filepath) { (void) filepath; }
+
+					void   bind(void) const override;
+					void unbind(void) const override;
+
 				protected:
 					GLenum m_type;
 
 					uint8_t* m_local_buffer;
 					uint8_t  m_slot;
 
-				public:
-					Base(                     uint8_t initial_slot = 0);
-					Base(GLenum initial_type, uint8_t initial_slot = 0);
-
-					Base(const Base&  other);
-					Base(      Base&& other);
-
-					virtual ~Base(void);
-
-				public:
-					virtual void load(std::string filepath) { (void) filepath; }
-
-				public:
-					void   bind(void) const override;
-					void unbind(void) const override;
-
-				public: // GETTERS
-					unsigned int slot(void) const;
-
-				protected:
-					void copy(const Base&  other);
-					void move(      Base&& other);
+				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
 			// GETTERS
-			inline unsigned int Base::slot(void) const { return m_slot; }
+			DEFINITION_DEFAULT_GETTER(Base, slot, unsigned int)
 
-			inline Base::Base(const Base&  other) : Base() { copy(          other ); }
-			inline Base::Base(      Base&& other) : Base() { move(std::move(other)); }
-
+			// FUNCTIONS
 			inline void Base::  bind(void) const { glCall(glActiveTexture(GL_TEXTURE0 + m_slot)); glCall(glBindTexture(m_type, m_renderer_id)); }
 			inline void Base::unbind(void) const { glCall(glActiveTexture(GL_TEXTURE0 + m_slot)); glCall(glBindTexture(m_type, 0            )); }
+
+			DEFINITION_MANDATORY(Base, other.m_type)
 		}
 	}
 }

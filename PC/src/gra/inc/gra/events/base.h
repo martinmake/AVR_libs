@@ -13,10 +13,13 @@ namespace Gra
 	{
 		class Base : public Esl::Event::Base
 		{
+			protected:
+				Base(void);
+
 			DECLARATION_MANDATORY_INTERFACE(Base)
 		};
 
-		DEFINITION_MANDATORY_INTERFACE(Base, )
+		DEFINITION_MANDATORY(Base, )
 	}
 }
 

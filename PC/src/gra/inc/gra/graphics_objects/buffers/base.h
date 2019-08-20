@@ -14,36 +14,28 @@ namespace Gra
 		{
 			class Base : public GraphicsObject::Base
 			{
-				protected:
-					GLenum m_type;
-
-				protected:
+				protected: // CONSTRUCTORS
 					Base(GLenum initial_type);
 
-					Base(const Base&  other);
-					Base(      Base&& other);
-
-					virtual ~Base(void);
-
-				public:
+				public: // FUNCTIONS
 					void buffer_data(const void* data, size_t size);
 
-				public:
 					void   bind(void) const override;
 					void unbind(void) const override;
 
-				public:
-					void copy(const Base&  other);
-					void move(      Base&& other);
+				protected:
+					GLenum m_type;
+
+				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
-			inline Base::Base(const Base&  other) : Base(other.m_type) { copy(          other ); }
-			inline Base::Base(      Base&& other) : Base(other.m_type) { move(std::move(other)); }
-
+			// FUNCTIONS
 			inline void Base::buffer_data(const void* data, size_t size) { bind(); glCall(glBufferData(m_type, size, data, GL_STATIC_DRAW)); }
-
+			//
 			inline void Base::  bind(void) const { glCall(glBindBuffer(m_type, m_renderer_id)); }
 			inline void Base::unbind(void) const { glCall(glBindBuffer(m_type, 0            )); }
+
+			DEFINITION_MANDATORY(Base, other.m_type)
 		}
 	}
 }

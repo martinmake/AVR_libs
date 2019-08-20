@@ -15,6 +15,9 @@ namespace Gra
 			class Input : public EventCategory::Window::Base
 			{
 				public:
+					Input(void);
+
+				public:
 					enum class Action
 					{
 						PRESS   = GLFW_PRESS,
@@ -30,14 +33,14 @@ namespace Gra
 						NUM_LOCK  = GLFW_MOD_NUM_LOCK,
 					};
 
-				DECLARATION_MANDATORY_INTERFACE(Input)
+				DECLARATION_MANDATORY(Input)
 			};
 			inline bool operator&(Input::Mod lhs, Input::Mod rhs)
 			{
 				return static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs);
 			}
 
-			DEFINITION_MANDATORY_INTERFACE(Input, )
+			DEFINITION_MANDATORY(Input, )
 		}
 	}
 }

@@ -16,6 +16,9 @@ namespace Gra
 		{
 			class Base : public EventCategory::Base
 			{
+				protected:
+					Base(void);
+
 				public:
 					enum class Action
 					{
@@ -35,7 +38,7 @@ namespace Gra
 				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
-			DEFINITION_MANDATORY_INTERFACE(Base, )
+			DEFINITION_MANDATORY(Base, )
 		}
 	}
 }

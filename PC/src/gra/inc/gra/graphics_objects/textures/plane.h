@@ -16,43 +16,29 @@ namespace Gra
 		{
 			class Plane : public Texture::Base
 			{
-				private:
-					int m_width,
-					    m_height;
-
-				public:
+				public: // CONSTRUCTORS
 					Plane(                             unsigned int initial_slot = 0);
 					Plane(const std::string& filepath, unsigned int initial_slot = 0);
-
-					Plane(const Plane&  other);
-					Plane(      Plane&& other);
-
-					~Plane(void);
-
-				public:
-					void load(std::string filepath) override;
 
 				public: // GETTERS
 					int width (void) const;
 					int height(void) const;
 
+				public: // FUNCTIONS
+					void load(std::string filepath) override;
+
 				private:
-					void copy(const Plane&  other);
-					void move(      Plane&& other);
-				public:
-					Plane& operator=(const Plane&  rhs);
-					Plane& operator=(      Plane&& rhs);
+					int m_width,
+					    m_height;
+
+				DECLARATION_MANDATORY(Plane)
 			};
 
 			// GETTERS
-			inline          int Plane::width (void) const { return m_width;  }
-			inline          int Plane::height(void) const { return m_height; }
+			DEFINITION_DEFAULT_GETTER(Plane, width,  int)
+			DEFINITION_DEFAULT_GETTER(Plane, height, int)
 
-			inline Plane::Plane(const Plane&  other) : Base() { copy(          other ); }
-			inline Plane::Plane(      Plane&& other) : Base() { move(std::move(other)); }
-
-			inline Plane& Plane::operator=(const Plane&  rhs) { copy(          rhs ); return *this; }
-			inline Plane& Plane::operator=(      Plane&& rhs) { move(std::move(rhs)); return *this; }
+			DEFINITION_MANDATORY(Plane, )
 		}
 	}
 }

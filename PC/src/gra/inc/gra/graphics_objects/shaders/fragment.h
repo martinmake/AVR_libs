@@ -12,7 +12,7 @@ namespace Gra
 		{
 			class Fragment : public Shader::Base
 			{
-				public:
+				public: // CONSTRUCTORS
 					Fragment(void);
 					Fragment(const std::string& filepath_or_source);
 

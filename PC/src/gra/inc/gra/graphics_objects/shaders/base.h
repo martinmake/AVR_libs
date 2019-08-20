@@ -17,25 +17,14 @@ namespace Gra
 		{
 			class Base : public GraphicsObject::Base
 			{
-				private:
-					GLenum m_type;
-				protected:
-					std::string m_source;
-
-				public:
+				public: // CONSTRUCTORS
 					Base(void);
 					Base(GLenum initial_type);
 					Base(GLenum initial_type, const std::string& filepath_or_source);
 
-					Base(const Base&  other);
-					Base(      Base&& other);
-
-					~Base(void);
-
-				public:
+				public: // FUNCTIONS
 					bool load(const std::string& filepath);
 
-				public:
 					void   bind(void) const override {}
 					void unbind(void) const override {}
 
@@ -44,20 +33,15 @@ namespace Gra
 				public: // SETTERS
 					bool source(const std::string& new_source);
 
-
 				protected:
-					void copy(const Base&  other);
-					void move(      Base&& other);
-				public:
-					Base& operator=(const Base&  rhs);
-					Base& operator=(      Base&& rhs);
+					std::string m_source;
+				private:
+					GLenum m_type;
+
+				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
-			inline Base::Base(const Base&  other) : Base(other.m_type) { copy(          other ); }
-			inline Base::Base(      Base&& other) : Base(other.m_type) { move(std::move(other)); }
-
-			inline Base& Base::operator=(const Base&  rhs) { copy(          rhs ); return *this; }
-			inline Base& Base::operator=(      Base&& rhs) { move(std::move(rhs)); return *this; }
+			DEFINITION_MANDATORY(Base, other.m_type)
 		}
 	}
 }

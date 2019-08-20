@@ -12,7 +12,7 @@ namespace Gra
 		{
 			class Vertex : public Shader::Base
 			{
-				public:
+				public: // CONSTRUCTORS
 					Vertex(void);
 					Vertex(const std::string& filepath_or_source);
 

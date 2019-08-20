@@ -14,11 +14,11 @@ namespace Gra
 	{
 		class VertexArray : public GraphicsObject::Base
 		{
-			public:
+			public: // CONSTRUCTORS
 				VertexArray(void);
 				VertexArray(const Buffer::Vertex& initial_vertex_buffer, const Buffer::Vertex::Layout& initial_vertex_buffer_layout);
 
-			public:
+			public: // FUNCTIONS
 				void   bind(void) const override;
 				void unbind(void) const override;
 
@@ -34,6 +34,7 @@ namespace Gra
 
 		};
 
+		// FUNCTIONS
 		inline void VertexArray::  bind(void) const { glCall(glBindVertexArray(m_renderer_id)); }
 		inline void VertexArray::unbind(void) const { glCall(glBindVertexArray(            0)); }
 

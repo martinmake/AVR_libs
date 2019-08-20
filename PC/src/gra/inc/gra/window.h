@@ -54,11 +54,12 @@ namespace Gra
 			Event::Window::MouseScrolled::callback m_on_mouse_scrolled;
 			Event::Window::MouseMoved   ::callback m_on_mouse_moved;
 		public:
-			static Window* sharing_window;
+			static Window* s_sharing_window;
 
 		DECLARATION_MANDATORY(Window)
 	};
 
+	// FUNCTIONS
 	inline bool Window::should_close(void)            const { return glfwWindowShouldClose(m_window);      }
 	inline void Window::make_current(void)            const { glfwMakeContextCurrent(m_window);            }
 	inline void Window::clear(void)                   const { glCall(glClear(GL_COLOR_BUFFER_BIT));        }

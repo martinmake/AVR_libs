@@ -16,10 +16,10 @@ namespace Gra
 		{
 			class Index : public Buffer::Base
 			{
-				public:
+				public: // TYPES
 					using type = uint32_t;
 
-				public:
+				public: // CONSTRUCTORS
 					Index(void);
 					Index(const std::vector<type>& initial_indices);
 

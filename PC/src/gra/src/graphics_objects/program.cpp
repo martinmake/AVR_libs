@@ -124,7 +124,7 @@ namespace Gra
 
 			namespace fs = boost::filesystem;
 			for (const fs::directory_entry& entry : fs::directory_iterator(dirpath))
-				shaders.emplace_back(Shader::filepath_to_type(entry.path().string()), entry.path().string());
+				shaders.emplace_back(Shader::load(entry.path().string()));
 
 			link_shaders(shaders);
 		}

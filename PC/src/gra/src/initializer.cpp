@@ -31,7 +31,7 @@ namespace Gra
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-		Window::sharing_window = new Window(1, 1, "", false, false);
+		Window::s_sharing_window = new Window(1, 1, "", false, false);
 
 		assert(glewInit() == GLEW_OK && "GLEW init");
 
@@ -58,7 +58,7 @@ namespace Gra
 	//	ImGui_ImplGlfw_Shutdown();
 	//	ImGui::DestroyContext();
 
-		delete Window::sharing_window;
+		delete Window::s_sharing_window;
 		glfwTerminate();
 		INFO("GLFW: TERMINATED");
 

@@ -8,7 +8,7 @@
 
 namespace Gra
 {
-	Window* Window::sharing_window;
+	Window* Window::s_sharing_window;
 
 	Window::Window(void)
 		: m_window(nullptr), m_width(0), m_height(0), m_title(""), m_share_resources(false), m_is_visible(false)
@@ -18,7 +18,7 @@ namespace Gra
 		: m_width(initial_width), m_height(initial_height), m_title(initial_title), m_share_resources(initial_share_resources), m_is_visible(initial_is_visible)
 	{
 		glfwWindowHint(GLFW_VISIBLE, m_is_visible ? GLFW_TRUE : GLFW_FALSE);
-		m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, m_share_resources ? sharing_window->m_window : nullptr);
+		m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, m_share_resources ? s_sharing_window->m_window : nullptr);
 		TRACE("GLFW: WINDOW: CREATED: {0}", (void*) m_window);
 
 		make_current();

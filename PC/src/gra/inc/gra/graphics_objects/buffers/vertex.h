@@ -16,7 +16,7 @@ namespace Gra
 		{
 			class Vertex : public Buffer::Base
 			{
-				public:
+				public: // CONSTRUCTORS
 					Vertex(void);
 					Vertex(const void* initial_data, uint32_t initial_size);
 
@@ -25,7 +25,7 @@ namespace Gra
 				public: // SETTERS
 					void data(const void* new_data, uint32_t new_size);
 
-				public:
+				public: // TYPES
 					struct Layout
 					{
 						struct Element
@@ -49,10 +49,6 @@ namespace Gra
 				DECLARATION_MANDATORY(Vertex)
 			};
 
-			// GETTERS
-			inline const void*    Vertex::data(void) const { return m_data; }
-			inline       uint32_t Vertex::size(void) const { return m_size; }
-
 			template <typename T> void Vertex::Layout::push(uint32_t count)
 			{
 				(void) count;
@@ -61,6 +57,10 @@ namespace Gra
 			template <> void Vertex::Layout::push<         float>(uint32_t count);
 			template <> void Vertex::Layout::push<unsigned int  >(uint32_t count);
 			template <> void Vertex::Layout::push<unsigned char >(uint32_t count);
+
+			// GETTERS
+			DEFINITION_DEFAULT_GETTER(Vertex, data, const void    *)
+			DEFINITION_DEFAULT_GETTER(Vertex, size,       uint32_t )
 
 			DEFINITION_MANDATORY(Vertex, )
 		}
