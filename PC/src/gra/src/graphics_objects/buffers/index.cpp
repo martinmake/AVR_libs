@@ -24,24 +24,13 @@ namespace Gra
 				TRACE("BUFFER: INDEX: DESTRUCTED: {0}", (void*) this);
 			}
 
-			// SETTERS
-			void Index::indices(const std::vector<type>& new_indices)
-			{
-				m_indices = new_indices;
-				buffer_data(m_indices.data(), m_indices.size() * sizeof(type));
-			}
-
 			void Index::copy(const Index& other)
 			{
 				Buffer::Base::copy(other);
-
-				indices(other.m_indices);
 			}
 			void Index::move(Index&& other)
 			{
 				Buffer::Base::move(std::move(other));
-
-				m_indices = std::move(other.m_indices);
 			}
 		}
 	}

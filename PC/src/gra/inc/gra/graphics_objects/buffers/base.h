@@ -16,24 +16,37 @@ namespace Gra
 			{
 				protected: // CONSTRUCTORS
 					Base(GLenum initial_type);
+					Base(GLenum initial_type, size_t initial_size);
+					Base(GLenum initial_type, const void* initial_data, size_t initial_size);
+
+				public: // GETTERS
+					size_t size(void) const;
+				public: // SETTERS
+					void size(size_t new_size);
+					void data(const void* new_data, size_t new_size);
+					void data(const void* new_data, size_t new_size, size_t offset);
 
 				public: // FUNCTIONS
-					void buffer_data(const void* data, size_t size);
-
 					void   bind(void) const override;
 					void unbind(void) const override;
 
 				protected:
 					GLenum m_type;
+					size_t m_size;
 
 				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
 			// FUNCTIONS
-			inline void Base::buffer_data(const void* data, size_t size) { bind(); glCall(glBufferData(m_type, size, data, GL_STATIC_DRAW)); }
-			//
 			inline void Base::  bind(void) const { glCall(glBindBuffer(m_type, m_renderer_id)); }
 			inline void Base::unbind(void) const { glCall(glBindBuffer(m_type, 0            )); }
+
+			// GETTERS
+			inline size_t Base::size(void) const { return m_size; }
+			// SETTERS
+			inline void Base::size(size_t new_size) { m_size = new_size; data(nullptr, m_size); }
+			inline void Base::data(const void* new_data, size_t new_size               ) { m_size = new_size; bind(); glCall(glBufferData   (m_type,         m_size, new_data, GL_STATIC_DRAW)); }
+			inline void Base::data(const void* new_data, size_t     size, size_t offset) {                    bind(); glCall(glBufferSubData(m_type, offset,   size, new_data));                 }
 
 			DEFINITION_MANDATORY(Base, other.m_type)
 		}

@@ -61,7 +61,7 @@ int main(void)
 
 	while (!window.should_close()) renderer.render(window, [&]()
 	{
-		renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
+		renderer.draw(DrawMode::TRIANGLES, program, vertex_array, index_buffer);
 	});
 
 	return 0;

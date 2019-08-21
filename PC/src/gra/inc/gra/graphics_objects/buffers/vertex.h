@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "gra/gra.h"
+#include "gra/core.h"
 #include "gra/graphics_objects/buffers/base.h"
 
 namespace Gra
@@ -18,12 +18,9 @@ namespace Gra
 			{
 				public: // CONSTRUCTORS
 					Vertex(void);
-					Vertex(const void* initial_data, uint32_t initial_size);
-
-				public: // GETTERS
-					const void* data(void) const; uint32_t size(void) const;
-				public: // SETTERS
-					void data(const void* new_data, uint32_t new_size);
+					Vertex(size_t initial_size);
+					Vertex(const void* initial_data, size_t initial_size);
+					Vertex(const std::vector<const void*>& initial_data, const std::vector<size_t>& initial_size);
 
 				public: // TYPES
 					struct Layout
@@ -42,13 +39,10 @@ namespace Gra
 						void push(uint32_t count);
 					};
 
-				private:
-					void*    m_data;
-					uint32_t m_size;
-
 				DECLARATION_MANDATORY(Vertex)
 			};
 
+			// FUNCTIONS
 			template <typename T> void Vertex::Layout::push(uint32_t count)
 			{
 				(void) count;
@@ -57,10 +51,6 @@ namespace Gra
 			template <> void Vertex::Layout::push<         float>(uint32_t count);
 			template <> void Vertex::Layout::push<unsigned int  >(uint32_t count);
 			template <> void Vertex::Layout::push<unsigned char >(uint32_t count);
-
-			// GETTERS
-			DEFINITION_DEFAULT_GETTER(Vertex, data, const void    *)
-			DEFINITION_DEFAULT_GETTER(Vertex, size,       uint32_t )
 
 			DEFINITION_MANDATORY(Vertex, )
 		}

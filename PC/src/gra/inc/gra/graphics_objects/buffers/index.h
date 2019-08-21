@@ -24,18 +24,20 @@ namespace Gra
 					Index(const std::vector<type>& initial_indices);
 
 				public: // GETTERS
-					const std::vector<type>& indices(void) const;
+					size_t count(void) const;
 				public: // SETTERS
 					void indices(const std::vector<type>& new_indices);
 
 				private:
-					std::vector<type> m_indices;
+					size_t m_count;
 
 				DECLARATION_MANDATORY(Index)
 			};
 
 			// GETTERS
-			DEFINITION_DEFAULT_GETTER(Index, indices, const std::vector<Index::type>&)
+			inline size_t Index::count(void) const { return m_count; }
+			// SETTERS
+			inline void Index::indices(const std::vector<type>& new_indices) { m_count = new_indices.size(); data(new_indices.data(), new_indices.size() * sizeof(type)); }
 
 			DEFINITION_MANDATORY(Index, )
 		}

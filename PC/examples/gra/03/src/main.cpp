@@ -71,7 +71,7 @@ int main(void)
 
 				program.set_uniform("u_mvp", mvp);
 				program.set_uniform("u_color", 0.7, 0.1, 0.5, 1.0);
-				renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
+				renderer.draw(DrawMode::TRIANGLES, program, vertex_array, index_buffer);
 			});
 		});
 
@@ -89,7 +89,7 @@ int main(void)
 
 				program.set_uniform("u_mvp", mvp);
 				program.set_uniform("u_color", 0., 0.8, 0.9, 1.0);
-				renderer.draw(vertex_array, index_buffer, program, DrawMode::TRIANGLES);
+				renderer.draw(DrawMode::TRIANGLES, program, vertex_array, index_buffer);
 			});
 		});
 

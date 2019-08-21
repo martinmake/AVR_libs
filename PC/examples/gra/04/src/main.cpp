@@ -13,6 +13,13 @@
 #define PEN_COLOR        0.7, 0.1, 0.5, 1.0
 #define BACKGROUND_COLOR 0.0, 0.0, 0.0, 1.0
 
+/*
+   ! DISCLAIMER !
+
+   THIS IS A NAIVE APPROACH AND JUST A QUICK TEST OF THE EVENT SYSTEM
+   I ALMOST FEEL BAD FOR HOW I WROTE IT
+*/
+
 int main(void)
 {
 	using namespace Gra;

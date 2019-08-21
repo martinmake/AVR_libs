@@ -42,7 +42,7 @@ namespace Gra
 		index_buffer.bind();
 		program     .bind();
 
-		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.indices().size(), GL_UNSIGNED_INT, nullptr));
+		glCall(glDrawElements(DrawMode_to_GLenum(mode), index_buffer.count(), GL_UNSIGNED_INT, nullptr));
 	}
 	inline void Renderer::draw(DrawMode mode, const GraphicsObject::Program& program, const GraphicsObject::VertexArray& vertex_array, uint32_t index_of_first_vertex, uint32_t count) const
 	{
