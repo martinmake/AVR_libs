@@ -67,6 +67,16 @@ namespace Gra
 			bind();
 			glCall(glUniform1f(location, val0));
 		}
+		void Program::set_uniform(const std::string& name, float val0, float val1)
+		{
+			int location = get_uniform_location(name);
+
+			if (location == -1)
+				return;
+
+			bind();
+			glCall(glUniform2f(location, val0, val1));
+		}
 		void Program::set_uniform(const std::string& name, float val0, float val1, float val2, float val3)
 		{
 			int location = get_uniform_location(name);

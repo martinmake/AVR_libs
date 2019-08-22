@@ -1,5 +1,3 @@
-#include <list>
-
 #include <gra/renderer.h>
 
 #define WINDOW_WIDTH  640.0

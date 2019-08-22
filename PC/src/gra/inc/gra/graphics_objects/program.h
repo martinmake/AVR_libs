@@ -26,6 +26,7 @@ namespace Gra
 				int get_uniform_location(const std::string& dirpath);
 
 				void set_uniform(const std::string& name, float val0);
+				void set_uniform(const std::string& name, float val0, float val1);
 				void set_uniform(const std::string& name, float val0, float val1, float val2, float val3);
 				void set_uniform(const std::string& name, int val0);
 				void set_uniform(const std::string& name, glm::vec4 vec0);
