@@ -15,10 +15,11 @@ namespace Gra
 			Window(int initial_width, int initial_height, const std::string& initial_title, bool initial_share_resources = true, bool initial_is_visible = true);
 
 		public: // GETTERS
-			      unsigned int  width (void) const;
-			      unsigned int  height(void) const;
-			const std::string & title (void) const;
-			      bool          vsync (void) const;
+			                 unsigned int   width     (void) const;
+			                 unsigned int   height    (void) const;
+			      Math::vec2<unsigned int>  resolution(void) const;
+			const std::string             & title     (void) const;
+			      bool                      vsync     (void) const;
 
 			Math::vec2<float> mouse_position(void) const;
 		public: // SETTERS
@@ -72,6 +73,7 @@ namespace Gra
 	DEFINITION_DEFAULT_GETTER(Window, height,       unsigned int )
 	DEFINITION_DEFAULT_GETTER(Window, title,  const std::string &)
 	DEFINITION_DEFAULT_GETTER(Window, vsync,        bool         )
+	inline Math::vec2<unsigned int> Window::resolution(void) const { return { m_width, m_height }; }
 	// SETTERS
 	inline void Window::vsync(bool new_vsync) { m_vsync = new_vsync; glfwSwapInterval(m_vsync); }
 	DEFINITION_DEFAULT_SETTER(Window, on_resize,         Event::Window::Resize       ::callback)

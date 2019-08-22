@@ -1,7 +1,13 @@
 #include <gra/renderer.h>
 
-#define WINDOW_WIDTH  640.0
-#define WINDOW_HEIGHT 420.0
+#define WINDOW_WIDTH  ((float) 1024)
+#define WINDOW_HEIGHT ((float) 1024)
+
+#define BLOCK_COUNT_X ((float) 32           )
+#define BLOCK_COUNT_Y ((float) BLOCK_COUNT_X)
+
+#define BLOCK_RESOLUTION_X ((float) WINDOW_WIDTH  / BLOCK_COUNT_X)
+#define BLOCK_RESOLUTION_Y ((float) WINDOW_HEIGHT / BLOCK_COUNT_Y)
 
 #define TIME_SPEED 1
 
@@ -50,8 +56,13 @@ int main(void)
 	{
 		static float time = 0.0;
 
-		program.set_uniform("u_time", time);
-		renderer.draw(DrawMode::TRIANGLES, program, vertex_array, index_buffer);
+		for (uint16_t y = 0; y < BLOCK_RESOLUTION_Y; y++)
+		for (uint16_t x = 0; x < BLOCK_RESOLUTION_X; x++)
+		{
+			glCall(glViewport(x * BLOCK_RESOLUTION_X, y * BLOCK_RESOLUTION_Y, BLOCK_RESOLUTION_X, BLOCK_RESOLUTION_Y));
+			program.set_uniform("u_time", time + x + y * BLOCK_COUNT_X);
+			renderer.draw(DrawMode::TRIANGLES, program, vertex_array, index_buffer);
+		}
 
 		time += TIME_SPEED / 60.0;
 	});
