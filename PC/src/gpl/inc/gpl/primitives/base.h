@@ -1,38 +1,56 @@
 #ifndef _GPL_PRIMITIVE_BASE_H_
 #define _GPL_PRIMITIVE_BASE_H_
 
-#include <assert.h>
+#include <vector>
 
 #include <gra/math.h>
 #include <gra/renderer.h>
-#include <gra/shader.h>
-#include <gra/vertex_array.h>
-#include <gra/vertex_buffer.h>
+#include <gra/graphics_objects/program.h>
+#include <gra/graphics_objects/vertex_array.h>
+#include <gra/graphics_objects/buffers/vertex.h>
 
-#include "gpl/static_initializer.h"
+#include "gpl/core.h"
 
 namespace Gpl
 {
 	namespace Primitive
 	{
-		class Base : private StaticInitializer
+		class Base
 		{
-			protected:
-				Gra::Math::vec4<float> m_color;
-			protected:
-				Gra::VertexArray  m_vertex_array;
-				Gra::VertexBuffer m_vertex_buffer;
+			protected: // CONSTRUCTORS
+				Base(void);
 
-			public:
-				Base(const Gra::Math::vec4<float>& initial_color);
-				Base(Base&& other);
-				virtual ~Base(void);
+			public: // PUBLIC VARIABLES
+				std::vector<std::unique_ptr<Primitive::Base>> primitives;
 
-			public:
-				virtual void draw(const Gra::Renderer& renderer, const glm::mat4& mvp) const;
+			public: // GETTERS
+			public: // SETTERS
+
+			public: // FUNCTIONS
+				virtual void draw(const Gra::Math::vec2<unsigned int>& resolution, const glm::mat4& parent_mvp);
+
+			public: // OPERATORS
+				template <typename T> Primitive::Base& operator<<(const T&  primitive);
+				template <typename T> Primitive::Base& operator<<(      T&& primitive);
+
+			protected:
+				Gra::GraphicsObject::VertexArray m_vertex_array;
+				Gra::GraphicsObject::Program     m_program;
+
+			DECLARATION_MANDATORY_INTERFACE(Base)
 		};
 
-		inline void Base::draw(const Gra::Renderer& renderer, const glm::mat4& mvp) const { (void) renderer; (void) mvp; assert(false && "THIS IS JUST AN INTERFACE!"); }
+		// GETTERS
+		// SETTERS
+
+		// FUNCTIONS
+		inline void Base::draw(const Gra::Math::vec2<unsigned int>& resolution, const glm::mat4& parent_mvp) { (void) resolution; (void) parent_mvp; }
+
+		// OPERATORS
+		template <typename T> Primitive::Base& Primitive::Base::operator<<(const T&  primitive) { primitives.push_back(std::make_unique<T>(          primitive )); return *this; }
+		template <typename T> Primitive::Base& Primitive::Base::operator<<(      T&& primitive) { primitives.push_back(std::make_unique<T>(std::move(primitive))); return *this; }
+
+		DEFINITION_MANDATORY(Base, )
 	}
 }
 

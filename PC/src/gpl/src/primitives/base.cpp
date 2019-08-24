@@ -4,16 +4,28 @@ namespace Gpl
 {
 	namespace Primitive
 	{
-		Base::Base(const Gra::Math::vec4<float>& initial_color)
-			: m_color(initial_color)
+		Base::Base(void)
 		{
 		}
-		Base::Base(Base&& other)
-                        : m_color(std::move(other.m_color)), m_vertex_array(std::move(other.m_vertex_array)),  m_vertex_buffer(std::move(other.m_vertex_buffer))
-		{
-		}
+
 		Base::~Base(void)
 		{
+		}
+
+		void Base::copy(const Base& other)
+		{
+			m_vertex_array = other.m_vertex_array;
+			m_program      = other.m_program;
+
+			primitives.clear();
+			for (const std::unique_ptr<Primitive::Base>& primitive : other.primitives)
+				primitives.push_back(std::make_unique<Primitive::Base>(*primitive));
+		}
+		void Base::move(Base&& other)
+		{
+			m_vertex_array = std::move(other.m_vertex_array);
+			m_program      = std::move(other.m_program     );
+			primitives     = std::move(other.primitives    );
 		}
 	}
 }

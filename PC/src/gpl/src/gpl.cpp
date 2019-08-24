@@ -2,5 +2,4 @@
 
 namespace Gpl
 {
-	std::string shader_directory = "";
 }

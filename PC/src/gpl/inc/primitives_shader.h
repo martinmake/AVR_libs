@@ -1,5 +1,5 @@
-#ifndef _GPL_PRIMITIVES_SHADER_H_
-#define _GPL_PRIMITIVES_SHADER_H_
+#ifndef _PRIMITIVES_SHADER_H_
+#define _PRIMITIVES_SHADER_H_
 
 #define VERTEX_SHADER                        \
 "#version 330                            \n" \

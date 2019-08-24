@@ -1,31 +1,42 @@
 #include "gpl/canvas.h"
 
+#include "gpl/primitives/shapes/point.h"
 namespace Gpl
 {
-	Gra::Renderer Canvas::s_renderer;
+	using namespace Gra;
+	using namespace Gra::GraphicsObject;
+	using namespace Gra::Math;
 
-	Canvas::Canvas(void)
+	Canvas::Canvas(int initial_width, int initial_height, const std::string initial_title)
+		: m_primitives(vec2<unsigned int>(0, 0), vec2<unsigned int>(initial_width, initial_height))
 	{
+		m_window = Gra::Window(initial_width, initial_height, initial_title);
 	}
+
 	Canvas::~Canvas(void)
 	{
 	}
 
-	void Canvas::render(void)
+	void Canvas::animate(void)
 	{
-		static glm::mat4 mvp = glm::ortho<float>(0, s_renderer.width(), 0, s_renderer.height());
+		static Gra::Renderer renderer;
 
-		s_renderer.start_frame();
-
-		for (std::shared_ptr<Primitive::Base>& primitive : m_primitives)
-			primitive->draw(s_renderer, mvp);
-
-		s_renderer.end_frame();
+		Primitive::Shape::Point p(vec2<unsigned int>(100, 100), vec4<float>(0.5, 0.0, 0.5, 1.0), 80);
+		while (!m_window.should_close()) renderer.render(m_window, [&]()
+		{
+			glm::mat4 mvp = glm::ortho<float>(0, m_window.width(), 0, m_window.height());
+			m_primitives.draw(m_window.resolution(), mvp);
+		});
 	}
 
-	Canvas& Canvas::operator<<(Primitive::Base* primitive)
+	void Canvas::copy(const Canvas& other)
 	{
-		m_primitives.emplace_back(primitive);
-		return *this;
+		m_primitives = other.m_primitives;
+		m_window     = other.m_window;
+	}
+	void Canvas::move(Canvas&& other)
+	{
+		m_primitives = std::move(other.m_primitives);
+		m_window     = std::move(other.m_window);
 	}
 }

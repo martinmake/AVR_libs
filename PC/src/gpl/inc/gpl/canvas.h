@@ -1,33 +1,52 @@
 #ifndef _GPL_CANVAS_H_
 #define _GPL_CANVAS_H_
 
-#include <vector>
-#include <memory>
-
 #include <gra/renderer.h>
+#include <gra/window.h>
 
-#include "gpl/primitives/base.h"
-#include "gpl/static_initializer.h"
+#include "gpl/core.h"
+#include "gpl/primitives/container.h"
 
 namespace Gpl
 {
-	class Canvas : private StaticInitializer
+	class Canvas
 	{
-		private: // MEMBER VARIABLES
-			std::vector<std::shared_ptr<Primitive::Base>> m_primitives;
-		public: // STATIC VARIABLES
-			static Gra::Renderer s_renderer;
+		public: // TYPES
+			struct Data;
 
-		public:
-			Canvas(void);
-			~Canvas(void);
+		public: // CONSTRUCTORS
+			Canvas(int initial_width, int initial_height, const std::string initial_title);
 
-		public:
-			void render(void);
+		public: // GETTERS
+			Primitive::Container& primitives(void);
+			unsigned int width (void) const;
+			unsigned int height(void) const;
+		public: // SETTERS
+
+		public: // FUNCTIONS
+			void animate(void);
 
 		public: // OPERATORS
-			Canvas& operator<<(Primitive::Base*  primitive);
+			template <typename T> Canvas& operator<<(const T&  primitive);
+			template <typename T> Canvas& operator<<(      T&& primitive);
+
+		private:
+			Primitive::Container m_primitives;
+			Gra::Window m_window;
+
+		DECLARATION_MANDATORY(Canvas)
 	};
+
+	// GETTERS
+	inline Primitive::Container& Canvas::primitives(void) { return m_primitives; }
+	inline unsigned int Canvas::width (void) const { return m_window.width();  }
+	inline unsigned int Canvas::height(void) const { return m_window.height(); }
+
+	// OPERATORS
+	template <typename T> Canvas& Canvas::operator<<(const T&  primitive) { m_primitives <<           primitive;  return *this; }
+	template <typename T> Canvas& Canvas::operator<<(      T&& primitive) { m_primitives << std::move(primitive); return *this; }
+
+	DEFINITION_MANDATORY(Canvas, other.m_window.width(), other.m_window.height(), other.m_window.title())
 }
 
 #endif
