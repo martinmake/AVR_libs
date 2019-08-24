@@ -53,5 +53,20 @@ namespace Gra
 				offset += glSizeOf(element.type) * element.count;
 			}
 		}
+
+		void VertexArray::copy(const VertexArray& other)
+		{
+			GraphicsObject::Base::copy(other);
+
+			m_vertex_buffer        = other.m_vertex_buffer;
+			m_vertex_buffer_layout = other.m_vertex_buffer_layout;
+		}
+		void VertexArray::move(VertexArray&& other)
+		{
+			GraphicsObject::Base::move(std::move(other));
+
+			m_vertex_buffer        = std::move(other.m_vertex_buffer       );
+			m_vertex_buffer_layout = std::move(other.m_vertex_buffer_layout);
+		}
 	}
 }

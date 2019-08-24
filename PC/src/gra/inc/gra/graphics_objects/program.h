@@ -36,7 +36,7 @@ namespace Gra
 				void load_shaders(const std::string& dirpath);
 				void link_shaders(const std::vector<Shader::Base>& shaders);
 
-				void bind(void)   const override;
+				void bind  (void) const override;
 				void unbind(void) const override;
 
 			DECLARATION_MANDATORY(Program)

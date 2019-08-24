@@ -167,6 +167,8 @@ namespace Gra
 	DEFINITION_DEFAULT_SETTER(Window, on_mouse_button,   Event::Window::MouseButton  ::callback)
 	DEFINITION_DEFAULT_SETTER(Window, on_mouse_scrolled, Event::Window::MouseScrolled::callback)
 	DEFINITION_DEFAULT_SETTER(Window, on_mouse_moved,    Event::Window::MouseMoved   ::callback)
+
+	DEFINITION_MANDATORY(Window, )
 }
 
 #endif

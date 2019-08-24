@@ -11,8 +11,10 @@ namespace Gra
 	Window* Window::s_sharing_window;
 
 	Window::Window(void)
-		: m_window(nullptr), m_width(0), m_height(0), m_title(""), m_share_resources(false), m_is_visible(false)
+		: m_window(nullptr), m_width(0), m_height(0), m_title(""), m_share_resources(false), m_is_visible(false),
+		  m_on_resize(nullptr), m_on_close(nullptr), m_on_key(nullptr), m_on_key_typed(nullptr), m_on_mouse_button(nullptr), m_on_mouse_scrolled(nullptr), m_on_mouse_moved(nullptr)
 	{
+		TRACE("WINDOW: CONSTRUCTED: {0}", (void*) this);
 	}
 	Window::Window(int initial_width, int initial_height, const std::string& initial_title, bool initial_share_resources, bool initial_is_visible)
 		: m_width(initial_width), m_height(initial_height), m_title(initial_title), m_share_resources(initial_share_resources), m_is_visible(initial_is_visible)
@@ -141,5 +143,39 @@ namespace Gra
 		glCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 		glCall(glEnable(GL_PROGRAM_POINT_SIZE));
+	}
+
+	void Window::copy(const Window& other)
+	{
+		*this = Window(other.m_width, other.m_height, other.m_title, other.m_share_resources, other.m_is_visible);
+		m_vsync = other.m_vsync;
+
+		on_resize        (other.m_on_resize);
+		on_close         (other.m_on_close);
+		on_key           (other.m_on_key);
+		on_key_typed     (other.m_on_key_typed);
+		on_mouse_button  (other.m_on_mouse_button);
+		on_mouse_scrolled(other.m_on_mouse_scrolled);
+		on_mouse_moved   (other.m_on_mouse_moved);
+	}
+	void Window::move(Window&& other)
+	{
+		m_window          = std::exchange(other.m_window, nullptr);
+		m_width           = other.m_width;
+		m_height          = other.m_height;
+		m_title           = other.m_title;
+		m_share_resources = other.m_share_resources;
+		m_is_visible      = other.m_is_visible;
+		m_vsync           = other.m_vsync;
+
+		m_on_resize         = other.m_on_resize;
+		m_on_close          = other.m_on_close;
+		m_on_key            = other.m_on_key;
+		m_on_key_typed      = other.m_on_key_typed;
+		m_on_mouse_button   = other.m_on_mouse_button;
+		m_on_mouse_scrolled = other.m_on_mouse_scrolled;
+		m_on_mouse_moved    = other.m_on_mouse_moved;
+
+		glfwSetWindowUserPointer(m_window, this);
 	}
 }

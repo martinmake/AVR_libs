@@ -147,5 +147,15 @@ namespace Gra
 			glCall(glLinkProgram    (m_renderer_id));
 			glCall(glValidateProgram(m_renderer_id));
 		}
+
+		void Program::copy(const Program& other)
+		{
+			(void) other;
+			assert(false && "NO COPY SUPPORT");
+		}
+		void Program::move(Program&& other)
+		{
+			GraphicsObject::Base::move(std::move(other));
+		}
 	}
 }
