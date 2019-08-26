@@ -10,8 +10,13 @@
 
 #include <sml/sml.h>
 
+#include <gra/math.h>
+
 namespace Gpl
 {
+	using Position = Gra::Math::vec2<unsigned int  >;
+	using Size     = Gra::Math::vec2<unsigned int  >;
+	using Color    = Gra::Math::vec4<         float>;
 }
 
 #endif

@@ -28,7 +28,7 @@ namespace Gpl
 					void color(const Gra::Math::vec4<float>& new_color);
 
 				public: // FUNCTIONS
-					virtual void draw(const Gra::Math::vec2<unsigned int>& resolution, const glm::mat4& parent_mvp) override;
+					virtual void draw(Data::Draw& data) override;
 
 				protected:
 					Gra::Math::vec4<float> m_color;
@@ -42,7 +42,7 @@ namespace Gpl
 			DEFINITION_DEFAULT_SETTER(Base, color, const Gra::Math::vec4<float>&)
 
 			// FUNCTIONS
-			inline void Base::draw(const Gra::Math::vec2<unsigned int>& resolution, const glm::mat4& parent_mvp) { (void) resolution; (void) parent_mvp; }
+			inline void Base::draw(Data::Draw& data) { (void) data; }
 
 			DEFINITION_MANDATORY(Base, other.m_color)
 		}

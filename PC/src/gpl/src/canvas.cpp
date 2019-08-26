@@ -1,6 +1,9 @@
-#include "gpl/canvas.h"
+#include <queue>
 
-#include "gpl/primitives/shapes/point.h"
+#include "gpl/canvas.h"
+#include "gpl/primitives/base.h"
+#include "gpl/data.h"
+
 namespace Gpl
 {
 	using namespace Gra;
@@ -11,6 +14,29 @@ namespace Gpl
 		: m_primitives(vec2<unsigned int>(0, 0), vec2<unsigned int>(initial_width, initial_height))
 	{
 		m_window = Gra::Window(initial_width, initial_height, initial_title);
+		m_window.on_mouse_moved([&](auto& event)
+		{
+			std::queue<std::pair<Primitive::Container&, Position>> queue;
+			Position mouse_position(event.xpos(), event.ypos());
+
+			queue.push({ m_primitives, m_primitives.position() });
+			Primitive::Base* highest_primitive;
+			while(!queue.empty())
+			{
+				Primitive::Container& next = queue.front().first;
+				if (next.colides(mouse_position - queue.front().second))
+				{
+					highest_primitive = &next;
+					for (std::unique_ptr<Primitive::Base>& primitive : next.primitives())
+					{
+						if (primitive->colides(mouse_position - (queue.front().second + next.position())))
+							highest_primitive = &*primitive;
+					}
+				}
+				queue.pop();
+			}
+			std::cout << (void*) highest_primitive << std::endl;
+		});
 	}
 
 	Canvas::~Canvas(void)
@@ -21,11 +47,17 @@ namespace Gpl
 	{
 		static Gra::Renderer renderer;
 
-		Primitive::Shape::Point p(vec2<unsigned int>(100, 100), vec4<float>(0.5, 0.0, 0.5, 1.0), 80);
 		while (!m_window.should_close()) renderer.render(m_window, [&]()
 		{
-			glm::mat4 mvp = glm::ortho<float>(0, m_window.width(), 0, m_window.height());
-			m_primitives.draw(m_window.resolution(), mvp);
+			static glm::mat4 mvp = glm::ortho<float>(0, m_window.width(), 0, m_window.height());
+			static std::queue<std::pair<Primitive::Container&, Data::Draw>> queue;
+
+			queue.push({ m_primitives, { m_window.resolution(), mvp } });
+			while(!queue.empty())
+			{
+				queue.front().first.draw(queue);
+				queue.pop();
+			}
 		});
 	}
 
@@ -37,6 +69,6 @@ namespace Gpl
 	void Canvas::move(Canvas&& other)
 	{
 		m_primitives = std::move(other.m_primitives);
-		m_window     = std::move(other.m_window);
+		m_window     = std::move(other.m_window    );
 	}
 }

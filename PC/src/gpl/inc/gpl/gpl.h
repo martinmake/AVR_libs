@@ -3,12 +3,7 @@
 
 #include <gra/gra.h>
 
-#include "gpl/core.h"
 #include "gpl/canvas.h"
 #include "gpl/primitives/all.h"
-
-namespace Gpl
-{
-}
 
 #endif

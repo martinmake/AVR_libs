@@ -11,9 +11,6 @@ namespace Gpl
 {
 	class Canvas
 	{
-		public: // TYPES
-			struct Data;
-
 		public: // CONSTRUCTORS
 			Canvas(int initial_width, int initial_height, const std::string initial_title);
 
@@ -29,6 +26,8 @@ namespace Gpl
 		public: // OPERATORS
 			template <typename T> Canvas& operator<<(const T&  primitive);
 			template <typename T> Canvas& operator<<(      T&& primitive);
+			const Primitive::Base& operator[](uint16_t index) const;
+			      Primitive::Base& operator[](uint16_t index);
 
 		private:
 			Primitive::Container m_primitives;
@@ -45,6 +44,8 @@ namespace Gpl
 	// OPERATORS
 	template <typename T> Canvas& Canvas::operator<<(const T&  primitive) { m_primitives <<           primitive;  return *this; }
 	template <typename T> Canvas& Canvas::operator<<(      T&& primitive) { m_primitives << std::move(primitive); return *this; }
+	inline const Primitive::Base& Canvas::operator[](uint16_t index) const { return m_primitives[index]; }
+	inline       Primitive::Base& Canvas::operator[](uint16_t index)       { return m_primitives[index]; }
 
 	DEFINITION_MANDATORY(Canvas, other.m_window.width(), other.m_window.height(), other.m_window.title())
 }
