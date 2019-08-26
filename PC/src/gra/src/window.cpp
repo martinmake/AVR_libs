@@ -80,11 +80,12 @@ namespace Gra
 			});
 			glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos)
 			{
-				Window& this_window = *(Window*)glfwGetWindowUserPointer(window);
+				Window& this_window = *(Window*) glfwGetWindowUserPointer(window);
 
 				if (this_window.m_on_mouse_moved)
 				{
-					Event::Window::MouseMoved event(xpos, ypos);
+					Event::Window::MouseMoved event(                       xpos,
+					                                this_window.m_height - ypos);
 					this_window.m_on_mouse_moved(event);
 				}
 			});

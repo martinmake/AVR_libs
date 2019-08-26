@@ -14,6 +14,9 @@ namespace Gra
 			T x, y;
 			vec2(void)                     : x(0),         y(0)         {}
 			vec2(T initial_x, T initial_y) : x(initial_x), y(initial_y) {}
+			inline vec2& operator+=(const vec2& rhs)       { x += rhs.x; y += rhs.y; return *this; }
+			inline vec2  operator- (const vec2& rhs) const { return vec2(x - rhs.x, y - rhs.y); }
+			inline vec2  operator+ (const vec2& rhs) const { return vec2(x + rhs.x, y + rhs.y); }
 		};
 		template<typename T>
 		struct vec3

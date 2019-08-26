@@ -1,5 +1,5 @@
-#ifndef _SML_H_
-#define _SML_H_
+#ifndef _SML_SML_H_
+#define _SML_SML_H_
 
 #include <utility>
 
