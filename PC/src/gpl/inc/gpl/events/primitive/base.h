@@ -13,15 +13,12 @@ namespace Gpl
 			class Base : public Event::Base
 			{
 				protected:
-					Base(Primitive::Base& instance);
-
-				public:
-					Base& instance;
+					Base(void);
 
 				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
-			DEFINITION_MANDATORY(Base, other.instance)
+			DEFINITION_MANDATORY(Base, )
 		}
 	}
 }

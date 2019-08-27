@@ -24,6 +24,7 @@ namespace Gpl
 
 				public: // GETTERS
 					const Gra::Math::vec4<float>& color(void) const;
+					      Gra::Math::vec4<float>& color(void);
 				public: // SETTERS
 					void color(const Gra::Math::vec4<float>& new_color);
 
@@ -38,6 +39,7 @@ namespace Gpl
 
 			// GETTERS
 			DEFINITION_DEFAULT_GETTER(Base, color, const Gra::Math::vec4<float>&)
+			inline Gra::Math::vec4<float>& Base::color(void) { return m_color; }
 			// SETTERS
 			DEFINITION_DEFAULT_SETTER(Base, color, const Gra::Math::vec4<float>&)
 

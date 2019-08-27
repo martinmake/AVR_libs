@@ -11,31 +11,35 @@ namespace Gpl
 	using namespace Gra::Math;
 
 	Canvas::Canvas(int initial_width, int initial_height, const std::string initial_title)
-		: m_primitives(vec2<unsigned int>(0, 0), vec2<unsigned int>(initial_width, initial_height))
+		: Window(initial_width, initial_height, initial_title), m_primitives(vec2<unsigned int>(0, 0), vec2<unsigned int>(initial_width, initial_height))
 	{
-		m_window = Gra::Window(initial_width, initial_height, initial_title);
-		m_window.on_mouse_moved([&](auto& event)
+		on_mouse_moved([&](auto& event)
 		{
 			std::queue<std::pair<Primitive::Container&, Position>> queue;
 			Position mouse_position(event.xpos(), event.ypos());
 
 			queue.push({ m_primitives, m_primitives.position() });
-			Primitive::Base* highest_primitive;
+			Primitive::Base* highest_primitive = nullptr;
 			while(!queue.empty())
 			{
 				Primitive::Container& next = queue.front().first;
-				if (next.colides(mouse_position - queue.front().second))
+				for (std::unique_ptr<Primitive::Base>& primitive : next.primitives())
 				{
-					highest_primitive = &next;
-					for (std::unique_ptr<Primitive::Base>& primitive : next.primitives())
+					if (primitive->colides(mouse_position - (queue.front().second + next.position())))
 					{
-						if (primitive->colides(mouse_position - (queue.front().second + next.position())))
+						if (primitive->is_container())
+							queue.push({ *((Primitive::Container*) &*primitive), queue.front().second });
+						else
 							highest_primitive = &*primitive;
 					}
 				}
 				queue.pop();
 			}
-			std::cout << (void*) highest_primitive << std::endl;
+			if (highest_primitive)
+			{
+				Event::Primitive::MouseOver mouse_over_event;
+				highest_primitive->on_mouse_over(mouse_over_event);
+			}
 		});
 	}
 
@@ -47,12 +51,12 @@ namespace Gpl
 	{
 		static Gra::Renderer renderer;
 
-		while (!m_window.should_close()) renderer.render(m_window, [&]()
+		while (!should_close()) renderer.render(*this, [&]()
 		{
-			static glm::mat4 mvp = glm::ortho<float>(0, m_window.width(), 0, m_window.height());
+			static glm::mat4 mvp = glm::ortho<float>(0, width(), 0, height());
 			static std::queue<std::pair<Primitive::Container&, Data::Draw>> queue;
 
-			queue.push({ m_primitives, { m_window.resolution(), mvp } });
+			queue.push({ m_primitives, { resolution(), mvp } });
 			while(!queue.empty())
 			{
 				queue.front().first.draw(queue);
@@ -63,12 +67,14 @@ namespace Gpl
 
 	void Canvas::copy(const Canvas& other)
 	{
+		Gra::Window::copy(other);
+
 		m_primitives = other.m_primitives;
-		m_window     = other.m_window;
 	}
 	void Canvas::move(Canvas&& other)
 	{
+		Gra::Window::move(std::move(other));
+
 		m_primitives = std::move(other.m_primitives);
-		m_window     = std::move(other.m_window    );
 	}
 }

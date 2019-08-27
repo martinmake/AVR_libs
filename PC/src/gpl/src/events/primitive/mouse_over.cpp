@@ -6,8 +6,7 @@ namespace Gpl
 	{
 		namespace Primitive
 		{
-			MouseOver::MouseOver(Primitive::Base& instance)
-				: Base(instance)
+			MouseOver::MouseOver(void)
 			{
 			}
 			MouseOver::~MouseOver(void)

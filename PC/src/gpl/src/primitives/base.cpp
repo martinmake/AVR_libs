@@ -12,15 +12,11 @@ namespace Gpl
 		{
 		}
 
-	//	void Base::on_mouse_over(std::queue<std::pair<Primitive::Base&, Data::MouseOver>>& queue)
-	//	{
-	//		on_mouse_over(queue.front().second);
-	//		if (m_on_mouse_over)
-	//			m_on_mouse_over(queue.front().second.event);
-
-	//		for (std::unique_ptr<Primitive::Base>& primitive : primitives)
-	//			queue.push({ *primitive, queue.front().second });
-	//	}
+		void Base::on_mouse_over(Event::Primitive::MouseOver& event)
+		{
+			if (m_on_mouse_over)
+				m_on_mouse_over(event, this);
+		}
 
 		void Base::copy(const Base& other)
 		{

@@ -32,8 +32,7 @@ namespace Gpl
 
 			public: // FUNCTIONS
 				virtual void draw(Data::Draw& data);
-				// void on_mouse_over(std::queue<std::pair<Primitive::Base&, Data::MouseOver>>& queue);
-				// virtual void on_mouse_over(Data::MouseOver& data);
+				virtual void on_mouse_over(Event::Primitive::MouseOver& event);
 
 			protected:
 				Gra::GraphicsObject::VertexArray m_vertex_array;
@@ -51,8 +50,7 @@ namespace Gpl
 		DEFINITION_DEFAULT_SETTER(Base, on_mouse_over, Event::Primitive::MouseOver::callback)
 
 		// FUNCTIONS
-		inline void Base::draw         (Data::Draw     & data) { (void) data; }
-		// inline void Base::on_mouse_over(Data::MouseOver& data) { (void) data; }
+		inline void Base::draw(Data::Draw& data) { (void) data; }
 
 		DEFINITION_MANDATORY(Base, )
 	}

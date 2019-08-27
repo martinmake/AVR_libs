@@ -8,8 +8,7 @@ namespace Gpl
 	{
 		namespace Primitive
 		{
-			Base::Base(Primitive::Base& instance)
-				: instance(instance)
+			Base::Base(void)
 			{
 			}
 
