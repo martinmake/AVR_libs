@@ -1,17 +1,16 @@
-#ifndef _GRA_EVENT_CATEGORY_BASE_H_
-#define _GRA_EVENT_CATEGORY_BASE_H_
+#ifndef _GRA_INPUT_BASE_H_
+#define _GRA_INPUT_BASE_H_
 
 #include <string>
 #include <functional>
 
 #include <sml/sml.h>
-#include <esl/event_categories/base.h>
 
 namespace Gra
 {
-	namespace EventCategory
+	namespace Input
 	{
-		class Base : public Esl::EventCategory::Base
+		class Base
 		{
 			protected:
 				Base(void);

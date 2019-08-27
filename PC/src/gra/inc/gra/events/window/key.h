@@ -5,7 +5,7 @@
 
 #include "gra/core.h"
 #include "gra/events/window/base.h"
-#include "gra/event_categories/window/input.h"
+#include "gra/inputs/window/keyboard.h"
 
 namespace Gra
 {
@@ -13,33 +13,37 @@ namespace Gra
 	{
 		namespace Window
 		{
-			class Key : public Event::Window::Base, public EventCategory::Window::Input
+			class Key : public Event::Window::Base
 			{
 				public:
 					using callback = std::function<void (Event::Window::Key&)>;
 
 				public:
-					Key(int initial_key, Action initial_action, Mod initial_mods);
+					Key(int                             initial_key,
+					    Input::Window::Keyboard::Action initial_action,
+					    Input::Window::Keyboard::Mod    initial_mods);
 
 				public: // GETTERS
-					int     key  (void) const;
-					Action action(void) const;
-					Mod    mods  (void) const;
+					int                             key   (void) const;
+					Input::Window::Keyboard::Action action(void) const;
+					Input::Window::Keyboard::Mod    mods  (void) const;
 
 				private:
-					int    m_key;
-					Action m_action;
-					Mod    m_mods;
+					int                             m_key;
+					Input::Window::Keyboard::Action m_action;
+					Input::Window::Keyboard::Mod    m_mods;
 
 				DECLARATION_MANDATORY(Key)
 			};
 
 			// GETTERS
-			DEFINITION_DEFAULT_GETTER(Key, key,    int        )
-			DEFINITION_DEFAULT_GETTER(Key, action, Key::Action)
-			DEFINITION_DEFAULT_GETTER(Key, mods,   Key::Mod   )
+			DEFINITION_DEFAULT_GETTER(Key, key,    int                            )
+			DEFINITION_DEFAULT_GETTER(Key, action, Input::Window::Keyboard::Action)
+			DEFINITION_DEFAULT_GETTER(Key, mods,   Input::Window::Keyboard::Mod   )
 
-			DEFINITION_MANDATORY(Key, other.m_key, other.m_action, other.m_mods)
+			DEFINITION_MANDATORY(Key, other.m_key,
+			                          other.m_action,
+						  other.m_mods)
 		}
 	}
 }

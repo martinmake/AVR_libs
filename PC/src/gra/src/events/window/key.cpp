@@ -8,8 +8,12 @@ namespace Gra
 	{
 		namespace Window
 		{
-			Key::Key(int initial_key, Action initial_action, Mod initial_mods)
-				: m_key(initial_key), m_action(initial_action), m_mods(initial_mods)
+			Key::Key(int                             initial_key,
+			         Input::Window::Keyboard::Action initial_action,
+				 Input::Window::Keyboard::Mod    initial_mods)
+				: m_key   (initial_key   ),
+				  m_action(initial_action),
+				  m_mods  (initial_mods  )
 			{
 			}
 			Key::~Key(void)

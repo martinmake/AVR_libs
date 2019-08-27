@@ -5,7 +5,6 @@
 
 #include "gra/core.h"
 #include "gra/events/window/base.h"
-#include "gra/event_categories/window/input.h"
 
 namespace Gra
 {
@@ -13,7 +12,7 @@ namespace Gra
 	{
 		namespace Window
 		{
-			class KeyTyped : public Event::Window::Base, public EventCategory::Window::Input
+			class KeyTyped : public Event::Window::Base
 			{
 				public:
 					using callback = std::function<void (Event::Window::KeyTyped&)>;

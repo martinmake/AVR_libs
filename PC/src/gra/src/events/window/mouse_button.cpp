@@ -8,8 +8,12 @@ namespace Gra
 	{
 		namespace Window
 		{
-			MouseButton::MouseButton(Button initial_button, Action initial_action, Mod initial_mods)
-				: m_button(initial_button), m_action(initial_action), m_mods(initial_mods)
+			MouseButton::MouseButton(Input::Window::Mouse::Button initial_button,
+			                         Input::Window::Mouse::Action initial_action,
+						 Input::Window::Mouse::Mod    initial_mods)
+				: m_button(initial_button),
+				  m_action(initial_action),
+				  m_mods  (initial_mods  )
 			{
 			}
 			MouseButton::~MouseButton(void)

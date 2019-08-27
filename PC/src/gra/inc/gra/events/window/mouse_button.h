@@ -5,7 +5,7 @@
 
 #include "gra/core.h"
 #include "gra/events/window/base.h"
-#include "gra/event_categories/window/input.h"
+#include "gra/inputs/window/mouse.h"
 
 namespace Gra
 {
@@ -13,47 +13,38 @@ namespace Gra
 	{
 		namespace Window
 		{
-			class MouseButton : public Event::Window::Base, public EventCategory::Window::Input
+			class MouseButton : public Event::Window::Base
 			{
 				public:
 					using callback = std::function<void (Event::Window::MouseButton&)>;
 					enum class Button;
 
 				public:
-					MouseButton(Button initial_button, Action initial_action, Mod initial_mods);
+					MouseButton(Input::Window::Mouse::Button initial_button,
+					            Input::Window::Mouse::Action initial_action,
+						    Input::Window::Mouse::Mod    initial_mods);
 
 				public: // GETTERS
-					Button button(void) const;
-					Action action(void) const;
-					Mod    mods  (void) const;
-
-				public:
-					enum class Button
-					{
-						LEFT   = GLFW_MOUSE_BUTTON_LEFT,
-						RIGHT  = GLFW_MOUSE_BUTTON_RIGHT,
-						MIDDLE = GLFW_MOUSE_BUTTON_MIDDLE,
-						FOUR   = GLFW_MOUSE_BUTTON_4,
-						FIVE   = GLFW_MOUSE_BUTTON_5,
-						SIX    = GLFW_MOUSE_BUTTON_6,
-						SEVEN  = GLFW_MOUSE_BUTTON_7,
-						EIGHT  = GLFW_MOUSE_BUTTON_8,
-					};
+					Input::Window::Mouse::Button button(void) const;
+					Input::Window::Mouse::Action action(void) const;
+					Input::Window::Mouse::Mod    mods  (void) const;
 
 				private:
-					Button m_button;
-					Action m_action;
-					Mod    m_mods;
+					Input::Window::Mouse::Button m_button;
+					Input::Window::Mouse::Action m_action;
+					Input::Window::Mouse::Mod    m_mods;
 
 				DECLARATION_MANDATORY(MouseButton)
 			};
 
 			// GETTERS
-			DEFINITION_DEFAULT_GETTER(MouseButton, button, MouseButton::Button)
-			DEFINITION_DEFAULT_GETTER(MouseButton, action, MouseButton::Action)
-			DEFINITION_DEFAULT_GETTER(MouseButton, mods,   MouseButton::Mod   )
+			DEFINITION_DEFAULT_GETTER(MouseButton, button, Input::Window::Mouse::Button)
+			DEFINITION_DEFAULT_GETTER(MouseButton, action, Input::Window::Mouse::Action)
+			DEFINITION_DEFAULT_GETTER(MouseButton, mods,   Input::Window::Mouse::Mod   )
 
-			DEFINITION_MANDATORY(MouseButton, other.m_button, other.m_action, other.m_mods)
+			DEFINITION_MANDATORY(MouseButton, other.m_button,
+			                                  other.m_action,
+							  other.m_mods)
 		}
 	}
 }

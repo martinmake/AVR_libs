@@ -2,11 +2,11 @@
 
 #include "logging.h"
 
-#include "gra/event_categories/window/base.h"
+#include "gra/inputs/window/base.h"
 
 namespace Gra
 {
-	namespace EventCategory
+	namespace Input
 	{
 		namespace Window
 		{
@@ -20,11 +20,11 @@ namespace Gra
 
 			void Base::copy(const Base& other)
 			{
-				EventCategory::Base::copy(other);
+				Input::Base::copy(other);
 			}
 			void Base::move(Base&& other)
 			{
-				EventCategory::Base::move(std::move(other));
+				Input::Base::move(std::move(other));
 			}
 		}
 	}

@@ -49,8 +49,8 @@ namespace Gra
 					Event::Window::Key event
 					(
 						key,
-						static_cast<Event::Window::Key::Action>(action),
-						static_cast<Event::Window::Key::Mod   >(mods  )
+						static_cast<Input::Window::Keyboard::Action>(action),
+						static_cast<Input::Window::Keyboard::Mod   >(mods  )
 					); this_window.m_on_key(event);
 				}
 			});
@@ -72,9 +72,9 @@ namespace Gra
 				{
 					Event::Window::MouseButton event
 					(
-						static_cast<Event::Window::MouseButton::Button>(button),
-						static_cast<Event::Window::MouseButton::Action>(action),
-						static_cast<Event::Window::MouseButton::Mod   >(mods  )
+						static_cast<Input::Window::Mouse::Button>(button),
+						static_cast<Input::Window::Mouse::Action>(action),
+						static_cast<Input::Window::Mouse::Mod   >(mods  )
 					); this_window.m_on_mouse_button(event);
 				}
 			});

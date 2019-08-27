@@ -7,8 +7,6 @@
 #include <inttypes.h>
 #include <assert.h>
 
-#include "gra/draw_mode.h"
-
 namespace Gra
 {
 	inline uint8_t glSizeOf(unsigned int type)
@@ -24,18 +22,12 @@ namespace Gra
 		return 0;
 	}
 
-	inline GLenum DrawMode_to_GLenum(DrawMode draw_mode)
+	enum class DrawMode : GLenum
 	{
-		switch (draw_mode)
-		{
-			case DrawMode::TRIANGLES: return GL_TRIANGLES;
-			case DrawMode::LINES:     return GL_LINES;
-			case DrawMode::POINTS:    return GL_POINTS;
-			default:                  assert(false);
-		}
-
-		return 0;
-	}
+		TRIANGLES = GL_TRIANGLES,
+		LINES     = GL_LINES,
+		POINTS    = GL_POINTS,
+	};
 }
 
 #endif

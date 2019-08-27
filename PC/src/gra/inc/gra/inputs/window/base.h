@@ -1,21 +1,23 @@
-#ifndef _GRA_EVENT_CATEGORY_WINDOW_INPUT_H_
-#define _GRA_EVENT_CATEGORY_WINDOW_INPUT_H_
+#ifndef _GRA_INPUT_WINDOW_BASE_H_
+#define _GRA_INPUT_WINDOW_BASE_H_
+
+#include <string>
 
 #include <sml/sml.h>
 
 #include "gra/core.h"
-#include "gra/event_categories/window/base.h"
+#include "gra/inputs/base.h"
 
 namespace Gra
 {
-	namespace EventCategory
+	namespace Input
 	{
 		namespace Window
 		{
-			class Input : public EventCategory::Window::Base
+			class Base : public Input::Base
 			{
-				public:
-					Input(void);
+				protected:
+					Base(void);
 
 				public:
 					enum class Action
@@ -33,14 +35,10 @@ namespace Gra
 						NUM_LOCK  = GLFW_MOD_NUM_LOCK,
 					};
 
-				DECLARATION_MANDATORY(Input)
+				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
-			inline bool operator&(Input::Mod lhs, Input::Mod rhs)
-			{
-				return static_cast<uint8_t>(lhs) & static_cast<uint8_t>(rhs);
-			}
 
-			DEFINITION_MANDATORY(Input, )
+			DEFINITION_MANDATORY(Base, )
 		}
 	}
 }

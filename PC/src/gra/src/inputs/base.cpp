@@ -1,10 +1,10 @@
 #include <utility>
 
-#include "gra/event_categories/base.h"
+#include "gra/inputs/base.h"
 
 namespace Gra
 {
-	namespace EventCategory
+	namespace Input
 	{
 		Base::Base(void)
 		{
@@ -16,11 +16,11 @@ namespace Gra
 
 		void Base::copy(const Base& other)
 		{
-			Esl::EventCategory::Base::copy(other);
+			(void) other;
 		}
 		void Base::move(Base&& other)
 		{
-			Esl::EventCategory::Base::move(std::move(other));
+			(void) other;
 		}
 	}
 }
