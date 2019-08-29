@@ -1,6 +1,5 @@
 #define CREATE_DEFAULT_LOGGER
 #include <logger/logger.h>
-
 #include <gra/renderer.h>
 
 #define WINDOW_WIDTH  ((float) 1024)
