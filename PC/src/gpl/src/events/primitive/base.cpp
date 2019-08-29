@@ -8,6 +8,10 @@ namespace Gpl
 	{
 		namespace Primitive
 		{
+			Base::Base(void* initial_instance)
+				: m_instance(initial_instance)
+			{
+			}
 			Base::Base(void)
 			{
 			}
@@ -19,10 +23,14 @@ namespace Gpl
 			void Base::copy(const Base& other)
 			{
 				Event::Base::copy(other);
+
+				m_instance = other.m_instance;
 			}
 			void Base::move(Base&& other)
 			{
 				Event::Base::move(std::move(other));
+
+				m_instance = std::exchange(other.m_instance, nullptr);
 			}
 		}
 	}

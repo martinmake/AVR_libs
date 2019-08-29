@@ -37,8 +37,39 @@ namespace Gpl
 			}
 			if (highest_primitive)
 			{
-				Event::Primitive::MouseOver mouse_over_event;
+				Event::Primitive::MouseOver mouse_over_event(highest_primitive);
 				highest_primitive->on_mouse_over(mouse_over_event);
+			}
+		});
+		on_mouse_button([&](auto& event)
+		{
+			std::queue<std::pair<Primitive::Container&, Position>> queue;
+			Position mouse_position = this->mouse_position();
+
+			queue.push({ m_primitives, m_primitives.position() });
+			Primitive::Base* highest_primitive = nullptr;
+			while(!queue.empty())
+			{
+				Primitive::Container& next = queue.front().first;
+				for (std::unique_ptr<Primitive::Base>& primitive : next.primitives())
+				{
+					if (primitive->colides(mouse_position - (queue.front().second + next.position())))
+					{
+						if (primitive->is_container())
+							queue.push({ *((Primitive::Container*) &*primitive), queue.front().second });
+						else
+							highest_primitive = &*primitive;
+					}
+				}
+				queue.pop();
+			}
+			if (highest_primitive)
+			{
+				Event::Primitive::MouseButton mouse_button_event(event.button(),
+				                                                 event.action(),
+				                                                 event.mods  (),
+										 highest_primitive);
+				highest_primitive->on_mouse_button(mouse_button_event);
 			}
 		});
 	}

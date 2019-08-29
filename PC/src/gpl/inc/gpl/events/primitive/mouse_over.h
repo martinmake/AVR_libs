@@ -13,9 +13,12 @@ namespace Gpl
 			class MouseOver : public Event::Primitive::Base
 			{
 				public:
-					using callback = std::function<void (Event::Primitive::MouseOver&, void*)>;
+					using callback = std::function<void (Event::Primitive::MouseOver&)>;
 
 				public:
+					MouseOver(void* initial_instance);
+
+				private:
 					MouseOver(void);
 
 				DECLARATION_MANDATORY(MouseOver)

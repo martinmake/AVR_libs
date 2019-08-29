@@ -16,6 +16,7 @@ namespace Gpl
 
 		public: // GETTERS
 			Primitive::Container& primitives(void);
+			template <typename T> T& primitives(uint16_t index);
 		public: // SETTERS
 
 		public: // FUNCTIONS
@@ -35,6 +36,7 @@ namespace Gpl
 
 	// GETTERS
 	inline Primitive::Container& Canvas::primitives(void) { return m_primitives; }
+	template <typename T> T& Canvas::primitives(uint16_t index) { return m_primitives.primitives<T>(index); }
 
 	// OPERATORS
 	template <typename T> Canvas& Canvas::operator<<(const T&  primitive) { m_primitives <<           primitive;  return *this; }

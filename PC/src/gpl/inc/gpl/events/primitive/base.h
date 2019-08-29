@@ -13,12 +13,21 @@ namespace Gpl
 			class Base : public Event::Base
 			{
 				protected:
+					Base(void* initial_instance);
 					Base(void);
+
+				public:
+					template <typename T> T& instance(void);
+
+				private:
+					void* m_instance;
 
 				DECLARATION_MANDATORY_INTERFACE(Base)
 			};
 
-			DEFINITION_MANDATORY(Base, )
+			template <typename T> T& Base::instance(void) { return *reinterpret_cast<T*>(m_instance); }
+
+			DEFINITION_MANDATORY(Base, other.m_instance)
 		}
 	}
 }

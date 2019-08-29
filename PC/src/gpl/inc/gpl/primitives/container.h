@@ -15,13 +15,13 @@ namespace Gpl
 
 			public: // FUNCTIONS
 				void draw(std::queue<std::pair<Primitive::Container&, Data::Draw>>& queue);
-				// void on_mouse_over(Data::MouseOver& data) override;
 
 			public: // GETTERS
 				const Position& position(void) const;
 				const Size    & size    (void) const;
 
 				std::vector<std::unique_ptr<Primitive::Base>>& primitives(void);
+				template <typename T> T& primitives(uint16_t index);
 
 				bool colides(const Position& position) const override;
 				bool is_container(void) const override;
@@ -48,6 +48,7 @@ namespace Gpl
 		DEFINITION_DEFAULT_GETTER(Container, position, const Position&)
 		DEFINITION_DEFAULT_GETTER(Container, size,     const Size    &)
 		inline std::vector<std::unique_ptr<Primitive::Base>>& Container::primitives(void) { return m_primitives; }
+		template <typename T> T& Container::primitives(uint16_t index) { return *static_cast<T*>(&*m_primitives[index]); }
 		inline bool Container::is_container(void) const { return true; }
 		// SETTERS
 		DEFINITION_DEFAULT_SETTER(Container, position, const Position&)
