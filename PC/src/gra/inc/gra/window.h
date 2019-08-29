@@ -21,7 +21,7 @@ namespace Gra
 			const std::string             & title     (void) const;
 			      bool                      vsync     (void) const;
 
-			Math::vec2<float>            mouse_position(void                                      ) const;
+			Math::vec2<unsigned int>     mouse_position(void                                      ) const;
 			Input::Window::Mouse::Action mouse_button  (Input::Window::Mouse::Button        button) const;
 			bool                         key           (Input::Window::Keyboard::SpecialKey key   ) const;
 			bool                         key           (char                                key   ) const;

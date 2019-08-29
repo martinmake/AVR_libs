@@ -127,12 +127,12 @@ namespace Gra
 	}
 
 	// GETTERS
-	Math::vec2<float> Window::mouse_position(void) const
+	Math::vec2<unsigned int> Window::mouse_position(void) const
 	{
 		double xpos = 0, ypos = 0;
 		glfwGetCursorPos(m_window, &xpos, &ypos);
 
-		return { (float) xpos, (float) ypos };
+		return { (unsigned int) xpos, m_height - (unsigned int) ypos };
 	}
 
 	// FUNCTIONS
