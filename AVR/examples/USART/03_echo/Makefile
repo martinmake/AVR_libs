@@ -1,4 +1,4 @@
-MAKEFILE:=../../Makefile
+MAKEFILE:=../../Makefile.example
 
 export MAKEFILE
 

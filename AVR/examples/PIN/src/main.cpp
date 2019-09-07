@@ -14,9 +14,9 @@ int main(void)
 
 	while (true)
 	{
-		led = State::HIGH;
+		led = HIGH;
 		sleep(200);
-		led = State::LOW;
+		led = LOW;
 		sleep(200);
 	}
 }
