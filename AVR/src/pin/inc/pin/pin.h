@@ -4,6 +4,8 @@
 #include <inttypes.h>
 #include <avr/io.h>
 
+#include <util/util.h>
+
 enum class Port : uint8_t
 {
 	B, C, D
@@ -12,18 +14,14 @@ enum class Direction : uint8_t
 {
 	INPUT, OUTPUT
 };
-enum class State : bool
-{
-	LOW, HIGH
-};
 
 template <Port port, uint8_t index, Direction direction = Direction::OUTPUT>
 class Pin
 {
-	public:
+	public: // CONSTRUCTORS
 		Pin(void);
 
-	public:
+	public: // FUNCTIONS
 		void set  (void);
 		void clear(void);
 		bool is_high(void);
@@ -34,9 +32,10 @@ class Pin
 		bool is_input (void);
 		bool is_output(void);
 
-	public:
-		Pin& operator=(State state);
-		operator State(void);
+	public: // OPERATORS
+		Pin<port, index, direction>& operator=(STATE state);
+		operator STATE(void);
+		operator bool (void);
 };
 
 template <Port port, uint8_t index, Direction direction>
@@ -50,20 +49,25 @@ Pin<port, index, direction>::Pin(void)
 }
 
 template <Port port, uint8_t index, Direction direction>
-Pin<port, index, direction>& Pin<port, index, direction>::operator=(State state)
+Pin<port, index, direction>& Pin<port, index, direction>::operator=(STATE state)
 {
 	switch (state)
 	{
-		case State::HIGH: set  (); break;
-		case State::LOW:  clear(); break;
+		case HIGH: set  (); break;
+		case LOW:  clear(); break;
 	}
 
 	return *this;
 }
 template <Port port, uint8_t index, Direction direction>
-Pin<port, index, direction>::operator State(void)
+Pin<port, index, direction>::operator STATE(void)
 {
-	return is_high() ? State::HIGH : State::LOW;
+	return is_high() ? HIGH : LOW;
+}
+template <Port port, uint8_t index, Direction direction>
+Pin<port, index, direction>::operator bool(void)
+{
+	return is_high();
 }
 
 template <Port port, uint8_t index, Direction direction>
