@@ -4,14 +4,18 @@
 #include <stddef.h>
 #include <inttypes.h>
 
+#define BIT(index) (1 << index)
+
 typedef enum {
 	BIN =  2,
 	OCT =  8,
 	DEC = 10,
-	HEX = 16
+	HEX = 16,
 } BASE;
-
-#define BIT(index) (1 << index)
+typedef enum {
+	OFF = 0, ON   = 1,
+	LOW = 0, HIGH = 1,
+} STATE;
 
 extern void sleep(uint64_t ms);
 
