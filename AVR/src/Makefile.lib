@@ -1,93 +1,100 @@
 # vim: filetype=make
 
+NAME_LIB:=$(notdir $(realpath .))
+
 include $(MAKEFILE).config
 include Makefile.config
 
-LNAME:=$(notdir $(realpath .))
+DIR_INC_PUBLIC:=inc/$(NAME_LIB)
+DIRS_INC+=$(DIR_INC_LIB)
 
-ARC:=$(LADIR)/$(MCU)/lib$(LNAME).a
-PHEADERS:=$(shell find $(PIDIR) -name '*.h')
-PHEADERS:=$(notdir $(PHEADERS))
-PHEADERS:=$(addprefix $(LIDIR)/$(LNAME)/,$(PHEADERS))
+LIBS:=$(addprefix -l,$(LIBS)    )
+DEFS:=$(addprefix -D,$(DEFS)    )
+INC :=$(addprefix -I,$(DIRS_INC))
 
-C_SRCS  :=$(shell find $(SDIR) -name '*.c'  )
-CXX_SRCS:=$(shell find $(SDIR) -name '*.cpp')
-ASM_SRCS:=$(shell find $(SDIR) -name '*.S'  )
+ARC:=$(DIR_LIB_LIB)/$(MCU)/lib$(NAME_LIB).a
 
-C_OBJS  :=$(patsubst $(SDIR)/%.c,  $(ODIR)/$(MCU)/%.o,$(C_SRCS)  )
-CXX_OBJS:=$(patsubst $(SDIR)/%.cpp,$(ODIR)/$(MCU)/%.o,$(CXX_SRCS))
-ASM_OBJS:=$(patsubst $(SDIR)/%.S,  $(ODIR)/$(MCU)/%.o,$(ASM_SRCS))
-OBJS:=$(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
-ARC_MEMBERS:=$(notdir $(OBJS))
+HEADERS_PUBLIC:=$(shell find $(DIR_INC_PUBLIC) -name '*.h' )
+HEADERS_PUBLIC:=$(patsubst $(DIR_INC_PUBLIC)/%,$(DIR_INC_LIB)/$(NAME_LIB)/%,$(HEADERS_PUBLIC))
 
-IDIRS+=$(LIDIR)
-IDIRS+=$(PIDIR)
-INC:=$(addprefix -I,$(IDIRS))
+SRCS_C   :=$(shell find $(DIR_SRC) -name '*.c'  )
+SRCS_CXX :=$(shell find $(DIR_SRC) -name '*.cpp')
+SRCS_ASM :=$(shell find $(DIR_SRC) -name '*.S'  )
 
-CCFLAGS :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) -std=c99
-CXXFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) -std=c++14
-ASMFLAGS:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC)
-ARFLAGS :=rUucv
+OBJS_C   :=$(patsubst $(DIR_SRC)/%.c,  $(DIR_OBJ)/$(MCU)/%.o, $(SRCS_C)  )
+OBJS_CXX :=$(patsubst $(DIR_SRC)/%.cpp,$(DIR_OBJ)/$(MCU)/%.o, $(SRCS_CXX))
+OBJS_ASM :=$(patsubst $(DIR_SRC)/%.S,  $(DIR_OBJ)/$(MCU)/%.o, $(SRCS_ASM))
+OBJS     :=$(OBJS_C) $(OBJS_CXX) $(OBJS_ASM)
+
+FLAGS_CC :=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU) -std=c99
+FLAGS_CXX:=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU) -std=c++17
+FLAGS_ASM:=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_AR :=rUucv
 
 .SECONDARY: $(OBJS)
 
 .PHONY: all
 all:
-	+$(foreach MCU,$(MCUS),make -e build MCU=$(MCU) -j1;)
+	+$(foreach MCU,$(MCUS),make -e build MCU=$(MCU) -j$(shell nproc);)
 
 .PHONY: build
-build: $(ARC)($(ARC_MEMBERS)) $(PHEADERS)
-	@echo "> BULDING $(LNAME) FOR $(MCU)"
+build: $(ARC) $(HEADERS_PUBLIC)
+	@echo "> BULDING $(NAME_LIB) FOR $(MCU)"
 	$(SIZE) $(ARC) | sed -e 's/^/* /'
-	@echo "< BULDING $(LNAME) FOR $(MCU) DONE"
+	@echo "< BULDING $(NAME_LIB) FOR $(MCU) DONE"
 
-$(LIDIR)/$(LNAME) $(LADIR)/$(MCU) $(ODIR)/$(MCU):
-	mkdir $@
+$(ARC): $(OBJS) | $(DIR_LIB_LIB)/$(MCU)
+	@echo "> ARCHIVING"
+	$(AR) $(FLAGS_AR) $@ $^
+	@echo "< ARCHIVING DONE"
 
-$(ARC)(%.o): $(ODIR)/$(MCU)/%.o | $(LADIR)/$(MCU)
-	@echo "> ARCHIVING $<"
-	$(AR) $(ARFLAGS) $@ $<
-	@echo "< ARCHIVING $< DONE"
+$(DIR_INC_LIB)/$(NAME_LIB) $(DIR_LIB_LIB)/$(MCU) $(DIR_OBJ)/$(MCU):
+	mkdir -p $@
 
-$(LIDIR)/$(LNAME)/%.h: $(PIDIR)/%.h | $(LIDIR)/$(LNAME)
+$(DIR_INC_LIB)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h | $(DIR_INC_LIB)/$(NAME_LIB)
 	@echo "> STOIRING PUBLIC LIBRARY HEADER $<"
-	cp $< -t $(LIDIR)/$(LNAME)
+	cp $< -rt $(DIR_INC_LIB)/$(NAME_LIB)
 	@echo "< STOIRING PUBLIC LIBRARY HEADER $< DONE"
 
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.c   | $(ODIR)/$(MCU)
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.c   | $(DIR_OBJ)/$(MCU)
 	@echo "> COMPILING $<"
-	$(CC)   $(CCFLAGS)  -c $< -o $@
+	$(CC)   $(FLAGS_CC)  -c $< -o $@
 	@echo "< COMPILING $< DONE"
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.cpp | $(ODIR)/$(MCU)
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.cpp | $(DIR_OBJ)/$(MCU)
 	@echo "> COMPILING $<"
-	$(CXX)  $(CXXFLAGS) -c $< -o $@
+	$(CXX)  $(FLAGS_CXX) -c $< -o $@
 	@echo "< COMPILING $< DONE"
-$(ODIR)/$(MCU)/%.o: $(SDIR)/%.S   | $(ODIR)/$(MCU)
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.S   | $(DIR_OBJ)/$(MCU)
 	@echo "> COMPILING $<"
-	$(ASMC) $(ASMFLAGS) -c $< -o $@
+	$(ASMC) $(FLAGS_ASM) -c $< -o $@
 	@echo "< COMPILING $< DONE"
 
-$(DDIR)/%.d: $(SDIR)/%.c
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.c
 	@echo "> BUILDING DEPENDENCIES $<"
-	$(CC)   $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
+	$(CC)   $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
 	@echo "< BUILDING DEPENDENCIES $< DONE"
-$(DDIR)/%.d: $(SDIR)/%.cpp
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.cpp
 	@echo "> BUILDING DEPENDENCIES $<"
-	$(CXX)  $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
+	$(CXX)  $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
 	@echo "< BUILDING DEPENDENCIES $< DONE"
-$(DDIR)/%.d: $(SDIR)/%.S
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.S
 	@echo "> BUILDING DEPENDENCIES $<"
-	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DDIR)/%.d,$(ODIR)/$$(MCU)/%.o,$@)' > $@
+	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
 	@echo "< BUILDING DEPENDENCIES $< DONE"
+
+.PHONY: bear
+bear:
+	@better-bear $(DIR_SRC) $(DIRS_INC)
 
 .PHONY: clean
+clean: CLEAN_FILES:=$(wildcard $(DIR_LIB_LIB)/*/lib$(NAME_LIB).a) $(DIR_INC_LIB)/$(NAME_LIB) $(shell find ./$(DIR_OBJ) ./$(DIR_DEP) -type f -name '[!.]*')
 clean:
 	@echo "> CLEANING"
-	-rm -vfr ./$(ODIR)/* ./$(DDIR)/* $(LADIR)/*/lib$(LNAME).a $(LIDIR)/$(LNAME) | sed -e 's/^/* /'
+	-rm -vfr $(shell echo $(CLEAN_FILES) | tr " " "\n") | sort | sed -e 's/^/* /'
 	@echo "< CLEANING DONE"
 
-ifeq ($(NODEP),)
--include $(patsubst $(SDIR)/%.c,  $(DDIR)/%.d,$(C_SRCS)  )
--include $(patsubst $(SDIR)/%.cpp,$(DDIR)/%.d,$(CXX_SRCS))
--include $(patsubst $(SDIR)/%.S,  $(DDIR)/%.d,$(ASM_SRCS))
+ifeq ($(NO_DEPENDENCIES),)
+-include $(patsubst $(DIR_SRC)/%.c,  $(DIR_DEP)/%.d,$(SRCS_C)  )
+-include $(patsubst $(DIR_SRC)/%.cpp,$(DIR_DEP)/%.d,$(SRCS_CXX))
+-include $(patsubst $(DIR_SRC)/%.S,  $(DIR_DEP)/%.d,$(SRCS_ASM))
 endif
