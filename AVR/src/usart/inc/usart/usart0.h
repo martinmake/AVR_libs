@@ -3,7 +3,7 @@
 
 #include <avr/io.h>
 
-#include <util/util.h>
+#include <util.h>
 
 #include "usart/iusart.h"
 

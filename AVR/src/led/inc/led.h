@@ -1,7 +1,7 @@
 #ifndef _LED_LED_H_
 #define _LED_LED_H_
 
-#include <pin/pin.h>
+#include <pin.h>
 
 enum class POLARITY : bool
 {
@@ -19,7 +19,7 @@ class Led : protected Pin<port, index, DIRECTION::OUTPUT>
 		bool is_off(void);
 
 	public: // FUNCTIONS
-		void toogle  (void);
+		void toggle  (void);
 		void turn_on (void);
 		void turn_off(void);
 
@@ -71,7 +71,7 @@ void Led<port, index, polarity>::turn_off(void)
 	}
 }
 template <PORT port, uint8_t index, POLARITY polarity>
-void Led<port, index, polarity>::toogle(void)
+void Led<port, index, polarity>::toggle(void)
 {
 	if (is_on())
 		turn_off();

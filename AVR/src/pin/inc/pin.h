@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <avr/io.h>
 
-#include <util/util.h>
+#include <util.h>
 
 enum class PORT : uint8_t
 {
