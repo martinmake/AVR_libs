@@ -1,76 +1,85 @@
-#include <avr/io.h>
+#include <avr/interrupt.h>
 
-#include <standard/standard.h>
-
-#include "adc.h"
+#include "adc/adc.h"
 
 Adc::Adc(const Init* init)
 {
 #if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
-	Bit(PRR, PRADC).clear();
+	PRR &= ~BIT(PRADC);
 #endif
-	switch (init->prescaler_select) {
-		case PrescalerSelect::S2:
-			Bit(ADCSRA, ADPS0).clear();
-			Bit(ADCSRA, ADPS1).clear();
-			Bit(ADCSRA, ADPS2).clear();
+	switch (init->prescaler_select)
+	{
+		case PRESCALER_SELECT::X2:
+			CLEAR(ADCSRA, ADPS0);
+			CLEAR(ADCSRA, ADPS1);
+			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S4:
-			Bit(ADCSRA, ADPS0).clear();
-			Bit(ADCSRA, ADPS1).set();
-			Bit(ADCSRA, ADPS2).clear();
+		case PRESCALER_SELECT::X4:
+			CLEAR(ADCSRA, ADPS0);
+			SET  (ADCSRA, ADPS1);
+			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S8:
-			Bit(ADCSRA, ADPS0).set();
-			Bit(ADCSRA, ADPS1).set();
-			Bit(ADCSRA, ADPS2).clear();
+		case PRESCALER_SELECT::X8:
+			SET  (ADCSRA, ADPS0);
+			SET  (ADCSRA, ADPS1);
+			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S16:
-			Bit(ADCSRA, ADPS0).clear();
-			Bit(ADCSRA, ADPS1).clear();
-			Bit(ADCSRA, ADPS2).set();
+		case PRESCALER_SELECT::X16:
+			CLEAR(ADCSRA, ADPS0);
+			CLEAR(ADCSRA, ADPS1);
+			SET  (ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S32:
-			Bit(ADCSRA, ADPS0).set();
-			Bit(ADCSRA, ADPS1).clear();
-			Bit(ADCSRA, ADPS2).set();
+		case PRESCALER_SELECT::X32:
+			SET  (ADCSRA, ADPS0);
+			CLEAR(ADCSRA, ADPS1);
+			SET  (ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S64:
-			Bit(ADCSRA, ADPS0).clear();
-			Bit(ADCSRA, ADPS1).set();
-			Bit(ADCSRA, ADPS2).set();
+		case PRESCALER_SELECT::X64:
+			CLEAR(ADCSRA, ADPS0);
+			SET  (ADCSRA, ADPS1);
+			SET  (ADCSRA, ADPS2);
 			break;
-		case PrescalerSelect::S128:
-			Bit(ADCSRA, ADPS0).set();
-			Bit(ADCSRA, ADPS1).set();
-			Bit(ADCSRA, ADPS2).set();
-			break;
-	}
-
-	switch (init->vref) {
-		case Vref::AREF:
-			Bit(ADMUX, REFS0).clear();
-			Bit(ADMUX, REFS1).clear();
-			break;
-		case Vref::AVCC:
-			Bit(ADMUX, REFS0).set();
-			Bit(ADMUX, REFS1).clear();
-			break;
-		case Vref::IREF:
-			Bit(ADMUX, REFS0).set();
-			Bit(ADMUX, REFS1).set();
+		case PRESCALER_SELECT::X128:
+			SET  (ADCSRA, ADPS0);
+			SET  (ADCSRA, ADPS1);
+			SET  (ADCSRA, ADPS2);
 			break;
 	}
 
-	ADCSRA |=  (1 << ADEN) | (1 << ADIE);
+	switch (init->vref)
+	{
+		case VREF::AREF:
+			CLEAR(ADMUX, REFS0);
+			CLEAR(ADMUX, REFS1);
+			break;
+		case VREF::AVCC:
+			SET  (ADMUX, REFS0);
+			CLEAR(ADMUX, REFS1);
+			break;
+		case VREF::IREF:
+			SET  (ADMUX, REFS0);
+			SET  (ADMUX, REFS1);
+			break;
+	}
+
+	SET(ADCSRA, ADEN);
 }
 
 Adc::Adc()
 {
 	Init init;
 
-	init.prescaler_select = PrescalerSelect::S2;
-	init.vref             = Vref::AVCC;
+	init.prescaler_select = PRESCALER_SELECT::X2;
+	init.vref             = VREF::AVCC;
 
 	*this = Adc(&init);
+}
+
+ISR(ADC_vect)
+{
+	if (adc.keep_sampling())
+	{
+		adc.ISR_callback(ADC);
+		adc.start_conversion();
+	}
 }
