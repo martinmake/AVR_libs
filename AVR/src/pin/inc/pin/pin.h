@@ -6,16 +6,16 @@
 
 #include <util/util.h>
 
-enum class Port : uint8_t
+enum class PORT : uint8_t
 {
 	B, C, D
 };
-enum class Direction : uint8_t
+enum class DIRECTION : uint8_t
 {
 	INPUT, OUTPUT
 };
 
-template <Port port, uint8_t index, Direction direction = Direction::OUTPUT>
+template <PORT port, uint8_t index, DIRECTION direction = DIRECTION::OUTPUT>
 class Pin
 {
 	public: // CONSTRUCTORS
@@ -38,17 +38,17 @@ class Pin
 		operator bool (void);
 };
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 Pin<port, index, direction>::Pin(void)
 {
 	switch (direction)
 	{
-		case Direction::OUTPUT: make_output(); break;
-		case Direction:: INPUT: make_input (); break;
+		case DIRECTION::OUTPUT: make_output(); break;
+		case DIRECTION:: INPUT: make_input (); break;
 	}
 }
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 Pin<port, index, direction>& Pin<port, index, direction>::operator=(STATE state)
 {
 	switch (state)
@@ -59,86 +59,86 @@ Pin<port, index, direction>& Pin<port, index, direction>::operator=(STATE state)
 
 	return *this;
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 Pin<port, index, direction>::operator STATE(void)
 {
 	return is_high() ? HIGH : LOW;
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 Pin<port, index, direction>::operator bool(void)
 {
 	return is_high();
 }
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 void Pin<port, index, direction>::set(void)
 {
 	switch (port)
 	{
-		case Port::B: PORTB |= (1 << index); break;
-		case Port::C: PORTC |= (1 << index); break;
-		case Port::D: PORTD |= (1 << index); break;
+		case PORT::B: PORTB |= (1 << index); break;
+		case PORT::C: PORTC |= (1 << index); break;
+		case PORT::D: PORTD |= (1 << index); break;
 	}
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 void Pin<port, index, direction>::clear(void)
 {
 	switch (port)
 	{
-		case Port::B: PORTB &= ~(1 << index); break;
-		case Port::C: PORTC &= ~(1 << index); break;
-		case Port::D: PORTD &= ~(1 << index); break;
+		case PORT::B: PORTB &= ~(1 << index); break;
+		case PORT::C: PORTC &= ~(1 << index); break;
+		case PORT::D: PORTD &= ~(1 << index); break;
 	}
 }
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 void Pin<port, index, direction>::make_output(void)
 {
 	switch (port)
 	{
-		case Port::B: DDRB |= (1 << index); break;
-		case Port::C: DDRC |= (1 << index); break;
-		case Port::D: DDRD |= (1 << index); break;
+		case PORT::B: DDRB |= (1 << index); break;
+		case PORT::C: DDRC |= (1 << index); break;
+		case PORT::D: DDRD |= (1 << index); break;
 	}
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 void Pin<port, index, direction>::make_input(void)
 {
 	switch (port)
 	{
-		case Port::B: DDRB &= ~(1 << index); break;
-		case Port::C: DDRC &= ~(1 << index); break;
-		case Port::D: DDRD &= ~(1 << index); break;
+		case PORT::B: DDRB &= ~(1 << index); break;
+		case PORT::C: DDRC &= ~(1 << index); break;
+		case PORT::D: DDRD &= ~(1 << index); break;
 	}
 }
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 bool Pin<port, index, direction>::is_high(void)
 {
 	switch (port)
 	{
-		case Port::B: return PINB & (1 << index);
-		case Port::C: return PINC & (1 << index);
-		case Port::D: return PIND & (1 << index);
+		case PORT::B: return PINB & (1 << index);
+		case PORT::C: return PINC & (1 << index);
+		case PORT::D: return PIND & (1 << index);
 	}
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 bool Pin<port, index, direction>::is_low(void)
 {
 	return !is_high();
 }
 
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 bool Pin<port, index, direction>::is_output(void)
 {
 	switch (port)
 	{
-		case Port::B: return DDRB & (1 << index);
-		case Port::C: return DDRC & (1 << index);
-		case Port::D: return DDRD & (1 << index);
+		case PORT::B: return DDRB & (1 << index);
+		case PORT::C: return DDRC & (1 << index);
+		case PORT::D: return DDRD & (1 << index);
 	}
 }
-template <Port port, uint8_t index, Direction direction>
+template <PORT port, uint8_t index, DIRECTION direction>
 bool Pin<port, index, direction>::is_input(void)
 {
 	return !is_output();
