@@ -2,6 +2,8 @@
 
 #include <avr/interrupt.h>
 
+#include <util.h>
+
 #include "config.h"
 #include "usart/usart0.h"
 
@@ -30,11 +32,11 @@ Usart0::Usart0(const Init* init)
 	switch (init->x2)
 	{
 		case X2::ON:
-			UCSR0A |= BIT(U2X0);
+			SET(UCSR0A, U2X0);
 			brrv = init->f_osc/8/init->baud-1;
 			break;
 		case X2::OFF:
-			UCSR0A &= ~BIT(U2X0);
+			CLEAR(UCSR0A, U2X0);
 			brrv = init->f_osc/16/init->baud-1;
 			break;
 	}
@@ -44,52 +46,52 @@ Usart0::Usart0(const Init* init)
 
 	switch (init->rx)
 	{
-		case Rx::ON:  UCSR0B |=  BIT(RXEN0); break;
-		case Rx::OFF: UCSR0B &= ~BIT(RXEN0); break;
+		case Rx::ON:  SET  (UCSR0B, RXEN0); break;
+		case Rx::OFF: CLEAR(UCSR0B, RXEN0); break;
 	}
 
 	switch (init->tx)
 	{
-		case Tx::ON:  UCSR0B |=  BIT(TXEN0); break;
-		case Tx::OFF: UCSR0B &= ~BIT(TXEN0); break;
+		case Tx::ON:  SET  (UCSR0B, TXEN0); break;
+		case Tx::OFF: CLEAR(UCSR0B, TXEN0); break;
 	}
 
 	switch (init->stop_bit_select)
 	{
-		case StopBitSelect::S1: UCSR0C |=  BIT(USBS0); break;
-		case StopBitSelect::S2: UCSR0C &= ~BIT(USBS0); break;
+		case StopBitSelect::S1: SET  (UCSR0C, USBS0); break;
+		case StopBitSelect::S2: CLEAR(UCSR0C, USBS0); break;
 	}
 
 	switch (init->character_size)
 	{
 		case CharacterSize::S5:
-			UCSR0C &= ~BIT(UCSZ00);
-			UCSR0C &= ~BIT(UCSZ01);
-			UCSR0B &= ~BIT(UCSZ02);
+			CLEAR(UCSR0C, UCSZ00);
+			CLEAR(UCSR0C, UCSZ01);
+			CLEAR(UCSR0B, UCSZ02);
 			break;
 		case CharacterSize::S6:
-			UCSR0C |=  BIT(UCSZ00);
-			UCSR0C &= ~BIT(UCSZ01);
-			UCSR0B &= ~BIT(UCSZ02);
+			SET  (UCSR0C, UCSZ00);
+			CLEAR(UCSR0C, UCSZ01);
+			CLEAR(UCSR0B, UCSZ02);
 			break;
 		case CharacterSize::S7:
-			UCSR0C &= ~BIT(UCSZ00);
-			UCSR0C |=  BIT(UCSZ01);
-			UCSR0B &= ~BIT(UCSZ02);
+			CLEAR(UCSR0C, UCSZ00);
+			SET  (UCSR0C, UCSZ01);
+			CLEAR(UCSR0B, UCSZ02);
 			break;
 		case CharacterSize::S8:
-			UCSR0C &= ~BIT(UCSZ00);
-			UCSR0C |=  BIT(UCSZ01);
-			UCSR0B |=  BIT(UCSZ02);
+			CLEAR(UCSR0C, UCSZ00);
+			SET  (UCSR0C, UCSZ01);
+			SET  (UCSR0B, UCSZ02);
 			break;
 		case CharacterSize::S9:
-			UCSR0C |=  BIT(UCSZ00);
-			UCSR0C |=  BIT(UCSZ01);
-			UCSR0B |=  BIT(UCSZ02);
+			SET  (UCSR0C, UCSZ00);
+			SET  (UCSR0C, UCSZ01);
+			SET  (UCSR0B, UCSZ02);
 			break;
 	}
 
-	UCSR0B |= BIT(UDRIE0);
+	SET(UCSR0B, UDRIE0);
 	output_queue = Queue(init->output_queue_size);
 	fdev_setup_stream(p_stream, usart0_putchar, usart0_getchar, _FDEV_SETUP_RW);
 }

@@ -1,7 +1,7 @@
 #include "usart/queue.h"
 
 Queue::Queue(uint8_t size)
-	: m_size(size), m_start(0), m_end(0)
+	: m_size(size), m_start(0), m_end(0), m_is_empty(0), m_is_full(0)
 {
 	m_buffer = new char[m_size];
 }

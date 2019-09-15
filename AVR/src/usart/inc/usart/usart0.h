@@ -9,16 +9,19 @@
 
 class Usart0: virtual public IUsart
 {
-	public:
+	public: // CONSTRUCTORS
 		Usart0(const Init* init);
 		Usart0(uint32_t baud, uint32_t f_osc);
 
-	public:
-		inline char getc(void);
-		inline void sendf(const char* fmt, ...);
+	public: // GETTERS
 		FILE* stream(void);
 
-	public:
+	public: // FUNSTIONS
+		inline char getc(void);
+		inline void sendf(const char* fmt, ...);
+		inline void flush(void);
+
+	public: // OPERATORS
 		inline Usart0& operator<<(      char  c);
 		inline Usart0& operator<<(const char* s);
 		inline Usart0& operator>>(char& c);
@@ -36,6 +39,17 @@ inline void Usart0::sendf(const char* fmt, ...)
 	va_start(args, fmt);
 	vfprintf(stream(), fmt, args);
 	va_end(args);
+}
+inline void Usart0::flush(void)
+{
+	uint8_t sreg_save = SREG;
+	cli();
+	while (!output_queue.is_empty())
+	{
+		while (IS_CLEAR(UCSR0A, UDRE0)) {}
+		output_queue >> UDR0;
+	}
+	SREG = sreg_save;
 }
 
 inline Usart0& Usart0::operator<<(char c)
