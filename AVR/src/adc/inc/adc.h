@@ -16,14 +16,14 @@ class Adc
 			AUTO_TRIGGER_SOURCE auto_trigger_source;
 			VREF                vref;
 		};
-		using ISR_callback_func = void (*)(uint16_t result);
+		using on_conversion_func = void (*)(uint16_t result);
 
 	public: // CONTRUCTORS
 		Adc(const Init* init);
 		Adc();
 
 	public: // PUBLIC VARIABLES
-		ISR_callback_func ISR_callback;
+		on_conversion_func on_conversion;
 
 	public: // SETTERS
 		void channel(uint8_t channel);

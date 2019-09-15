@@ -7,6 +7,7 @@ Adc::Adc(const Init* init)
 #if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
 	CLEAR(PRR, PRADC);
 #endif
+	CLEAR(ADMUX, ADLAR);
 	switch (init->prescaler_select)
 	{
 		case PRESCALER_SELECT::X2:
@@ -115,8 +116,4 @@ Adc::Adc()
 	*this = Adc(&init);
 }
 
-// ISR(ADC_vect)
-// {
-// 	PORTB ^= 0xff;
-// 	adc.ISR_callback(ADC);
-// }
+ISR(ADC_vect) { adc.on_conversion(ADC); }
