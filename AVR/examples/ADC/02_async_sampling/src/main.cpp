@@ -15,10 +15,10 @@ void init(void)
 	stdout = usart0.stream();
 
 	adc.channel(0);
-	adc.ISR_callback = [](uint16_t result)
+	adc.on_conversion = [](uint16_t result)
 	{
-		led.toggle();
 		printf("%u\n", result);
+		usart0.flush();
 	};
 
 	sei();
@@ -26,25 +26,8 @@ void init(void)
 	adc.start_sampling();
 }
 
-volatile bool adc_flag = 0;
 int main(void)
 {
 	init();
-
-	while (1)
-	{
-		if (adc_flag)
-		{
-			printf("CONVERSION COMPLETE\n");
-			adc_flag = 0;
-		}
-
-		// if (ADCSRA & BIT(ADIF)) printf("ADIF IS SET\n");
-		// else                    printf("ADIF IS CLEARED\n");
-	}
-}
-
-ISR(ADC_vect)
-{
-	adc_flag = 1;
+	while (true) {}
 }
