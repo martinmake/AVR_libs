@@ -2,52 +2,63 @@
 
 #include "adc.h"
 
-Adc::Adc(const Init* init)
+Adc adc;
+
+Adc::Adc()
+{
+}
+
+Adc::Adc(const Init& init_struct)
+{
+	init(init_struct);
+}
+
+void Adc::init(const Init& init_struct)
 {
 #if defined(__AVR_ATmega48P__) || defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || defined(__AVR_ATmega328P__)
 	CLEAR(PRR, PRADC);
 #endif
 	CLEAR(ADMUX, ADLAR);
-	switch (init->prescaler_select)
+	switch (init_struct.prescaler)
 	{
-		case PRESCALER_SELECT::X2:
+		case PRESCALER::X2:
 			SET  (ADCSRA, ADPS0);
 			CLEAR(ADCSRA, ADPS1);
 			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X4:
+		case PRESCALER::X4:
 			CLEAR(ADCSRA, ADPS0);
 			SET  (ADCSRA, ADPS1);
 			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X8:
+		case PRESCALER::X8:
 			SET  (ADCSRA, ADPS0);
 			SET  (ADCSRA, ADPS1);
 			CLEAR(ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X16:
+		case PRESCALER::X16:
 			CLEAR(ADCSRA, ADPS0);
 			CLEAR(ADCSRA, ADPS1);
 			SET  (ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X32:
+		case PRESCALER::X32:
 			SET  (ADCSRA, ADPS0);
 			CLEAR(ADCSRA, ADPS1);
 			SET  (ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X64:
+		case PRESCALER::X64:
 			CLEAR(ADCSRA, ADPS0);
 			SET  (ADCSRA, ADPS1);
 			SET  (ADCSRA, ADPS2);
 			break;
-		case PRESCALER_SELECT::X128:
+		case PRESCALER::X128:
 			SET  (ADCSRA, ADPS0);
 			SET  (ADCSRA, ADPS1);
 			SET  (ADCSRA, ADPS2);
 			break;
 	}
 
-	switch (init->auto_trigger_source)
+	switch (init_struct.auto_trigger_source)
 	{
 		case AUTO_TRIGGER_SOURCE::FREE_RUNNING:
 			CLEAR(ADCSRB, ADTS0);
@@ -86,7 +97,7 @@ Adc::Adc(const Init* init)
 			break;
 	}
 
-	switch (init->vref)
+	switch (init_struct.vref)
 	{
 		case VREF::AREF:
 			CLEAR(ADMUX, REFS0);
@@ -103,17 +114,6 @@ Adc::Adc(const Init* init)
 	}
 
 	SET(ADCSRA, ADEN);
-}
-
-Adc::Adc()
-{
-	Init init;
-
-	init.prescaler_select    = PRESCALER_SELECT::X128;
-	init.auto_trigger_source = AUTO_TRIGGER_SOURCE::FREE_RUNNING;
-	init.vref                = VREF::AVCC;
-
-	*this = Adc(&init);
 }
 
 ISR(ADC_vect) { adc.on_conversion(ADC); }

@@ -6,6 +6,9 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#ifdef F_CPU
+#include <util/delay.h>
+#endif
 
 #define BIT(index) (1 << index)
 
@@ -25,13 +28,6 @@ typedef enum {
 	OFF = 0, ON   = 1,
 	LOW = 0, HIGH = 1,
 } STATE;
-
-extern void sleep(uint64_t ms);
-
-#ifdef UTIL_DEFINE_SLEEP
-#include <util/delay.h>
-void sleep(uint64_t ms) { while (ms--) _delay_ms(1); }
-#endif
 
 extern void* operator new  (size_t size);
 extern void* operator new[](size_t size);

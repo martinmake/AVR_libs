@@ -3,3 +3,6 @@
 IUsart::IUsart(void)
 {
 }
+IUsart::~IUsart(void)
+{
+}

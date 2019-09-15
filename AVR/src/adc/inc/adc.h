@@ -7,20 +7,20 @@
 class Adc
 {
 	public: // TYPES
-		enum class PRESCALER_SELECT    : uint8_t { X2, X4, X8, X16, X32, X64, X128 };
+		enum class PRESCALER           : uint8_t { X2, X4, X8, X16, X32, X64, X128 };
 		enum class AUTO_TRIGGER_SOURCE : uint8_t { FREE_RUNNING, EXTERNAL_INTERRUPT_REQUEST_0, TIM0_COMPARE_MATCH_A, TIM0_OVERFLOW, TIM1_COMPARE_MATCH_B, TIM1_OVERFLOW, TIM1_CAPTURE_EVENT };
 		enum class VREF                : uint8_t { AREF, AVCC, IREF };
 		struct Init
 		{
-			PRESCALER_SELECT    prescaler_select;
-			AUTO_TRIGGER_SOURCE auto_trigger_source;
-			VREF                vref;
+			PRESCALER           prescaler           = PRESCALER::X128;
+			AUTO_TRIGGER_SOURCE auto_trigger_source = AUTO_TRIGGER_SOURCE::FREE_RUNNING;
+			VREF                vref                = VREF::AVCC;
 		};
 		using on_conversion_func = void (*)(uint16_t result);
 
 	public: // CONTRUCTORS
-		Adc(const Init* init);
-		Adc();
+		Adc(void);
+		Adc(const Init& init_init);
 
 	public: // PUBLIC VARIABLES
 		on_conversion_func on_conversion;
@@ -29,6 +29,8 @@ class Adc
 		void channel(uint8_t channel);
 
 	public: // FUNCTIONS
+		void init(const Init& init_init);
+
 		void start_sampling(void);
 		void  stop_sampling(void);
 		uint16_t take_sample(void);

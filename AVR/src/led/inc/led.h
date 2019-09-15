@@ -33,6 +33,7 @@ template <PORT port, uint8_t index, POLARITY polarity>
 Led<port, index, polarity>::Led(void)
 	: Pin<port, index, DIRECTION::OUTPUT>()
 {
+	turn_off();
 }
 
 template <PORT port, uint8_t index, POLARITY polarity>
