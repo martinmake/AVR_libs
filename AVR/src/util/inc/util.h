@@ -30,7 +30,7 @@ extern void sleep(uint64_t ms);
 
 #ifdef UTIL_DEFINE_SLEEP
 #include <util/delay.h>
-void sleep(uint64_t ms) { ms /= 50; while (ms--) _delay_ms(1); }
+void sleep(uint64_t ms) { while (ms--) _delay_ms(1); }
 #endif
 
 extern void* operator new  (size_t size);
