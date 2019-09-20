@@ -1,8 +1,8 @@
 #define UTIL_DEFINE_SLEEP
-#include <util/util.h>
-#include <pin/pin.h>
+#include <util.h>
+#include <gpio.h>
 
-Pin<Port::B, 5> led;
+Gpio<PORT::B, 5> led;
 
 inline void init(void)
 {
@@ -15,8 +15,8 @@ int main(void)
 	while (true)
 	{
 		led = HIGH;
-		sleep(200);
+		_delay_ms(200);
 		led = LOW;
-		sleep(200);
+		_delay_ms(200);
 	}
 }
