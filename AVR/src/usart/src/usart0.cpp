@@ -43,5 +43,7 @@ void Usart0::init_pipeline(const Init& init)
 FILE* Usart0::stream(void) { return p_stream; }
 
 ISR(USART_UDRE_vect) { if (!usart0.output_queue.is_empty()) usart0.output_queue >> UDR0; }
+// ISR(USART_TX_vect) {}
+// ISR(USART_RX_vect) {}
 
 #endif

@@ -47,7 +47,7 @@ class Usart0: virtual public IUsart
 		Usart0& operator>>(      char& c);
 		Usart0& operator>>(      char* s);
 
-	private: // PRIVATE FUNCTIENABLEDS
+	private: // PRIVATE FUNCTIONS
 		void init_pipeline(const Init& init);
 };
 
@@ -116,6 +116,8 @@ inline void Usart0::init(const Init& init_struct)
 	}
 
 	SET(UCSR0B, UDRIE0);
+	// SET(UCSR0B, TXCIE0);
+	// SET(UCSR0B, RXCIE0);
 
 	init_pipeline(init_struct);
 }
