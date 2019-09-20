@@ -16,7 +16,7 @@ class Adc
 			AUTO_TRIGGER_SOURCE auto_trigger_source = AUTO_TRIGGER_SOURCE::FREE_RUNNING;
 			VREF                vref                = VREF::AVCC;
 		};
-		using on_conversion_func = void (*)(uint16_t result);
+		using on_conversion_func = void (*)(void);
 
 	public: // CONTRUCTORS
 		Adc(void);
@@ -24,6 +24,7 @@ class Adc
 
 	public: // PUBLIC VARIABLES
 		on_conversion_func on_conversion;
+		volatile uint16_t value = 0;
 
 	public: // SETTERS
 		void channel(uint8_t channel);

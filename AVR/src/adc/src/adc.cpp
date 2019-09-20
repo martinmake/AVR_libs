@@ -116,4 +116,4 @@ void Adc::init(const Init& init_struct)
 	SET(ADCSRA, ADEN);
 }
 
-ISR(ADC_vect) { adc.on_conversion(ADC); }
+ISR(ADC_vect) { adc.value = ADC; if (adc.on_conversion) adc.on_conversion(); }

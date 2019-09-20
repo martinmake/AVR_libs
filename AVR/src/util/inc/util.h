@@ -9,6 +9,7 @@
 #ifdef F_CPU
 #include <util/delay.h>
 #endif
+#include <util/atomic.h>
 
 #define BIT(index) (1 << index)
 
