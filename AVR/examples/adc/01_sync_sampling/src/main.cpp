@@ -19,8 +19,5 @@ int main(void)
 {
 	init();
 
-	while (1)
-	{
-		printf("%u\n", adc.take_sample());
-	}
+	while (1) printf("%u\n", adc.take_sample());
 }

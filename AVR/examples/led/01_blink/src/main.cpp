@@ -1,16 +1,15 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#include <led/led.h>
+#include <led.h>
 
-Led led({{PORTB, PB1}}, true);
+Led<PORT::B, 5>  led;
 
 int main(void)
 {
-	while (1) {
-		led = 1;
-		_delay_ms(100);
-		led = 0;
+	while (1)
+	{
+		led.toggle();
 		_delay_ms(100);
 	}
 }

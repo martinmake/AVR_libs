@@ -1,5 +1,4 @@
-#include <avr/interrupt.h>
-
+#include <util.h>
 #include <usart/usart0.h>
 
 void init(void)
@@ -14,5 +13,6 @@ int main(void)
 {
 	init();
 
-	while (true) { }
+	while (true)
+		putchar('\n');
 }
