@@ -1,7 +1,7 @@
 #ifndef _LED_LED_H_
 #define _LED_LED_H_
 
-#include <pin.h>
+#include <gpio.h>
 
 enum class POLARITY : bool
 {
@@ -9,7 +9,7 @@ enum class POLARITY : bool
 };
 
 template <PORT port, uint8_t index, POLARITY polarity = POLARITY::NONINVERTED>
-class Led : protected Pin<port, index, DIRECTION::OUTPUT>
+class Led : protected Gpio<port, index, DIRECTION::OUTPUT>
 {
 	public: // CONSTRUCTORS
 		Led(void);
@@ -31,7 +31,7 @@ class Led : protected Pin<port, index, DIRECTION::OUTPUT>
 
 template <PORT port, uint8_t index, POLARITY polarity>
 Led<port, index, polarity>::Led(void)
-	: Pin<port, index, DIRECTION::OUTPUT>()
+	: Gpio<port, index, DIRECTION::OUTPUT>()
 {
 	turn_off();
 }
