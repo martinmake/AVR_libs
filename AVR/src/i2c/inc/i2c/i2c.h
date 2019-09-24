@@ -63,9 +63,6 @@ void I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::start(void)
 template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
 void I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::stop(void)
 {
-	set_scl(LOW);
-	delay();
-
 	set_sda(LOW);
 	set_scl(HIGH);
 	delay();
