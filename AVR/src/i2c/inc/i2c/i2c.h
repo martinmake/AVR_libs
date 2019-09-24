@@ -21,7 +21,7 @@ class I2c : public II2c
 		void stop (void) override;
 
 		bool    write(uint8_t data) override;
-		uint8_t read (void)         override;
+		uint8_t read (bool    ack ) override;
 
 		void set_sda(bool state);
 		void set_scl(bool state);
@@ -29,8 +29,8 @@ class I2c : public II2c
 		void delay(void);
 
 	private:
-		Gpio<sda_port, sda_pin, INPUT> m_sda;
-		Gpio<scl_port, scl_pin, INPUT> m_scl;
+		Gpio<sda_port, sda_pin> m_sda;
+		Gpio<scl_port, scl_pin> m_scl;
 };
 
 template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
@@ -87,24 +87,21 @@ bool I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write(uint8_t dat
 		delay();
 	}
 
+	bool ack = NACK;
 	set_scl(LOW);
 	delay();
-
 	set_sda(HIGH);
 	delay();
-
 	set_scl(HIGH);
 	delay();
-
-	bool ack = !m_sda;
-
+	ack = !m_sda;
 	set_scl(LOW);
 	delay();
 
 	return ack;
 }
 template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
-uint8_t I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read(void)
+uint8_t I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read(bool ack)
 {
 	uint8_t data = 0x00;
 	for (uint8_t mask = 1 << 7; mask; mask >>= 1)
@@ -119,14 +116,13 @@ uint8_t I2c<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read(void)
 
 	set_scl(LOW);
 	delay();
+      	if (ack) set_sda(LOW);
+      	else     set_sda(HIGH);
 	set_scl(HIGH);
 	delay();
-
-	bool ack = !m_sda;
-	(void) ack;
-
 	set_scl(LOW);
 	delay();
+      	set_sda(HIGH);
 
 	return data;
 }
