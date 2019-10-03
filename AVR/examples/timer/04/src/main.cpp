@@ -22,13 +22,13 @@ void init(void)
 	{
 		uint8_t value = adc.value / 4;
 
-		if (value <= 1)
+		if (value)
+			timer0.on_compare_match_output_A_pin_action(Timer0::ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::SET);
+		else
 		{
 			timer0.on_compare_match_output_A_pin_action(Timer0::ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS);
 			led.turn_off();
 		}
-		else
-			timer0.on_compare_match_output_A_pin_action(Timer0::ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::SET);
 
 		timer0.output_compare_register_A(value);
 	};

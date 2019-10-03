@@ -20,6 +20,7 @@ OBJS_CXX:=$(patsubst $(DIR_SRC)/%.cpp,$(DIR_OBJ)/%.o,$(SRCS_CXX))
 OBJS_ASM:=$(patsubst $(DIR_SRC)/%.S,  $(DIR_OBJ)/%.o,$(SRCS_ASM))
 OBJS    :=$(OBJS_C) $(OBJS_CXX) $(OBJS_ASM)
 
+DIRS_INC+=/usr/avr/include
 INC:=$(addprefix -I,$(DIRS_INC) $(DIR_INC_LIB))
 
 FLAGS_CC :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS) -std=c99
@@ -71,18 +72,15 @@ $(DIR_DEP)/%.d: $(DIR_SRC)/%.S
 
 .PHONY: flash
 flash:
-	sudo avrdude -p $(MCU) -c $(PROG) -P $(PORT) -U flash:w:$(HEX):i
+	sudo avrdude -v -p $(MCU) -c $(PROG) -P $(PORT) -U flash:w:$(HEX):i
 
 .PHONY: serial
 serial:
 	sudo tio -b $(TIO_BAUD) -d 8 -s 1 -e -mINLCRNL $(PORT)
 
-.PHONY: setup
-setup:
-	@echo "> MAKING DIRECTORIES"
-	mkdir -p $(DIR_BIN) $(DIR_OBJ) $(DIR_DEP) $(DIRS_INC) $(DIR_SRC)
-	touch $(DIR_BIN)/.empty $(DIR_OBJ)/.empty $(DIR_DEP)/.empty
-	@echo "< MAKING DIRECTORIES DONE"
+.PHONY: bear
+bear:
+	@better-bear $(DIR_SRC) $(DIRS_INC)
 
 .PHONY: clean
 clean:
