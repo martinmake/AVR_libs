@@ -2,6 +2,8 @@
 #define _UTIL_UTIL_H_
 
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <inttypes.h>
 
 #include <avr/io.h>
@@ -19,16 +21,19 @@
 #define IS_SET(  port, index) (  port & BIT(index) )
 #define IS_CLEAR(port, index) (!(port & BIT(index)))
 
-typedef enum {
-	BIN =  2,
-	OCT =  8,
-	DEC = 10,
-	HEX = 16,
-} BASE;
-typedef enum {
-	OFF = 0, ON   = 1,
-	LOW = 0, HIGH = 1,
-} STATE;
+#define BIN =  2,
+#define OCT =  8,
+#define DEC = 10,
+#define HEX = 16,
+
+#define ON   true
+#define OFF  false
+
+#define HIGH true
+#define LOW  false
+
+#define ACK  true
+#define NACK false
 
 extern void* operator new  (size_t size);
 extern void* operator new[](size_t size);

@@ -1,11 +1,14 @@
-#include "i2c/ii2c.h"
+#include "i2c/base.h"
 
-II2c::II2c(void)
+namespace I2c
 {
-}
+	Base::Base(void)
+	{
+	}
 
-II2c::~II2c(void)
-{
+	Base::~Base(void)
+	{
+	}
 }
 
 /*
