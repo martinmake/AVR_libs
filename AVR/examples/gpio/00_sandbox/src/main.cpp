@@ -18,9 +18,5 @@ int main(void)
 	{
 		if (input_pin) printf("HIGH\n");
 		else           printf("LOW \n");
-		// CLEAR(DDRD,  7);
-		// CLEAR(PORTD, 7);
-		// if (IS_SET(PIND, 7)) printf("HIGH\n");
-		// else                 printf("LOW \n");
 	}
 }

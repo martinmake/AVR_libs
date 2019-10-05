@@ -9,7 +9,7 @@ enum class POLARITY : bool
 };
 
 template <PORT port, uint8_t index, POLARITY polarity = POLARITY::NONINVERTED>
-class Led : protected Gpio<port, index, DIRECTION::OUTPUT>
+class Led : protected Gpio<port, index>
 {
 	public: // CONSTRUCTORS
 		Led(void);
@@ -24,20 +24,19 @@ class Led : protected Gpio<port, index, DIRECTION::OUTPUT>
 		void turn_off(void);
 
 	public: // OPERATORS
-		Led& operator=(STATE state);
-		operator STATE(void);
+		Led& operator=(bool state);
 		operator bool(void);
 };
 
 template <PORT port, uint8_t index, POLARITY polarity>
 Led<port, index, polarity>::Led(void)
-	: Gpio<port, index, DIRECTION::OUTPUT>()
+	: Gpio<port, index>(MODE::OUTPUT)
 {
 	turn_off();
 }
 
 template <PORT port, uint8_t index, POLARITY polarity>
-Led<port, index, polarity>& Led<port, index, polarity>::operator=(STATE state)
+Led<port, index, polarity>& Led<port, index, polarity>::operator=(bool state)
 {
 	switch (state)
 	{
@@ -48,7 +47,7 @@ Led<port, index, polarity>& Led<port, index, polarity>::operator=(STATE state)
 	return *this;
 }
 template <PORT port, uint8_t index, POLARITY polarity>
-Led<port, index, polarity>::operator STATE(void)
+Led<port, index, polarity>::operator bool(void)
 {
 	return is_on() ? ON : OFF;
 }
@@ -88,11 +87,6 @@ bool Led<port, index, polarity>::is_on(void)
 		case POLARITY::NONINVERTED: return this->is_high();
 		case POLARITY::INVERTED:    return this->is_low ();
 	}
-}
-template <PORT port, uint8_t index, POLARITY polarity>
-bool Led<port, index, polarity>::is_off(void)
-{
-	return !is_on();
 }
 
 #endif
