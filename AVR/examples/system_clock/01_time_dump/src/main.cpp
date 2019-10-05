@@ -1,13 +1,15 @@
-#include <avr/io.h>
-
-#include <system_clock/timer0.h>
+#include <system_clock.h>
 #include <usart/usart0.h>
+#include <led.h>
 
 using namespace Usart;
-using namespace SystemClock;
+
+Led<PORT::B, 1, POLARITY::INVERTED> led;
 
 void init(void)
 {
+	system_clock.init({ SystemClock::TIMER::TIMER0 });
+
 	usart0.init({ TIO_BAUD });
 	stdout = usart0.stream();
 
