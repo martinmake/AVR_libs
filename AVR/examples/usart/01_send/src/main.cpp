@@ -1,6 +1,6 @@
-#include <avr/interrupt.h>
-
 #include <usart/usart0.h>
+
+using namespace Usart;
 
 void init(void)
 {
