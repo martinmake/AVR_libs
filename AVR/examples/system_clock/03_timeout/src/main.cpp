@@ -33,9 +33,9 @@ int main(void)
 			else     return false;
 		});
 
-		if (timed_out) puts("YOU FAILED !!\n");
-		else           puts("YOU PASSED !!\n");
+		if (timed_out) puts("YOU FAILED !!");
+		else           puts("YOU PASSED !!");
 
-		system_clock.sleep(500);
+		system_clock.sleep(200);
 	}
 }
