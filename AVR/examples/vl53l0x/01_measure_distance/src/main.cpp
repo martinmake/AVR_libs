@@ -1,53 +1,38 @@
+#include <vl53l0x/software.h>
+#include <system_clock.h>
 #include <usart/usart0.h>
-#include <i2c/software.h>
 
-#define SDA_PORT PORT::B
-#define SCL_PORT PORT::B
-#define SDA_PIN  0
-#define SCL_PIN  1
+#define SDA_PORT PORT::C
+#define SCL_PORT PORT::C
+#define SDA_PIN  4
+#define SCL_PIN  5
 
-I2c::Software<SDA_PORT, SDA_PIN, SCL_PORT, SCL_PIN, 5> i2c;
+using namespace Usart;
+
+Vl53l0x::Software<SDA_PORT, SDA_PIN, SCL_PORT, SCL_PIN> vl53l0x;
 
 void init(void)
 {
+	system_clock.init({ SystemClock::TIMER::TIMER0 });
+
 	usart0.init({ TIO_BAUD });
 	stdout = usart0.stream();
 
 	sei();
+
+	vl53l0x.init();
+	while (!vl53l0x.is_connected())
+	{
+		printf("DEVICE[0x%02X] NOT FOUND!\n", vl53l0x.address());
+		system_clock.sleep(10);
+	}
+	printf("DEVICE[0x%02X] FOUND!\n", vl53l0x.address());
 }
 
 int main(void)
 {
 	init();
 
-	usart0 << "[*] SCAN INITIATED!\n";
-
-	bool at_least_one_device = false;
-	for (uint8_t addr = 0x04; addr <= 0x77; addr++) {
-		i2c.start();
-		i2c.write(addr << 1);
-		i2c.stop();
-
-		if (i2c.ack())
-		{
-			printf("[+] FOUND: 0x%02X\n", addr);
-			at_least_one_device = true;
-		}
-	}
-
-	for (uint8_t addr = 0x04; addr <= 0x77; addr++) {
-		i2c.start();
-		i2c.write(addr << 1);
-		i2c.stop();
-
-		if (i2c.ack()) putchar('!');
-		else           putchar('.');
-	}
-	putchar('\n');
-
-	usart0 << "[*] SCAN COMPLETED!\n";
-	if (!at_least_one_device)
-		usart0 << "[-] NO DEVICES WERE FOUND!\n";
-
-	while (true) { }
+	while (true)
+		printf("%u\n", vl53l0x.range());
 }

@@ -17,12 +17,19 @@ namespace Vl53l0x
 		public: // DESTRUCTOR
 			~Software(void);
 
-		public: // METHODS
-			void write_register_8bit (uint8_t register_address, uint8_t  data);
-			void write_register_16bit(uint8_t register_address, uint16_t data);
+		public: // GETTERS
+			bool is_connected(void) override;
 
-			uint8_t  read_register_8bit (uint8_t register_address);
-			uint16_t read_register_16bit(uint8_t register_address);
+		public: // METHODS
+			void init(void);
+
+			void write_register_8bit (uint8_t register_address, uint8_t  data) override;
+			void write_register_16bit(uint8_t register_address, uint16_t data) override;
+			void write_register_8bit (uint8_t register_address, uint8_t* data, uint16_t count) override;
+
+			uint8_t  read_register_8bit (uint8_t register_address) override;
+			uint16_t read_register_16bit(uint8_t register_address) override;
+			void     read_register_8bit (uint8_t register_address, uint8_t* data, uint16_t count) override;
 	};
 
 	// CONSTRUCTORS
@@ -38,7 +45,25 @@ namespace Vl53l0x
 	{
 	}
 
+	// GETTERS
+	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
+	bool Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::is_connected(void)
+	{
+		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::start();
+		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write(m_address << 1);
+		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::stop();
+
+		return I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::ack();
+	}
+
 	// METHODS
+	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
+	void Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::init(void)
+	{
+		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::init();
+		Base::init();
+	}
+
 	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
 	void Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write_register_8bit(uint8_t register_address, uint8_t data)
 	{
@@ -48,6 +73,11 @@ namespace Vl53l0x
 	void Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write_register_16bit(uint8_t register_address, uint16_t data)
 	{
 		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write_register_16bit(m_address, register_address, data);
+	}
+	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
+	void Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write_register_8bit(uint8_t register_address, uint8_t* data, uint16_t count)
+	{
+		I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::write_register_8bit(m_address, register_address, data, count);
 	}
 	//
 	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
@@ -59,6 +89,11 @@ namespace Vl53l0x
 	uint16_t Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read_register_16bit(uint8_t register_address)
 	{
 		return I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read_register_16bit(m_address, register_address);
+	}
+	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
+	void Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read_register_8bit(uint8_t register_address, uint8_t* data, uint16_t count)
+	{
+		return I2c::Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::read_register_8bit(m_address, register_address, data, count);
 	}
 }
 
