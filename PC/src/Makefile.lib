@@ -6,11 +6,6 @@ include $(MAKEFILE).config
 include Makefile.config
 
 DIR_INC_PUBLIC:=inc/$(NAME_LIB)
-
-ARC:=$(DIR_LIB_LIB)/lib$(NAME_LIB).a
-SO :=$(DIR_LIB_LIB)/lib$(NAME_LIB).so
-
-DEFS    +=$(EDEFS)
 DIRS_INC+=$(DIR_INC_LIB)
 
 LIBS:=$(addprefix -l,$(LIBS)    )
@@ -19,6 +14,9 @@ INC :=$(addprefix -I,$(DIRS_INC))
 
 INTS:=$(subst python,$(DIR_INT_PYTHON_LIB)/$(NAME_LIB).py,$(INTS))
 INT :=$(DIR_INT)/$(NAME_LIB).i
+
+ARC:=$(DIR_LIB_LIB)/lib$(NAME_LIB).a
+SO :=$(DIR_LIB_LIB)/lib$(NAME_LIB).so
 
 HEADERS_PUBLIC:=$(shell find $(DIR_INC_PUBLIC) -name '*.h' )
 HEADERS_PUBLIC+=$(shell find $(DIR_INC_PUBLIC) -name '*.cuh')
@@ -84,6 +82,11 @@ $(DIR_INC_LIB)/$(NAME_LIB)/%.cuh: $(DIR_INC_PUBLIC)/%.cuh
 	@echo "> STORING PUBLIC LIBRARY HEADER $<"
 	mkdir -p $(dir $@) && cp $< $@
 	@echo "< STORING PUBLIC LIBRARY HEADER $< DONE"
+
+$(DIR_INC_LIB)/$(NAME_LIB).h: $(DIR_INC_PUBLIC)/%.h
+	@echo "> STORING MAIN PUBLIC LIBRARY HEADER $<"
+	cp $< $@
+	@echo "< STORING MAIN PUBLIC LIBRARY HEADER $< DONE"
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c
 	@echo "> COMPILING $<"

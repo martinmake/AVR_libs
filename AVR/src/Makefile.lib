@@ -2,8 +2,9 @@
 
 NAME_LIB:=$(notdir $(realpath .))
 
+CONFIG:=Makefile.config
 include $(MAKEFILE).config
-include Makefile.config
+include $(CONFIG)
 
 DIR_INC_PUBLIC:=$(DIR_INC_MAIN)/$(NAME_LIB)
 DIRS_INC+=$(DIR_INC_LIB)
