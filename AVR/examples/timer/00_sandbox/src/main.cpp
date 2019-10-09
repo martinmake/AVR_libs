@@ -5,6 +5,8 @@
 #include <gpio.h>
 #include <timer/timer0.h>
 
+using namespace Timer;
+
 static Gpio<PORT::D, 7> half_bringe00(OUTPUT);
 static Gpio<PORT::D, 6> half_bringe01(OUTPUT);
 static Gpio<PORT::D, 5> half_bringe10(OUTPUT);

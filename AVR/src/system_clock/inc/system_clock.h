@@ -26,21 +26,25 @@ class SystemClock
 
 	public: // GETTERS
 		Time time(void) const;
+		bool has_timed_out(void) const;
 
 	public: // METHODS
 		void init(const Init& init_struct);
 		void sleep(Time delta_time) const;
 		bool timeout(Time max_delta_time, TimeoutActionFunction timeout_action_function) const;
+		void timeout(Time max_delta_time);
 		void tick(void);
 
 	private:
 		Time m_time;
+		Time m_end_time;
 };
 
 extern SystemClock system_clock;
 
 // GETTERS
-inline SystemClock::Time SystemClock::time(void) const { return m_time; }
+inline SystemClock::Time SystemClock::time         (void) const { return m_time; }
+inline bool              SystemClock::has_timed_out(void) const { return time() > m_end_time; }
 
 // METHODS
 inline void SystemClock::init(const Init& init_struct)
@@ -67,5 +71,6 @@ inline void SystemClock::init(const Init& init_struct)
 	}
 }
 inline void SystemClock::tick(void) { m_time++; }
+inline void SystemClock::timeout(Time max_delta_time) { m_end_time = time() + max_delta_time; }
 
 #endif

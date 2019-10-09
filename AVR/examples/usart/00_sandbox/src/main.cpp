@@ -1,6 +1,8 @@
 #include <util.h>
 #include <usart/usart0.h>
 
+using namespace Usart;
+
 void init(void)
 {
 	usart0.init({ TIO_BAUD });

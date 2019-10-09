@@ -8,6 +8,8 @@
 #include <led.h>
 #include <usart/usart0.h>
 
+using namespace Usart;
+
 void init(void)
 {
 	Usart0::Init usart0_init;

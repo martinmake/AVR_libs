@@ -5,6 +5,8 @@
 #include <led.h>
 #include <timer/timer0.h>
 
+using namespace Timer;
+
 static Led<PORT::B, 5> led;
 
 static uint16_t counter_top = 0;

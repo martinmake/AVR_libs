@@ -3,6 +3,8 @@
 #include <adc.h>
 #include <timer/timer1.h>
 
+using namespace Timer;
+
 static Led<PORT::D, 5> led;
 
 void init(void)

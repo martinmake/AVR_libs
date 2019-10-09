@@ -6,6 +6,8 @@
 #include <timer/timer0.h>
 #include <usart/usart0.h>
 
+using namespace Timer;
+
 Led<PORT::D, 6, POLARITY::INVERTED> led;
 
 void init(void)

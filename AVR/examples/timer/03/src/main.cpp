@@ -6,6 +6,8 @@
 #include <timer/timer1.h>
 #include <usart/usart0.h>
 
+using namespace Timer;
+
 static Led<PORT::B, 5> led;
 
 void init(void)
