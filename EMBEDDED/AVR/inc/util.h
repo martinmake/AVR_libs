@@ -13,6 +13,8 @@
 #endif
 #include <util/atomic.h>
 
+#include <math/util.h>
+
 #define BIT(index) (1 << index)
 
 #define SET(   port, index) port |=  BIT(index)

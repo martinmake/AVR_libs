@@ -6,7 +6,7 @@ int main(void)
 {
 	while (true)
 	{
-		led_pin.toogle();
+		led_pin.toggle();
 		_delay_ms(500);
 	}
 }

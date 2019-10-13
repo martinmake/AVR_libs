@@ -20,7 +20,7 @@ class Gpio : public IGpio
 	public: // METHODS
 		void set  (void) override;
 		void clear(void) override;
-		void toogle(void) override;
+		void toggle(void) override;
 		bool is_high(void) const override;
 		bool is_low (void) const override;
 
@@ -99,7 +99,7 @@ void Gpio<port, index>::clear(void)
 	}
 }
 template <PORT port, uint8_t index>
-void Gpio<port, index>::toogle(void)
+void Gpio<port, index>::toggle(void)
 {
 	switch (port)
 	{

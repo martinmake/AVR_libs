@@ -11,7 +11,7 @@ class IGpio
 	public: // METHODS
 		virtual void set  (void) = 0;
 		virtual void clear(void) = 0;
-		virtual void toogle(void) = 0;
+		virtual void toggle(void) = 0;
 		virtual bool is_high(void) const = 0;
 		virtual bool is_low (void) const = 0;
 
