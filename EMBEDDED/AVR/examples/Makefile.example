@@ -6,6 +6,8 @@ CONFIG:=Makefile.config
 include $(CONFIG)
 
 LIBS+=util
+LIBS+=printf_flt
+
 DEFS+=F_CPU=$(F_CPU) TIO_BAUD=$(TIO_BAUD)
 
 LIBS:=$(addprefix -l,$(LIBS))
@@ -25,7 +27,7 @@ INC:=$(addprefix -I,$(DIRS_INC) $(DIR_LIB_INC))
 FLAGS_CC :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS) -std=c99
 FLAGS_CXX:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS) -std=c++14 -fno-rtti
 FLAGS_ASM:=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) $(INC) $(DEFS)
-FLAGS_LD :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) -L$(DIR_LIB_LIB)/$(MCU) -Wl,--gc-sections
+FLAGS_LD :=$(WARNING) $(OPTIMIZATION) -mmcu=$(MCU) -L$(DIR_LIB_LIB)/$(MCU) -Wl,-u,vfprintf -Wl,--gc-sections
 
 .SECONDARY: $(OBJS)
 

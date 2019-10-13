@@ -55,13 +55,16 @@ $(ARC): $(OBJS) | $(DIR_LIB_LIB)/$(MCU)
 $(DIR_LIB_INC)/$(NAME_LIB) $(DIR_LIB_LIB)/$(MCU) $(DIR_OBJ)/$(MCU):
 	mkdir -p $@
 
-$(DIR_LIB_INC)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h | $(DIR_LIB_INC)/$(NAME_LIB)
+# $(DIR_LIB_INC)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h | $(DIR_LIB_INC)/$(NAME_LIB)
+$(DIR_LIB_INC)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h
 	@echo "> STOIRING PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@)
 	cp $< $@
 	@echo "< STOIRING PUBLIC LIBRARY HEADER $< DONE"
 
 $(HEADER_PUBLIC_MAIN): $(DIR_INC_MAIN)/$(NAME_LIB).h
 	@echo "> STOIRING MAIN PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@)
 	cp $< $@
 	@echo "< STOIRING MAIN PUBLIC LIBRARY HEADER $< DONE"
 
