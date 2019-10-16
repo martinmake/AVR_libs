@@ -59,6 +59,7 @@ namespace Pid
 		m_last_error = error;
 
 		output_t controll = safe_cast<output_t>(kp*error + ki*m_error_sum + kd*error_change);
+		// output_t controll = map_to_type_limits<output_t>(kp*error + ki*m_error_sum + kd*error_change);
 
 		return controll;
 	}

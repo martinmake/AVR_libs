@@ -1,13 +1,14 @@
-#include <util.h>
 #include <gpio.h>
 #include <usart/usart0.h>
 
-Gpio<PORT::D, 7, INPUT> input_pin;
+using namespace Usart;
+
+Gpio<PORT::D, 7> pin(OUTPUT);
 
 void init(void)
 {
 	usart0.init({ TIO_BAUD });
-	stdout = usart0.stream();
+	stdout = usart0.output_stream();
 }
 
 int main(void)
@@ -16,7 +17,5 @@ int main(void)
 
 	while (true)
 	{
-		if (input_pin) printf("HIGH\n");
-		else           printf("LOW \n");
 	}
 }

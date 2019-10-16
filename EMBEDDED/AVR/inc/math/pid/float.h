@@ -64,15 +64,12 @@ namespace Pid
 	{
 		float error = desired_output - actual_output;
 		m_error_sum = safe_add(m_error_sum, error);
-		if (m_error_sum >  m_limit) m_error_sum =  m_limit;
-		if (m_error_sum < -m_limit) m_error_sum = -m_limit;
+		m_error_sum = clamp(-m_limit, m_limit, m_error_sum);
 
 		float error_change = error - m_last_error;
 		m_last_error = error;
 
-		float controll = clamp(-m_limit, m_limit, m_kp*error + m_ki*m_error_sum + m_kd*error_change);
-		if (controll >  m_limit) controll =  m_limit;
-		if (controll < -m_limit) controll = -m_limit;
+		float controll = m_kp*error + m_ki*m_error_sum + m_kd*error_change;
 
 		return controll;
 	}

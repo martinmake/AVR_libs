@@ -29,8 +29,11 @@
 #define DEC = 10,
 #define HEX = 16,
 
-#define ON   true
-#define OFF  false
+#define ON  true
+#define OFF false
+
+#define OK  true
+#define ERR false
 
 #define HIGH true
 #define LOW  false

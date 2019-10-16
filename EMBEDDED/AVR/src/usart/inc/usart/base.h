@@ -17,7 +17,7 @@ namespace Usart
 			virtual ~Base();
 
 		public: // GETTERS
-			virtual FILE* stream(void) = 0;
+			virtual FILE* output_stream(void) = 0;
 
 		public: // FUNCTIONS
 			virtual void putchar(char c) = 0;

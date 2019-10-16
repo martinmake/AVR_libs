@@ -38,7 +38,7 @@ namespace Usart
 			Usart0(const Init& init_struct);
 
 		public: // GETTERS
-			FILE* stream(void) override;
+			FILE* output_stream(void) override;
 
 		public: // FUNSTIENABLEDS
 			void init(const Init& init_struct);

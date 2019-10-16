@@ -7,7 +7,7 @@ using namespace Usart;
 #define KP 4
 #define KI 1
 #define KD 8
-#define INTEGRAL_LIMIT 100
+#define INTEGRAL_LIMIT 30
 
 Pid::Templated<int16_t, int16_t, uint8_t, KP, KI, KD, INTEGRAL_LIMIT> pid;
 

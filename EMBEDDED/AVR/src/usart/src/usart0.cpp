@@ -26,7 +26,7 @@ namespace Usart
 	}
 
 	static FILE    stream;
-	static FILE* p_stream = &stream;
+	static FILE* p_output_stream = &stream;
 
 	Usart0::Usart0(void)
 	{
@@ -39,10 +39,10 @@ namespace Usart
 	void Usart0::init_pipeline(const Init& init)
 	{
 		output_queue = Queue(init.output_queue_size);
-		fdev_setup_stream(p_stream, usart0_putchar, usart0_getchar, _FDEV_SETUP_RW);
+		fdev_setup_stream(p_output_stream, usart0_putchar, usart0_getchar, _FDEV_SETUP_RW);
 	}
 
-	FILE* Usart0::stream(void) { return p_stream; }
+	FILE* Usart0::output_stream(void) { return p_output_stream; }
 }
 
 ISR(USART_UDRE_vect) { if (!Usart::usart0.output_queue.is_empty()) Usart::usart0.output_queue >> UDR0; }
