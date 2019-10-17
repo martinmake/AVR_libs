@@ -29,5 +29,6 @@ int main(void)
 	init();
 
 	while (true)
-		printf("DESIRED %+08.2f | ACTUAL %+08.2f | CONTROL %+08.2f\n", 0.0, adc.value - 512.0, pid(0.0, adc.value - 512.0));
+		printf("DESIRED %+08.2f | ACTUAL %+08.2f | CONTROL %+08.2f\n",
+			0.0, adc.value - 512.0, -1 * pid(adc.value - 512.0));
 }

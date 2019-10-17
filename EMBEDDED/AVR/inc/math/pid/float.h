@@ -8,17 +8,17 @@ namespace Pid
 	class Float
 	{
 		public: // CONSTRUCTORS
-			Float(void);
-			Float(float kp = 1, float ki = 1, float kd = 1, float limit = 1);
+			Float(void) = default;
+			Float(float kp, float ki, float kd, float limit);
 		public: // DESTRUCTOR
-			~Float(void);
+			~Float(void) = default;
 
 		public: // METHODS
 			void init (float kp, float ki, float kd, float limit);
 			void reset(void);
 
 		public: // OPERATORS
-			float operator()(float desired_output, float actual_output);
+			float operator()(float error);
 
 		private:
 			float m_kp;
@@ -31,16 +31,9 @@ namespace Pid
 	};
 
 	// CONSTRUCTORS
-	Float::Float(void)
-	{
-	}
 	Float::Float(float kp, float ki, float kd, float limit)
 	{
 		init(kp, ki, kd, limit);
-	}
-	// DESTRUCTOR
-	Float::~Float(void)
-	{
 	}
 
 	// METHODS
@@ -60,16 +53,18 @@ namespace Pid
 	}
 
 	// OPERATORS
-	float Float::operator()(float desired_output, float actual_output)
+	float Float::operator()(float error)
 	{
-		float error = desired_output - actual_output;
 		m_error_sum = safe_add(m_error_sum, error);
 		m_error_sum = clamp(-m_limit, m_limit, m_error_sum);
 
 		float error_change = error - m_last_error;
 		m_last_error = error;
 
-		float controll = m_kp*error + m_ki*m_error_sum + m_kd*error_change;
+		float controll =
+			m_kp * error +
+			m_ki * m_error_sum +
+			m_kd * error_change;
 
 		return controll;
 	}
