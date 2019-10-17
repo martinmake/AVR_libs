@@ -5,11 +5,23 @@
 using namespace Usart;
 
 #define KP 4
-#define KI 1
+#define KI 0.01
 #define KD 8
 #define INTEGRAL_LIMIT 30
+#define FACTOR 100
+typedef int16_t input_t;
+typedef int32_t intermediate_t;
+typedef uint8_t output_t;
 
-Pid::Templated<int16_t, int16_t, uint8_t, KP, KI, KD, INTEGRAL_LIMIT> pid;
+Pid::Templated<
+	input_t,
+	intermediate_t,
+	output_t,
+	(intermediate_t (KP             * FACTOR)),
+	(intermediate_t (KI             * FACTOR)),
+	(intermediate_t (KD             * FACTOR)),
+	(intermediate_t (INTEGRAL_LIMIT * FACTOR)),
+	FACTOR> pid;
 
 void init(void)
 {

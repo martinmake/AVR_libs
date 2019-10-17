@@ -13,10 +13,19 @@ inline int16_t safe_add(int16_t lhs, int16_t rhs)
 template <typename output_t, typename input_t>
 output_t safe_cast(input_t value)
 {
+	(void) value;
 	static_assert(false && sizeof(output_t), "THOSE TYPES ARE NOT SUPPORTED");
+	return 0;
 }
 template <>
 inline uint8_t safe_cast<uint8_t>(int16_t value)
+{
+	if (value > UINT8_MAX) return UINT8_MAX;
+	if (value <         0) return         0;
+	else                   return value;
+}
+template <>
+inline uint8_t safe_cast<uint8_t>(int32_t value)
 {
 	if (value > UINT8_MAX) return UINT8_MAX;
 	if (value <         0) return         0;

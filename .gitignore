@@ -49,16 +49,16 @@ cscope
 
 # Other
 PC/inc/*
-AVR/inc/*
-ARM/inc/*
+EMBEDDED/AVR/inc/*
+EMBEDDED/ARM/inc/*
 
-PC/int/*
+COMPUTER/int/*
 
-PC/src/tmp
-PC/examples/tmp
-AVR/src/tmp
-AVR/examples/tmp
-ARM/src/tmp
-ARM/examples/tmp
+COMPUTER/src/tmp
+COMPUTER/examples/tmp
+EMBEDDED/AVR/src/tmp
+EMBEDDED/AVR/examples/tmp
+EMBEDDED/ARM/src/tmp
+EMBEDDED/ARM/examples/tmp
 
 compile_commands.json
