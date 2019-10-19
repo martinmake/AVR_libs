@@ -7,9 +7,32 @@
 class Adc
 {
 	public: // TYPES
-		enum class PRESCALER           : uint8_t { X2, X4, X8, X16, X32, X64, X128 };
-		enum class AUTO_TRIGGER_SOURCE : uint8_t { FREE_RUNNING, EXTERNAL_INTERRUPT_REQUEST_0, TIM0_COMPARE_MATCH_A, TIM0_OVERFLOW, TIM1_COMPARE_MATCH_B, TIM1_OVERFLOW, TIM1_CAPTURE_EVENT };
-		enum class VREF                : uint8_t { AREF, AVCC, IREF };
+		enum class PRESCALER : uint8_t
+		{
+			X2,
+			X4,
+			X8,
+			X16,
+			X32,
+			X64,
+			X128
+		};
+		enum class AUTO_TRIGGER_SOURCE : uint8_t
+		{
+			FREE_RUNNING,
+			EXTERNAL_INTERRUPT_REQUEST_0,
+			TIM0_COMPARE_MATCH_A,
+			TIM0_OVERFLOW,
+			TIM1_COMPARE_MATCH_B,
+			TIM1_OVERFLOW,
+			TIM1_CAPTURE_EVENT
+		};
+		enum class VREF : uint8_t
+		{
+			AREF,
+			AVCC,
+			IREF
+		};
 		struct Init
 		{
 			PRESCALER           prescaler           = PRESCALER::X128;

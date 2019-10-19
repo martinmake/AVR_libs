@@ -15,6 +15,8 @@
 
 #include <math/util.h>
 
+#include "util/tty.h"
+
 #define BIT(index) (1 << index)
 
 #define SET(   port, index) port |=  BIT(index)
@@ -40,6 +42,11 @@
 
 #define ACK  true
 #define NACK false
+
+inline bool __sei(void) { sei(); return true;  }
+inline bool __cli(void) { cli(); return false; }
+
+#define ATOMIC() for (bool run = __cli(); run; run = __sei())
 
 extern void* operator new  (size_t size);
 extern void* operator new[](size_t size);
