@@ -106,12 +106,12 @@ namespace Pid
 		intermediate_t error_change = error - m_last_error;
 		m_last_error = error;
 
-		output_t controll = safe_cast<output_t>(
+		output_t control = safe_cast<output_t>(
 			(kp * error +
 			 ki * m_error_sum +
 			 kd * error_change) / factor);
 
-		return controll;
+		return control;
 	}
 }
 

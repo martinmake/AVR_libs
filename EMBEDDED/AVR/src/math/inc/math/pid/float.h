@@ -61,12 +61,12 @@ namespace Pid
 		float error_change = error - m_last_error;
 		m_last_error = error;
 
-		float controll =
+		float control =
 			m_kp * error +
 			m_ki * m_error_sum +
 			m_kd * error_change;
 
-		return controll;
+		return control;
 	}
 }
 
