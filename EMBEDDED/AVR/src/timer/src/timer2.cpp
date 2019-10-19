@@ -9,13 +9,13 @@ namespace Timer
 	Timer2::Timer2(void)
 	{
 	}
-	Timer2::Timer2(const Init& init_struct)
+	Timer2::Timer2(const Spec& spec)
 	{
-		init(init_struct);
+		init(spec);
 	}
-	void Timer2::init(const Init& init_struct)
+	void Timer2::init(const Spec& spec)
 	{
-		switch (init_struct.on_compare_match_output_A)
+		switch (spec.on_compare_match_output_A)
 		{
 			case ON_COMPARE_MATCH_OUTPUT::PASS:
 				CLEAR(TCCR2A, COM2A0);
@@ -37,7 +37,7 @@ namespace Timer
 				SET(DDRB, PB3);
 				break;
 		}
-		switch (init_struct.on_compare_match_output_B)
+		switch (spec.on_compare_match_output_B)
 		{
 			case ON_COMPARE_MATCH_OUTPUT::PASS:
 				CLEAR(TCCR2A, COM2B0);
@@ -60,7 +60,7 @@ namespace Timer
 				break;
 		}
 
-		switch (init_struct.mode)
+		switch (spec.mode)
 		{
 			case MODE::NORMAL:
 				CLEAR(TCCR2A, WGM20);
@@ -84,7 +84,7 @@ namespace Timer
 				break;
 		}
 
-		switch (init_struct.clock_source)
+		switch (spec.clock_source)
 		{
 			case CLOCK_SOURCE::IO_CLK_OVER_1:
 				SET  (TCCR2B, CS20);
@@ -123,12 +123,12 @@ namespace Timer
 				break;
 		}
 
-		output_compare_register_A(init_struct.output_compare_value_A);
-		output_compare_register_B(init_struct.output_compare_value_B);
+		output_compare_register_A(spec.output_compare_value_A);
+		output_compare_register_B(spec.output_compare_value_B);
 
-		on_output_compare_match_A = init_struct.on_output_compare_match_A;
-		on_output_compare_match_B = init_struct.on_output_compare_match_B;
-		on_overflow               = init_struct.on_overflow;
+		on_output_compare_match_A = spec.on_output_compare_match_A;
+		on_output_compare_match_B = spec.on_output_compare_match_B;
+		on_overflow               = spec.on_overflow;
 
 		if (on_output_compare_match_A) enable_output_compare_match_A_interrupt();
 		if (on_output_compare_match_B) enable_output_compare_match_B_interrupt();
@@ -136,9 +136,8 @@ namespace Timer
 	}
 }
 
-ISR(TIMER0_OVF_vect) { Timer::timer2.on_overflow(); }
-
-ISR(TIMER0_COMPA_vect) { Timer::timer2.on_output_compare_match_A(); }
-ISR(TIMER0_COMPB_vect) { Timer::timer2.on_output_compare_match_B(); }
+ISR(TIMER2_OVF_vect  ) { Timer::timer2.on_overflow              (); }
+ISR(TIMER2_COMPA_vect) { Timer::timer2.on_output_compare_match_A(); }
+ISR(TIMER2_COMPB_vect) { Timer::timer2.on_output_compare_match_B(); }
 
 #endif

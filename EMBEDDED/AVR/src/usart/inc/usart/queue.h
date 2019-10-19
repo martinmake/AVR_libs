@@ -1,8 +1,6 @@
 #ifndef _USART_QUEUE_H_
 #define _USART_QUEUE_H_
 
-#include <inttypes.h>
-
 #include <util.h>
 
 class Queue
@@ -38,7 +36,7 @@ inline Queue& Queue::operator<<(char c)
 	{
 		uint8_t sreg_save = SREG;
 		sei();
-		while (is_full()) {}
+		while (is_full()) { }
 		SREG = sreg_save;
 	}
 

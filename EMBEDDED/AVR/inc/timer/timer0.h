@@ -12,13 +12,34 @@ namespace Timer
 	class Timer0: virtual public Timer::Base
 	{
 		public: // TYPES
-			enum class MODE                               : uint8_t { NORMAL, CTC, FAST_PWM, PHASE_CORRECT_PWM };
-			enum class ON_COMPARE_MATCH_OUTPUT_PIN_ACTION : uint8_t { PASS, TOGGLE, CLEAR, SET };
-			enum class CLOCK_SOURCE                       : uint8_t { IO_CLK_OVER_1,  IO_CLK_OVER_8,  IO_CLK_OVER_64, IO_CLK_OVER_256, IO_CLK_OVER_1024, EXTERNAL_ON_FALLING_EDGE, EXTERNAL_ON_RISING_EDGE };
+			enum class MODE : uint8_t
+			{
+				NORMAL,
+				CTC,
+				FAST_PWM,
+				PHASE_CORRECT_PWM
+			};
+			enum class ON_COMPARE_MATCH_OUTPUT_PIN_ACTION : uint8_t
+			{
+				PASS,
+				TOGGLE,
+				CLEAR,
+				SET
+			};
+			enum class CLOCK_SOURCE : uint8_t
+			{
+				IO_CLK_OVER_1,
+				IO_CLK_OVER_8,
+				IO_CLK_OVER_64,
+				IO_CLK_OVER_256,
+				IO_CLK_OVER_1024,
+				EXTERNAL_ON_FALLING_EDGE,
+				EXTERNAL_ON_RISING_EDGE
+			};
 			using on_output_compare_match_func = void (*)(void);
 			using on_overflow_func             = void (*)(void);
 
-			struct Init
+			struct Spec
 			{
 				MODE                               mode                                 = MODE::NORMAL;
 				ON_COMPARE_MATCH_OUTPUT_PIN_ACTION on_compare_match_output_A_pin_action = ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS;
@@ -33,7 +54,7 @@ namespace Timer
 
 		public: // CONSTRUCTORS
 			Timer0(void);
-			Timer0(const Init& init_struct);
+			Timer0(const Spec& spec);
 
 		public: // GETTERS
 			uint8_t count                    (void) const;
@@ -53,7 +74,7 @@ namespace Timer
 			void on_overflow              (on_overflow_func             new_on_overflow              );
 
 		public: // FUNCTIONS
-			void init(const Init& init_struct);
+			void init(const Spec& spec);
 
 			void force_output_compare_A(void);
 			void force_output_compare_B(void);

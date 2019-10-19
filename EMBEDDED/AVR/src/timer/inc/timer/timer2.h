@@ -14,7 +14,7 @@ namespace Timer
 			using on_output_compare_match_func = void (*)(void);
 			using on_overflow_func             = void (*)(void);
 
-			struct Init
+			struct Spec
 			{
 				MODE                         mode                      = MODE::NORMAL;
 				ON_COMPARE_MATCH_OUTPUT      on_compare_match_output_A = ON_COMPARE_MATCH_OUTPUT::PASS;
@@ -29,7 +29,7 @@ namespace Timer
 
 		public: // CONSTRUCTORS
 			Timer2(void);
-			Timer2(const Init& init_struct);
+			Timer2(const Spec& spec);
 
 		public: // PUBLIC VARIABLES
 			on_output_compare_match_func on_output_compare_match_A;
@@ -46,7 +46,7 @@ namespace Timer
 			void output_compare_register_B(uint8_t new_output_compare_register_B);
 
 		public: // FUNCTIONS
-			void init(const Init& init_struct);
+			void init(const Spec& spec);
 
 			void force_output_compare_A(void);
 			void force_output_compare_B(void);

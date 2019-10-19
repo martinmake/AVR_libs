@@ -9,13 +9,13 @@ namespace Timer
 	Timer1::Timer1(void)
 	{
 	}
-	Timer1::Timer1(const Init& init_struct)
+	Timer1::Timer1(const Spec& spec)
 	{
-		init(init_struct);
+		init(spec);
 	}
-	void Timer1::init(const Init& init_struct)
+	void Timer1::init(const Spec& spec)
 	{
-		switch (init_struct.on_compare_match_output_A)
+		switch (spec.on_compare_match_output_A)
 		{
 			case ON_COMPARE_MATCH_OUTPUT::PASS:
 				CLEAR(TCCR1A, COM1A0);
@@ -37,7 +37,7 @@ namespace Timer
 				SET(DDRB, PB1);
 				break;
 		}
-		switch (init_struct.on_compare_match_output_B)
+		switch (spec.on_compare_match_output_B)
 		{
 			case ON_COMPARE_MATCH_OUTPUT::PASS:
 				CLEAR(TCCR1A, COM1B0);
@@ -60,7 +60,7 @@ namespace Timer
 				break;
 		}
 
-		switch (init_struct.input_capture)
+		switch (spec.input_capture)
 		{
 			case INPUT_CAPTURE::ENABLED:
 				CLEAR(DDRB, PB0);
@@ -69,7 +69,7 @@ namespace Timer
 				break;
 		}
 
-		switch (init_struct.mode)
+		switch (spec.mode)
 		{
 			case MODE::NORMAL:
 				CLEAR(TCCR1A, WGM10);
@@ -78,7 +78,7 @@ namespace Timer
 				CLEAR(TCCR1A, WGM13);
 				break;
 			case MODE::CTC:
-				switch (init_struct.input_capture)
+				switch (spec.input_capture)
 				{
 					case INPUT_CAPTURE::ENABLED:
 						CLEAR(TCCR1A, WGM10);
@@ -94,7 +94,7 @@ namespace Timer
 						break;
 				} break;
 			case MODE::FAST_PWM:
-				switch (init_struct.input_capture)
+				switch (spec.input_capture)
 				{
 					case INPUT_CAPTURE::ENABLED:
 						CLEAR(TCCR1A, WGM10);
@@ -110,7 +110,7 @@ namespace Timer
 						break;
 				} break;
 			case MODE::PHASE_CORRECT_PWM:
-				switch (init_struct.input_capture)
+				switch (spec.input_capture)
 				{
 					case INPUT_CAPTURE::ENABLED:
 						CLEAR(TCCR1A, WGM10);
@@ -126,7 +126,7 @@ namespace Timer
 						break;
 				} break;
 			case MODE::PHASE_AND_FREQUENCY_CORRECT_PWM:
-				switch (init_struct.input_capture)
+				switch (spec.input_capture)
 				{
 					case INPUT_CAPTURE::ENABLED:
 						CLEAR(TCCR1A, WGM10);
@@ -143,7 +143,7 @@ namespace Timer
 				} break;
 		}
 
-		switch (init_struct.clock_source)
+		switch (spec.clock_source)
 		{
 			case CLOCK_SOURCE::IO_CLK_OVER_1:
 				SET  (TCCR1B, CS10);
@@ -182,12 +182,12 @@ namespace Timer
 				break;
 		}
 
-		output_compare_register_A(init_struct.output_compare_value_A);
-		output_compare_register_B(init_struct.output_compare_value_B);
+		output_compare_register_A(spec.output_compare_value_A);
+		output_compare_register_B(spec.output_compare_value_B);
 
-		on_output_compare_match_A = init_struct.on_output_compare_match_A;
-		on_output_compare_match_B = init_struct.on_output_compare_match_B;
-		on_overflow               = init_struct.on_overflow;
+		on_output_compare_match_A = spec.on_output_compare_match_A;
+		on_output_compare_match_B = spec.on_output_compare_match_B;
+		on_overflow               = spec.on_overflow;
 
 		if (on_output_compare_match_A) enable_output_compare_match_A_interrupt();
 		if (on_output_compare_match_B) enable_output_compare_match_B_interrupt();
@@ -195,8 +195,7 @@ namespace Timer
 	}
 }
 
-ISR(TIMER1_OVF_vect) { Timer::timer1.on_overflow(); }
-
+ISR(TIMER1_OVF_vect  ) { Timer::timer1.on_overflow              (); }
 ISR(TIMER1_COMPA_vect) { Timer::timer1.on_output_compare_match_A(); }
 ISR(TIMER1_COMPB_vect) { Timer::timer1.on_output_compare_match_B(); }
 

@@ -50,14 +50,15 @@ class Adc
 		volatile uint16_t value = 0;
 
 	public: // SETTERS
-		void channel(uint8_t channel);
+		void channel(uint8_t new_channel);
 
 	public: // FUNCTIONS
 		void init(const Init& init_init);
 
 		void start_sampling(void);
 		void  stop_sampling(void);
-		uint16_t take_sample(void);
+		uint16_t sample(void);
+		uint16_t sample(uint8_t new_channel);
 
 	public: // OPERATORS
 		Adc& operator++();
@@ -65,13 +66,20 @@ class Adc
 };
 
 // SETTERS
-inline void Adc::channel(uint8_t channel) { ADMUX = (ADMUX & 0b11110000) | channel; }
+inline void Adc::channel(uint8_t new_channel) { ADMUX = (ADMUX & 0b11110000) | new_channel; }
 
 // FUNCTIONS
 inline void Adc::start_sampling() { ADCSRA |=   BIT(ADIE) | BIT(ADATE) | BIT(ADSC); }
 inline void Adc:: stop_sampling() { ADCSRA &= ~(BIT(ADIE) | BIT(ADATE));            }
-inline uint16_t Adc::take_sample(void)
+inline uint16_t Adc::sample(void)
 {
+	SET(ADCSRA, ADSC);
+	while (IS_SET(ADCSRA, ADSC)) {}
+	return ADC;
+}
+inline uint16_t Adc::sample(uint8_t new_channel)
+{
+	channel(new_channel);
 	SET(ADCSRA, ADSC);
 	while (IS_SET(ADCSRA, ADSC)) {}
 	return ADC;

@@ -1,6 +1,7 @@
 #ifndef _MATH_UTIL_H_
 #define _MATH_UTIL_H_
 
+#include <inttypes.h>
 #include <math.h>
 
 inline int16_t safe_add(int16_t lhs, int16_t rhs)

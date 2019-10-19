@@ -13,23 +13,23 @@ namespace Timer
 	Timer0::Timer0(void)
 	{
 	}
-	Timer0::Timer0(const Init& init_struct)
+	Timer0::Timer0(const Spec& Spec)
 	{
-		init(init_struct);
+		init(Spec);
 	}
-	void Timer0::init(const Init& init_struct)
+	void Timer0::init(const Spec& Spec)
 	{
-		on_compare_match_output_A_pin_action(init_struct.on_compare_match_output_A_pin_action);
-		on_compare_match_output_B_pin_action(init_struct.on_compare_match_output_B_pin_action);
-		mode                                (init_struct.mode                                );
-		clock_source                        (init_struct.clock_source                        );
+		on_compare_match_output_A_pin_action(Spec.on_compare_match_output_A_pin_action);
+		on_compare_match_output_B_pin_action(Spec.on_compare_match_output_B_pin_action);
+		mode                                (Spec.mode                                );
+		clock_source                        (Spec.clock_source                        );
 
-		output_compare_register_A(init_struct.output_compare_value_A);
-		output_compare_register_B(init_struct.output_compare_value_B);
+		output_compare_register_A(Spec.output_compare_value_A);
+		output_compare_register_B(Spec.output_compare_value_B);
 
-		on_output_compare_match_A(init_struct.on_output_compare_match_A);
-		on_output_compare_match_B(init_struct.on_output_compare_match_B);
-		on_overflow              (init_struct.on_overflow              );
+		on_output_compare_match_A(Spec.on_output_compare_match_A);
+		on_output_compare_match_B(Spec.on_output_compare_match_B);
+		on_overflow              (Spec.on_overflow              );
 	}
 }
 

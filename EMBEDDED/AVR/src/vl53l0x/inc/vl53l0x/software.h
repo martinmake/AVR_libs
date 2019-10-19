@@ -15,18 +15,18 @@ namespace Vl53l0x
 			Software(uint8_t initial_address = VL53L0X_DEFAULT_ADDRESS);
 
 		public: // DESTRUCTOR
-			~Software(void);
+			~Software(void) = default;
 
 		public: // GETTERS
 			bool is_connected(void) override;
 
 		public: // METHODS
 			void init(void);
-
+			//
 			void write_register_8bit (uint8_t register_address, uint8_t  data) override;
 			void write_register_16bit(uint8_t register_address, uint16_t data) override;
 			void write_register_8bit (uint8_t register_address, uint8_t* data, uint16_t count) override;
-
+			//
 			uint8_t  read_register_8bit (uint8_t register_address) override;
 			uint16_t read_register_16bit(uint8_t register_address) override;
 			void     read_register_8bit (uint8_t register_address, uint8_t* data, uint16_t count) override;
@@ -36,12 +36,6 @@ namespace Vl53l0x
 	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
 	Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::Software(uint8_t initial_address)
 		: Base(initial_address)
-	{
-	}
-
-	// DESTRUCTOR
-	template<PORT sda_port, uint8_t sda_pin, PORT scl_port, uint8_t scl_pin,  uint16_t signal_length>
-	Software<sda_port, sda_pin, scl_port, scl_pin, signal_length>::~Software(void)
 	{
 	}
 

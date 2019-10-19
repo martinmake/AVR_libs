@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <inttypes.h>
+#include <string.h>
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -12,6 +12,7 @@
 #include <util/delay.h>
 #endif
 #include <util/atomic.h>
+#include <avr/pgmspace.h>
 
 #include <math/util.h>
 

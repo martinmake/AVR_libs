@@ -37,5 +37,14 @@ int main(void)
 		else           puts("YOU PASSED !!");
 
 		system_clock.sleep(200);
+
+		printf("YOU HAVE %d SECONDS TO PULL UP PC0 !!\n", TIMEOUT_TIME / 1000);
+		SYSTEM_CLOCK_TIMEOUT(TIMEOUT_TIME)
+			if (pin) break;
+
+		if (system_clock.has_timed_out()) puts("YOU FAILED !!");
+		else                              puts("YOU PASSED !!");
+
+		system_clock.sleep(200);
 	}
 }

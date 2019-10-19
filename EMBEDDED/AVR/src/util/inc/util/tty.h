@@ -100,29 +100,29 @@ enum TTY_CODE : uint8_t
 	BG_DEFAULT                   =  49,
 };
 
-inline void _fstty(FILE* stream)
+inline void _ftty_escape_sequence(FILE* stream)
 {
 	putc('m', stream);
 }
 template <typename V>
-void _fstty(FILE* stream, V value)
+void _ftty_escape_sequence(FILE* stream, V value)
 {
 	fprintf(stream, "%u", static_cast<uint8_t>(value));
-	_fstty(stream);
+	_ftty_escape_sequence(stream);
 }
 template <typename V, typename ... A>
-void _fstty(FILE* stream, V value, A ... args)
+void _ftty_escape_sequence(FILE* stream, V value, A ... args)
 {
 	fprintf(stream, "%u;", static_cast<uint8_t>(value));
-	_fstty(stream, args ...);
+	_ftty_escape_sequence(stream, args ...);
 }
 template <typename ... A>
-void fstty(FILE* stream, A ... args)
+void ftty_escape_sequence(FILE* stream, A ... args)
 {
 	fprintf(stream, "\033[");
-	_fstty(stream, args ...);
+	_ftty_escape_sequence(stream, args ...);
 }
 
-#define stty(...) fstty(stdout, __VA_ARGS__)
+#define tty_escape_sequence(...) ftty_escape_sequence(stdout, __VA_ARGS__)
 
 #endif
