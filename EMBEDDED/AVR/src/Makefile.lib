@@ -30,10 +30,10 @@ OBJS_CXX :=$(patsubst $(DIR_SRC)/%.cpp,$(DIR_OBJ)/$(MCU)/%.o, $(SRCS_CXX))
 OBJS_ASM :=$(patsubst $(DIR_SRC)/%.S,  $(DIR_OBJ)/$(MCU)/%.o, $(SRCS_ASM))
 OBJS     :=$(OBJS_C) $(OBJS_CXX) $(OBJS_ASM)
 
-FLAGS_CC :=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU) -std=c99
-FLAGS_CXX:=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU) -std=c++17
-FLAGS_ASM:=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
-FLAGS_AR :=rUucv
+FLAGS_CC +=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_CXX+=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_ASM+=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_AR +=rUucv
 
 .SECONDARY: $(OBJS)
 
