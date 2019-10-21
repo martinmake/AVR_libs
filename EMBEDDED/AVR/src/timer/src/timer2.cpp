@@ -6,13 +6,61 @@ namespace Timer
 {
 	Timer2 timer2;
 
-	Timer2::Timer2(void)
-	{
-	}
+	// CONSTRUCTORS
 	Timer2::Timer2(const Spec& spec)
 	{
 		init(spec);
 	}
+
+	//SETTERS
+	void Timer2::clock_source(CLOCK_SOURCE new_clock_source)
+	{
+		switch (new_clock_source)
+		{
+			case CLOCK_SOURCE::NO:
+				CLEAR(TCCR2B, CS20);
+				CLEAR(TCCR2B, CS21);
+				CLEAR(TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::IO_CLK_OVER_1:
+				SET  (TCCR2B, CS20);
+				CLEAR(TCCR2B, CS21);
+				CLEAR(TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::IO_CLK_OVER_8:
+				SET  (TCCR2B, CS20);
+				CLEAR(TCCR2B, CS21);
+				CLEAR(TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::IO_CLK_OVER_64:
+				SET  (TCCR2B, CS20);
+				SET  (TCCR2B, CS21);
+				CLEAR(TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::IO_CLK_OVER_256:
+				CLEAR(TCCR2B, CS20);
+				CLEAR(TCCR2B, CS21);
+				SET  (TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::IO_CLK_OVER_1024:
+				SET  (TCCR2B, CS20);
+				CLEAR(TCCR2B, CS21);
+				SET  (TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::EXTERNAL_ON_FALLING_EDGE:
+				CLEAR(TCCR2B, CS20);
+				SET  (TCCR2B, CS21);
+				SET  (TCCR2B, CS22);
+				break;
+			case CLOCK_SOURCE::EXTERNAL_ON_RISING_EDGE:
+				SET  (TCCR2B, CS20);
+				SET  (TCCR2B, CS21);
+				SET  (TCCR2B, CS22);
+				break;
+		}
+	}
+
+	// METHODS
 	void Timer2::init(const Spec& spec)
 	{
 		switch (spec.on_compare_match_output_A)
@@ -84,44 +132,7 @@ namespace Timer
 				break;
 		}
 
-		switch (spec.clock_source)
-		{
-			case CLOCK_SOURCE::IO_CLK_OVER_1:
-				SET  (TCCR2B, CS20);
-				CLEAR(TCCR2B, CS21);
-				CLEAR(TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_8:
-				SET  (TCCR2B, CS20);
-				CLEAR(TCCR2B, CS21);
-				CLEAR(TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_64:
-				SET  (TCCR2B, CS20);
-				SET  (TCCR2B, CS21);
-				CLEAR(TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_256:
-				CLEAR(TCCR2B, CS20);
-				CLEAR(TCCR2B, CS21);
-				SET  (TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_1024:
-				SET  (TCCR2B, CS20);
-				CLEAR(TCCR2B, CS21);
-				SET  (TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::EXTERNAL_ON_FALLING_EDGE:
-				CLEAR(TCCR2B, CS20);
-				SET  (TCCR2B, CS21);
-				SET  (TCCR2B, CS22);
-				break;
-			case CLOCK_SOURCE::EXTERNAL_ON_RISING_EDGE:
-				SET  (TCCR2B, CS20);
-				SET  (TCCR2B, CS21);
-				SET  (TCCR2B, CS22);
-				break;
-		}
+		clock_source(spec.clock_source);
 
 		output_compare_register_A(spec.output_compare_value_A);
 		output_compare_register_B(spec.output_compare_value_B);
@@ -133,6 +144,8 @@ namespace Timer
 		if (on_output_compare_match_A) enable_output_compare_match_A_interrupt();
 		if (on_output_compare_match_B) enable_output_compare_match_B_interrupt();
 		if (on_overflow              ) enable_overflow_interrupt();
+
+		m_spec = spec;
 	}
 }
 

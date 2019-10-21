@@ -19,7 +19,7 @@ namespace Timer
 				FAST_PWM,
 				PHASE_CORRECT_PWM
 			};
-			enum class ON_COMPARE_MATCH_OUTPUT_PIN_ACTION : uint8_t
+			enum class PIN_ACTION_ON_OUTPUT_COMPARE_MATCH : uint8_t
 			{
 				PASS,
 				TOGGLE,
@@ -28,6 +28,7 @@ namespace Timer
 			};
 			enum class CLOCK_SOURCE : uint8_t
 			{
+				NO,
 				IO_CLK_OVER_1,
 				IO_CLK_OVER_8,
 				IO_CLK_OVER_64,
@@ -42,8 +43,8 @@ namespace Timer
 			struct Spec
 			{
 				MODE                               mode                                 = MODE::NORMAL;
-				ON_COMPARE_MATCH_OUTPUT_PIN_ACTION on_compare_match_output_A_pin_action = ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS;
-				ON_COMPARE_MATCH_OUTPUT_PIN_ACTION on_compare_match_output_B_pin_action = ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS;
+				PIN_ACTION_ON_OUTPUT_COMPARE_MATCH pin_action_on_output_compare_match_A = PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::PASS;
+				PIN_ACTION_ON_OUTPUT_COMPARE_MATCH pin_action_on_output_compare_match_B = PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::PASS;
 				CLOCK_SOURCE                       clock_source                         = CLOCK_SOURCE::IO_CLK_OVER_1;
 				uint8_t                            output_compare_value_A               = 0xff;
 				uint8_t                            output_compare_value_B               = 0xff;
@@ -53,8 +54,10 @@ namespace Timer
 			};
 
 		public: // CONSTRUCTORS
-			Timer0(void);
+			Timer0(void) = default;
 			Timer0(const Spec& spec);
+		public: // DESTRUCTOR
+			~Timer0(void) = default;
 
 		public: // GETTERS
 			uint8_t count                    (void) const;
@@ -65,25 +68,37 @@ namespace Timer
 			void output_compare_register_A(uint8_t new_output_compare_register_A);
 			void output_compare_register_B(uint8_t new_output_compare_register_B);
 			//
-			void on_compare_match_output_A_pin_action(ON_COMPARE_MATCH_OUTPUT_PIN_ACTION new_on_compare_match_output_A_pin_action);
-			void on_compare_match_output_B_pin_action(ON_COMPARE_MATCH_OUTPUT_PIN_ACTION new_on_compare_match_output_B_pin_action);
+			void pin_action_on_output_compare_match_A(PIN_ACTION_ON_OUTPUT_COMPARE_MATCH new_pin_action_on_output_compare_match_A);
+			void pin_action_on_output_compare_match_B(PIN_ACTION_ON_OUTPUT_COMPARE_MATCH new_pin_action_on_output_compare_match_B);
 			void mode(MODE new_mode);
 			void clock_source(CLOCK_SOURCE new_clock_source);
 			void on_output_compare_match_A(on_output_compare_match_func new_on_output_compare_match_A);
 			void on_output_compare_match_B(on_output_compare_match_func new_on_output_compare_match_B);
 			void on_overflow              (on_overflow_func             new_on_overflow              );
+			//
+			void  enable_output_compare_match_A_interrupt(void);
+			void disable_output_compare_match_A_interrupt(void);
+			void  enable_output_compare_match_B_interrupt(void);
+			void disable_output_compare_match_B_interrupt(void);
+			void                enable_overflow_interrupt(void);
+			void               disable_overflow_interrupt(void);
 
-		public: // FUNCTIONS
+		public: // METHODS
 			void init(const Spec& spec);
-
+			//
+			void pause  (void) override;
+			void unpause(void) override;
+			//
 			void force_output_compare_A(void);
 			void force_output_compare_B(void);
-
+			//
 			void call_on_output_compare_match_A(void);
 			void call_on_output_compare_match_B(void);
 			void call_on_overflow              (void);
 
 		private:
+			CLOCK_SOURCE m_clock_source;
+			//
 			on_output_compare_match_func m_on_output_compare_match_A;
 			on_output_compare_match_func m_on_output_compare_match_B;
 			on_overflow_func             m_on_overflow;
@@ -98,45 +113,47 @@ namespace Timer
 	inline void Timer0::output_compare_register_A(uint8_t new_output_compare_register_A) { OCR0A = new_output_compare_register_A; }
 	inline void Timer0::output_compare_register_B(uint8_t new_output_compare_register_B) { OCR0B = new_output_compare_register_B; }
 	//
-	inline void Timer0::on_compare_match_output_A_pin_action(ON_COMPARE_MATCH_OUTPUT_PIN_ACTION new_on_compare_match_output_A_pin_action)
+	inline void Timer0::pin_action_on_output_compare_match_A(
+			PIN_ACTION_ON_OUTPUT_COMPARE_MATCH new_pin_action_on_output_compare_match_A)
 	{
-		switch (new_on_compare_match_output_A_pin_action)
+		switch (new_pin_action_on_output_compare_match_A)
 		{
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::PASS:
 				CLEAR(TCCR0A, COM0A0);
 				CLEAR(TCCR0A, COM0A1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::TOGGLE:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::TOGGLE:
 				SET  (TCCR0A, COM0A0);
 				CLEAR(TCCR0A, COM0A1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::CLEAR:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::CLEAR:
 				CLEAR(TCCR0A, COM0A0);
 				SET  (TCCR0A, COM0A1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::SET:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::SET:
 				SET  (TCCR0A, COM0A0);
 				SET  (TCCR0A, COM0A1);
 				break;
 		}
 	}
-	inline void Timer0::on_compare_match_output_B_pin_action(ON_COMPARE_MATCH_OUTPUT_PIN_ACTION new_on_compare_match_output_B_pin_action)
+	inline void Timer0::pin_action_on_output_compare_match_B(
+		PIN_ACTION_ON_OUTPUT_COMPARE_MATCH new_pin_action_on_output_compare_match_B)
 	{
-		switch (new_on_compare_match_output_B_pin_action)
+		switch (new_pin_action_on_output_compare_match_B)
 		{
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::PASS:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::PASS:
 				CLEAR(TCCR0A, COM0B0);
 				CLEAR(TCCR0A, COM0B1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::TOGGLE:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::TOGGLE:
 				SET  (TCCR0A, COM0B0);
 				CLEAR(TCCR0A, COM0B1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::CLEAR:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::CLEAR:
 				CLEAR(TCCR0A, COM0B0);
 				SET  (TCCR0A, COM0B1);
 				break;
-			case ON_COMPARE_MATCH_OUTPUT_PIN_ACTION::SET:
+			case PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::SET:
 				SET  (TCCR0A, COM0B0);
 				SET  (TCCR0A, COM0B1);
 				break;
@@ -170,8 +187,15 @@ namespace Timer
 	}
 	inline void Timer0::clock_source(CLOCK_SOURCE new_clock_source)
 	{
+		m_clock_source = new_clock_source;
+
 		switch (new_clock_source)
 		{
+			case CLOCK_SOURCE::NO:
+				CLEAR(TCCR0B, CS00);
+				CLEAR(TCCR0B, CS01);
+				CLEAR(TCCR0B, CS02);
+				break;
 			case CLOCK_SOURCE::IO_CLK_OVER_1:
 				SET  (TCCR0B, CS00);
 				CLEAR(TCCR0B, CS01);
@@ -209,17 +233,50 @@ namespace Timer
 				break;
 		}
 	}
-	inline void Timer0::on_output_compare_match_A(on_output_compare_match_func new_on_output_compare_match_A) { if (new_on_output_compare_match_A) SET(TIMSK0, OCIE0A); else CLEAR(TIMSK0, OCIE0A); m_on_output_compare_match_A = new_on_output_compare_match_A; }
-	inline void Timer0::on_output_compare_match_B(on_output_compare_match_func new_on_output_compare_match_B) { if (new_on_output_compare_match_B) SET(TIMSK0, OCIE0A); else CLEAR(TIMSK0, OCIE0B); m_on_output_compare_match_B = new_on_output_compare_match_B; }
-	inline void Timer0::on_overflow              (on_overflow_func             new_on_overflow              ) { if (new_on_overflow              ) SET(TIMSK0, TOIE0 ); else CLEAR(TIMSK0, TOIE0 ); m_on_overflow               = new_on_overflow;               }
+	inline void Timer0::on_output_compare_match_A(
+		on_output_compare_match_func new_on_output_compare_match_A)
+	{
+		m_on_output_compare_match_A = new_on_output_compare_match_A;
+		if (m_on_output_compare_match_A)
+			enable_output_compare_match_A_interrupt();
+		else
+			disable_output_compare_match_A_interrupt();
+	}
+	inline void Timer0::on_output_compare_match_B(
+		on_output_compare_match_func new_on_output_compare_match_B)
+	{
+		m_on_output_compare_match_B = new_on_output_compare_match_B;
+		if (m_on_output_compare_match_B)
+			enable_output_compare_match_B_interrupt();
+		else
+			disable_output_compare_match_B_interrupt();
+	}
+	inline void Timer0::on_overflow(on_overflow_func new_on_overflow )
+	{
+		m_on_overflow = new_on_overflow;
+		if (m_on_overflow)  enable_overflow_interrupt();
+		else               disable_overflow_interrupt();
+	}
+	//
+	inline void Timer0:: enable_output_compare_match_A_interrupt(void) { SET  (TIMSK0, OCIE0A); }
+	inline void Timer0::disable_output_compare_match_A_interrupt(void) { CLEAR(TIMSK0, OCIE0A); }
+	inline void Timer0:: enable_output_compare_match_B_interrupt(void) { SET  (TIMSK0, OCIE0B); }
+	inline void Timer0::disable_output_compare_match_B_interrupt(void) { CLEAR(TIMSK0, OCIE0B); }
+	inline void Timer0::               enable_overflow_interrupt(void) { SET  (TIMSK0, TOIE0 ); }
+	inline void Timer0::              disable_overflow_interrupt(void) { CLEAR(TIMSK0, TOIE0 ); }
 
-	// FUNCTIONS
+	// METHODS
+	inline void Timer0::  pause(void) { clock_source(CLOCK_SOURCE::NO); }
+	inline void Timer0::unpause(void) { clock_source(m_clock_source  ); }
+	//
 	inline void Timer0::force_output_compare_A(void) { SET(TCCR0B, FOC0A); }
 	inline void Timer0::force_output_compare_B(void) { SET(TCCR0B, FOC0B); }
 	//
-	inline void Timer0::call_on_output_compare_match_A(void) { m_on_output_compare_match_A(); }
-	inline void Timer0::call_on_output_compare_match_B(void) { m_on_output_compare_match_B(); }
-	inline void Timer0::call_on_overflow              (void) { m_on_overflow              (); }
+	inline void Timer0::call_on_output_compare_match_A(void)
+	{ m_on_output_compare_match_A(); }
+	inline void Timer0::call_on_output_compare_match_B(void)
+	{ m_on_output_compare_match_B(); }
+	inline void Timer0::call_on_overflow(void) { m_on_overflow(); }
 
 	extern Timer0 timer0;
 }

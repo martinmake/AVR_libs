@@ -55,7 +55,7 @@ namespace Pid
 	// OPERATORS
 	float Float::operator()(float error)
 	{
-		m_error_sum = safe_add(m_error_sum, error);
+		m_error_sum += error;
 		m_error_sum = clamp(-m_limit, m_limit, m_error_sum);
 
 		float error_change = error - m_last_error;

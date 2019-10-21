@@ -6,197 +6,35 @@ namespace Timer
 {
 	Timer1 timer1;
 
-	Timer1::Timer1(void)
-	{
-	}
+	// CONSTRUCTORS
 	Timer1::Timer1(const Spec& spec)
 	{
 		init(spec);
 	}
+
+	// METHODS
 	void Timer1::init(const Spec& spec)
 	{
-		switch (spec.on_compare_match_output_A)
-		{
-			case ON_COMPARE_MATCH_OUTPUT::PASS:
-				CLEAR(TCCR1A, COM1A0);
-				CLEAR(TCCR1A, COM1A1);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::TOGGLE:
-				SET  (TCCR1A, COM1A0);
-				CLEAR(TCCR1A, COM1A1);
-				SET(DDRB, PB1);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::CLEAR:
-				CLEAR(TCCR1A, COM1A0);
-				SET  (TCCR1A, COM1A1);
-				SET(DDRB, PB1);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::SET:
-				SET  (TCCR1A, COM1A0);
-				SET  (TCCR1A, COM1A1);
-				SET(DDRB, PB1);
-				break;
-		}
-		switch (spec.on_compare_match_output_B)
-		{
-			case ON_COMPARE_MATCH_OUTPUT::PASS:
-				CLEAR(TCCR1A, COM1B0);
-				CLEAR(TCCR1A, COM1B1);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::TOGGLE:
-				SET  (TCCR1A, COM1B0);
-				CLEAR(TCCR1A, COM1B1);
-				SET(DDRB, PB2);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::CLEAR:
-				CLEAR(TCCR1A, COM1B0);
-				SET  (TCCR1A, COM1B1);
-				SET(DDRB, PB2);
-				break;
-			case ON_COMPARE_MATCH_OUTPUT::SET:
-				SET  (TCCR1A, COM1B0);
-				SET  (TCCR1A, COM1B1);
-				SET(DDRB, PB2);
-				break;
-		}
+		mode(spec.mode);
+		top (spec.top );
 
-		switch (spec.input_capture)
-		{
-			case INPUT_CAPTURE::ENABLED:
-				CLEAR(DDRB, PB0);
-				break;
-			case INPUT_CAPTURE::DISABLED:
-				break;
-		}
+		input_capture(spec.input_capture);
 
-		switch (spec.mode)
-		{
-			case MODE::NORMAL:
-				CLEAR(TCCR1A, WGM10);
-				CLEAR(TCCR1A, WGM11);
-				CLEAR(TCCR1A, WGM12);
-				CLEAR(TCCR1A, WGM13);
-				break;
-			case MODE::CTC:
-				switch (spec.input_capture)
-				{
-					case INPUT_CAPTURE::ENABLED:
-						CLEAR(TCCR1A, WGM10);
-						CLEAR(TCCR1A, WGM11);
-						SET  (TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-					case INPUT_CAPTURE::DISABLED:
-						CLEAR(TCCR1A, WGM10);
-						CLEAR(TCCR1A, WGM11);
-						SET  (TCCR1A, WGM12);
-						CLEAR(TCCR1A, WGM13);
-						break;
-				} break;
-			case MODE::FAST_PWM:
-				switch (spec.input_capture)
-				{
-					case INPUT_CAPTURE::ENABLED:
-						CLEAR(TCCR1A, WGM10);
-						SET  (TCCR1A, WGM11);
-						SET  (TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-					case INPUT_CAPTURE::DISABLED:
-						SET  (TCCR1A, WGM10);
-						SET  (TCCR1A, WGM11);
-						SET  (TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-				} break;
-			case MODE::PHASE_CORRECT_PWM:
-				switch (spec.input_capture)
-				{
-					case INPUT_CAPTURE::ENABLED:
-						CLEAR(TCCR1A, WGM10);
-						SET  (TCCR1A, WGM11);
-						CLEAR(TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-					case INPUT_CAPTURE::DISABLED:
-						SET  (TCCR1A, WGM10);
-						SET  (TCCR1A, WGM11);
-						CLEAR(TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-				} break;
-			case MODE::PHASE_AND_FREQUENCY_CORRECT_PWM:
-				switch (spec.input_capture)
-				{
-					case INPUT_CAPTURE::ENABLED:
-						CLEAR(TCCR1A, WGM10);
-						CLEAR(TCCR1A, WGM11);
-						CLEAR(TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-					case INPUT_CAPTURE::DISABLED:
-						SET  (TCCR1A, WGM10);
-						CLEAR(TCCR1A, WGM11);
-						CLEAR(TCCR1A, WGM12);
-						SET  (TCCR1A, WGM13);
-						break;
-				} break;
-		}
+		pin_action_on_output_compare_match_A(spec.pin_action_on_output_compare_match_A);
+		pin_action_on_output_compare_match_B(spec.pin_action_on_output_compare_match_B);
 
-		switch (spec.clock_source)
-		{
-			case CLOCK_SOURCE::IO_CLK_OVER_1:
-				SET  (TCCR1B, CS10);
-				CLEAR(TCCR1B, CS11);
-				CLEAR(TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_8:
-				SET  (TCCR1B, CS10);
-				CLEAR(TCCR1B, CS11);
-				CLEAR(TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_64:
-				SET  (TCCR1B, CS10);
-				SET  (TCCR1B, CS11);
-				CLEAR(TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_256:
-				CLEAR(TCCR1B, CS10);
-				CLEAR(TCCR1B, CS11);
-				SET  (TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::IO_CLK_OVER_1024:
-				SET  (TCCR1B, CS10);
-				CLEAR(TCCR1B, CS11);
-				SET  (TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::EXTERNAL_ON_FALLING_EDGE:
-				CLEAR(TCCR1B, CS10);
-				SET  (TCCR1B, CS11);
-				SET  (TCCR1B, CS12);
-				break;
-			case CLOCK_SOURCE::EXTERNAL_ON_RISING_EDGE:
-				SET  (TCCR1B, CS10);
-				SET  (TCCR1B, CS11);
-				SET  (TCCR1B, CS12);
-				break;
-		}
+		clock_source(spec.clock_source);
 
-		output_compare_register_A(spec.output_compare_value_A);
-		output_compare_register_B(spec.output_compare_value_B);
-
-		on_output_compare_match_A = spec.on_output_compare_match_A;
-		on_output_compare_match_B = spec.on_output_compare_match_B;
-		on_overflow               = spec.on_overflow;
-
-		if (on_output_compare_match_A) enable_output_compare_match_A_interrupt();
-		if (on_output_compare_match_B) enable_output_compare_match_B_interrupt();
-		if (on_overflow              ) enable_overflow_interrupt();
+		on<INTERRUPT::ON_OUTPUT_COMPARE_MATCH_A>(spec.on_output_compare_match_A);
+		on<INTERRUPT::ON_OUTPUT_COMPARE_MATCH_B>(spec.on_output_compare_match_B);
+		on<INTERRUPT::ON_INPUT_CAPTURE         >(spec.on_input_capture         );
+		on<INTERRUPT::ON_OVERFLOW              >(spec.on_overflow              );
 	}
 }
 
-ISR(TIMER1_OVF_vect  ) { Timer::timer1.on_overflow              (); }
-ISR(TIMER1_COMPA_vect) { Timer::timer1.on_output_compare_match_A(); }
-ISR(TIMER1_COMPB_vect) { Timer::timer1.on_output_compare_match_B(); }
+ISR(TIMER1_COMPA_vect) { Timer::timer1.call<Timer::Timer1::INTERRUPT::ON_OUTPUT_COMPARE_MATCH_A>(); }
+ISR(TIMER1_COMPB_vect) { Timer::timer1.call<Timer::Timer1::INTERRUPT::ON_OUTPUT_COMPARE_MATCH_B>(); }
+ISR(TIMER1_CAPT_vect ) { Timer::timer1.call<Timer::Timer1::INTERRUPT::ON_INPUT_CAPTURE         >(); }
+ISR(TIMER1_OVF_vect  ) { Timer::timer1.call<Timer::Timer1::INTERRUPT::ON_OVERFLOW              >(); }
 
 #endif

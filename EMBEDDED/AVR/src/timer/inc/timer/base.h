@@ -8,9 +8,13 @@ namespace Timer
 	class Base
 	{
 		public: // CONSTRUCTORS
-			Base();
+			Base(void) = default;
 		public: // DESTRUCTOR
-			virtual ~Base();
+			virtual ~Base(void) = default;
+
+		public: // METHODS
+			virtual void   pause(void) = 0;
+			virtual void unpause(void) = 0;
 	};
 }
 

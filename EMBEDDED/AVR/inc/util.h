@@ -49,6 +49,17 @@ inline bool __cli(void) { cli(); return false; }
 
 #define ATOMIC() for (bool run = __cli(); run; run = __sei())
 
+extern void assert_failed(const char* exp, const char* file, int line);
+#define assert(exp) if (!(exp)) assert_failed(#exp, __FILE__, __LINE__);
+#ifndef CUSTOM_ASSERT
+inline void assert_failed(const char* exp, const char* file, int line)
+{
+	tty_escape_sequence(FG_RED, BOLD);
+	fprintf(stderr, "%s:%d: ASSERTION `%s' FAILED\n", file, line, exp);
+	tty_escape_sequence(NORMAL);
+}
+#endif
+
 extern void* operator new  (size_t size);
 extern void* operator new[](size_t size);
 extern void  operator delete  (void* ptr);

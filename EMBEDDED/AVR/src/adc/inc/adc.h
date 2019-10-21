@@ -75,14 +75,15 @@ inline uint16_t Adc::sample(void)
 {
 	SET(ADCSRA, ADSC);
 	while (IS_SET(ADCSRA, ADSC)) {}
-	return ADC;
+
+	value = ADC;
+
+	return value;
 }
 inline uint16_t Adc::sample(uint8_t new_channel)
 {
 	channel(new_channel);
-	SET(ADCSRA, ADSC);
-	while (IS_SET(ADCSRA, ADSC)) {}
-	return ADC;
+	return sample();
 }
 
 // OPERATORS

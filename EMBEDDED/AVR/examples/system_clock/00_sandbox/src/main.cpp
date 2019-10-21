@@ -1,7 +1,5 @@
 #include <system_clock.h>
 #include <usart/usart0.h>
-#include <gpio.h>
-#include <led.h>
 
 using namespace Usart;
 
@@ -21,15 +19,8 @@ int main(void)
 
 	while (true)
 	{
-
-		SYSTEM_CLOCK_TIMEOUT(100)
-		{
-			putchar('A');
-			break;
-		} putchar('\n');
-
-		if (system_clock.has_timed_out()) putchar('\n');
-
+		puts("TEST");
 		system_clock.sleep(1000);
+
 	}
 }

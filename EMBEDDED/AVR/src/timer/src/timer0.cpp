@@ -10,26 +10,27 @@ namespace Timer
 {
 	Timer0 timer0;
 
-	Timer0::Timer0(void)
+	// CONSTRUCTORS
+	Timer0::Timer0(const Spec& spec)
 	{
+		init(spec);
 	}
-	Timer0::Timer0(const Spec& Spec)
-	{
-		init(Spec);
-	}
-	void Timer0::init(const Spec& Spec)
-	{
-		on_compare_match_output_A_pin_action(Spec.on_compare_match_output_A_pin_action);
-		on_compare_match_output_B_pin_action(Spec.on_compare_match_output_B_pin_action);
-		mode                                (Spec.mode                                );
-		clock_source                        (Spec.clock_source                        );
 
-		output_compare_register_A(Spec.output_compare_value_A);
-		output_compare_register_B(Spec.output_compare_value_B);
+	// METHODS
+	void Timer0::init(const Spec& spec)
+	{
+		pin_action_on_output_compare_match_A(spec.pin_action_on_output_compare_match_A);
+		pin_action_on_output_compare_match_B(spec.pin_action_on_output_compare_match_B);
 
-		on_output_compare_match_A(Spec.on_output_compare_match_A);
-		on_output_compare_match_B(Spec.on_output_compare_match_B);
-		on_overflow              (Spec.on_overflow              );
+		mode                                (spec.mode                                );
+		clock_source                        (spec.clock_source                        );
+
+		output_compare_register_A(spec.output_compare_value_A);
+		output_compare_register_B(spec.output_compare_value_B);
+
+		on_output_compare_match_A(spec.on_output_compare_match_A);
+		on_output_compare_match_B(spec.on_output_compare_match_B);
+		on_overflow              (spec.on_overflow              );
 	}
 }
 

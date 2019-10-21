@@ -17,7 +17,9 @@ void SystemClock::sleep(Time delta_time) const
 		asm ("NOP");
 }
 
-bool SystemClock::timeout(Time max_delta_time, TimeoutActionFunction timeout_action_function) const
+bool SystemClock::timeout(
+	Time max_delta_time,
+	TimeoutActionFunction timeout_action_function) const
 {
 	Time max_time = time() + max_delta_time;
 	while (time() < max_time)

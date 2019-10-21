@@ -33,7 +33,9 @@ class SystemClock
 	public: // METHODS
 		void init(const Spec& init_struct);
 		void sleep(Time delta_time) const;
-		bool timeout(Time max_delta_time, TimeoutActionFunction timeout_action_function) const;
+		bool timeout(
+			Time max_delta_time,
+			TimeoutActionFunction timeout_action_function) const;
 		void timeout(Time max_delta_time);
 		void tick(void);
 
