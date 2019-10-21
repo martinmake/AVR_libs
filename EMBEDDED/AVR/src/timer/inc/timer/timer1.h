@@ -231,8 +231,8 @@ namespace Timer
 				CLEAR(TCCR1B, CS12);
 				break;
 			case CLOCK_SOURCE::IO_CLK_OVER_8:
-				SET  (TCCR1B, CS10);
-				CLEAR(TCCR1B, CS11);
+				CLEAR(TCCR1B, CS10);
+				SET  (TCCR1B, CS11);
 				CLEAR(TCCR1B, CS12);
 				break;
 			case CLOCK_SOURCE::IO_CLK_OVER_64:
