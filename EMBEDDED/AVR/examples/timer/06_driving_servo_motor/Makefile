@@ -1,9 +1,8 @@
-MAKEFILE:=../../Makefile.example
+PATHS:=$(dir $(shell find $$(ls -d ./*/ | sed '/_\/$$/d') -maxdepth 1 -name 'Makefile'))
 
-export MAKEFILE
-
+.PHONY: all
 all:
-	+$(MAKE) -f $(MAKEFILE) $@
+	+$(foreach PATH,$(PATHS),make -C $(PATH) $@;)
 
 %:
-	+$(MAKE) -f $(MAKEFILE) $@
+	+$(foreach PATH,$(PATHS),make -C $(PATH) $@;)
