@@ -1,0 +1,113 @@
+# vim: filetype=make
+
+NAME_LIB:=$(notdir $(realpath .))
+
+CONFIG:=Makefile.config
+include $(CONFIG)
+
+DIR_INC_PUBLIC:=$(DIR_INC_MAIN)/$(NAME_LIB)
+DIRS_INC+=$(DIR_LIB_INC)
+
+LIBS:=$(addprefix -l,$(LIBS)    )
+DEFS:=$(addprefix -D,$(DEFS)    )
+INC :=$(addprefix -I,$(DIRS_INC))
+
+ARC:=$(DIR_LIB_LIB)/$(MCU)/lib$(NAME_LIB).a
+
+HEADERS_PUBLIC:=$(shell find $(DIR_INC_PUBLIC) -name '*.h')
+HEADERS_PUBLIC:=$(patsubst $(DIR_INC_PUBLIC)/%.h,$(DIR_LIB_INC)/$(NAME_LIB)/%.h,$(HEADERS_PUBLIC))
+
+ifneq ("$(wildcard $(DIR_INC_MAIN)/$(NAME_LIB).h)","")
+HEADER_PUBLIC_MAIN:=$(DIR_LIB_INC)/$(NAME_LIB).h
+endif
+
+SRCS_C   :=$(shell find $(DIR_SRC) -name '*.c'  )
+SRCS_CXX :=$(shell find $(DIR_SRC) -name '*.cpp')
+SRCS_ASM :=$(shell find $(DIR_SRC) -name '*.S'  )
+
+OBJS_C   :=$(patsubst $(DIR_SRC)/%.c,  $(DIR_OBJ)/$(MCU)/%.o, $(SRCS_C)  )
+OBJS_CXX :=$(patsubst $(DIR_SRC)/%.cpp,$(DIR_OBJ)/$(MCU)/%.o, $(SRCS_CXX))
+OBJS_ASM :=$(patsubst $(DIR_SRC)/%.S,  $(DIR_OBJ)/$(MCU)/%.o, $(SRCS_ASM))
+OBJS     :=$(OBJS_C) $(OBJS_CXX) $(OBJS_ASM)
+
+FLAGS_CC +=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_CXX+=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_ASM+=$(WARNING) $(OPTIMIZATION) $(DEBUG) $(INC) $(DEFS) -mmcu=$(MCU)
+FLAGS_AR +=rUucv
+
+.SECONDARY: $(OBJS)
+
+.PHONY: all
+all: $(HEADERS_PUBLIC) $(HEADER_PUBLIC_MAIN)
+	+$(foreach MCU,$(MCUS),$(MAKE) -e build MCU=$(MCU);)
+
+.PHONY: build
+build: $(ARC)
+	@echo "> BULDING $(NAME_LIB) FOR $(MCU)"
+	$(SIZE) $(ARC) | sed -e 's/^/* /'
+	@echo "< BULDING $(NAME_LIB) FOR $(MCU) DONE"
+
+$(ARC): $(OBJS) | $(DIR_LIB_LIB)/$(MCU)
+	@echo "> ARCHIVING"
+	$(AR) $(FLAGS_AR) $@ $^
+	@echo "< ARCHIVING DONE"
+
+$(DIR_LIB_INC)/$(NAME_LIB) $(DIR_LIB_LIB)/$(MCU) $(DIR_OBJ)/$(MCU):
+	mkdir -p $@
+
+# $(DIR_LIB_INC)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h | $(DIR_LIB_INC)/$(NAME_LIB)
+$(DIR_LIB_INC)/$(NAME_LIB)/%.h: $(DIR_INC_PUBLIC)/%.h
+	@echo "> STOIRING PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@)
+	cp $< $@
+	@echo "< STOIRING PUBLIC LIBRARY HEADER $< DONE"
+
+$(HEADER_PUBLIC_MAIN): $(DIR_INC_MAIN)/$(NAME_LIB).h
+	@echo "> STOIRING MAIN PUBLIC LIBRARY HEADER $<"
+	mkdir -p $(dir $@)
+	cp $< $@
+	@echo "< STOIRING MAIN PUBLIC LIBRARY HEADER $< DONE"
+
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.c   | $(DIR_OBJ)/$(MCU)
+	@echo "> COMPILING $< FOR $(MCU)"
+	$(CC)   $(FLAGS_CC)  -c $< -o $@
+	@echo "< COMPILING $< FOR $(MCU) DONE"
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.cpp | $(DIR_OBJ)/$(MCU)
+	@echo "> COMPILING $< FOR $(MCU)"
+	$(CXX)  $(FLAGS_CXX) -c $< -o $@
+	@echo "< COMPILING $< FOR $(MCU) DONE"
+$(DIR_OBJ)/$(MCU)/%.o: $(DIR_SRC)/%.S   | $(DIR_OBJ)/$(MCU)
+	@echo "> COMPILING $< FOR $(MCU)"
+	$(ASMC) $(FLAGS_ASM) -c $< -o $@
+	@echo "< COMPILING $< FOR $(MCU) DONE"
+
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.c
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(CC)   $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.cpp
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(CXX)  $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+$(DIR_DEP)/%.d: $(DIR_SRC)/%.S
+	@echo "> BUILDING DEPENDENCIES $<"
+	$(ASMC) $(INC) -MM $< -MT '$(patsubst $(DIR_DEP)/%.d,$(DIR_OBJ)/$$(MCU)/%.o,$@)' > $@
+	@echo "< BUILDING DEPENDENCIES $< DONE"
+
+.PHONY: bear
+bear:
+	@better-bear $(DIR_SRC) $(DIRS_INC)
+
+.PHONY: clean
+clean: CLEAN_FILES+=$(wildcard $(DIR_LIB_LIB)/*/lib$(NAME_LIB).a) $(HEADER_PUBLIC_MAIN) $(DIR_LIB_INC)/$(NAME_LIB)
+clean: CLEAN_FILES+=$(shell find ./$(DIR_OBJ) ./$(DIR_DEP) -type f -name '[!.]*')
+clean:
+	@echo "> CLEANING"
+	-rm -vfr $(shell echo $(CLEAN_FILES) | tr " " "\n") | sort | sed -e 's/^/* /'
+	@echo "< CLEANING DONE"
+
+ifeq ($(NO_DEPENDENCIES),)
+-include $(patsubst $(DIR_SRC)/%.c,  $(DIR_DEP)/%.d,$(SRCS_C)  )
+-include $(patsubst $(DIR_SRC)/%.cpp,$(DIR_DEP)/%.d,$(SRCS_CXX))
+-include $(patsubst $(DIR_SRC)/%.S,  $(DIR_DEP)/%.d,$(SRCS_ASM))
+endif

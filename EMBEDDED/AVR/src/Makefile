@@ -1,4 +1,4 @@
-LIBS_CORE:=math util gpio timer system_clock usart
+LIBS_CORE:=math util core
 
 FILTER:=$(foreach LIB,$(CORE_LIBS),%$(LIB)/)
 LIBS_CORE:=$(patsubst %,./%/,$(LIBS_CORE))

@@ -1,6 +1,9 @@
-#include <gpio.h>
+#include <core/gpio.h>
 
-Gpio<PORT::B, 5> led_pin(OUTPUT);
+using namespace Core;
+using namespace GPIO;
+
+Gpio<PORT::B, 5> led_pin(MODE::OUTPUT);
 
 int main(void)
 {

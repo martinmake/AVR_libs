@@ -1,11 +1,9 @@
 # vim: filetype=make
 
-NAME_EXAMPLE:=$(shell echo $(realpath .) | sed -E 's/.*\/([^\/]*\/[^\/]*)$$/\1/')
-
 CONFIG:=Makefile.config
 include $(CONFIG)
 
-LIBS+=util
+LIBS+=util core
 LIBS+=printf_flt
 
 DEFS+=F_CPU=$(F_CPU) TIO_BAUD=$(TIO_BAUD)

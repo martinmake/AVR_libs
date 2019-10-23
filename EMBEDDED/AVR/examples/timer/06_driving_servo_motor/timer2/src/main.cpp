@@ -1,13 +1,7 @@
 #include <util.h>
 #include <gpio.h>
-#include <timer/timer1.h>
+#include <timer/timer2.h>
 #include <usart/usart0.h>
-
-#define PRESCALER 8
-#define PERIOD    0.02
-
-#define F_TIM     (F_CPU / PRESCALER)
-#define TOP_VALUE (uint16_t (F_TIM * PERIOD - 1))
 
 using namespace Timer;
 using namespace Usart;
@@ -17,6 +11,8 @@ Gpio<PORT::B, 2> servo2(OUTPUT);
 
 void init(void)
 {
+	system_clock.init({ SystemClock::TIMER0 });
+
 	usart0.init({ TIO_BAUD });
 	stdout = usart0.stream();
 	stderr = usart0.stream();
@@ -28,8 +24,8 @@ void init(void)
 	spec.pin_action_on_output_compare_match_A = Timer1::PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::CLEAR;
 	spec.pin_action_on_output_compare_match_B = Timer1::PIN_ACTION_ON_OUTPUT_COMPARE_MATCH::CLEAR;
 	spec.clock_source                         = Timer1::CLOCK_SOURCE::IO_CLK_OVER_8;
-	timer1.init(spec);
-	timer1.input_capture_value(TOP_VALUE);
+	timer2.init(spec);
+	timer2.input_capture_value(TOP_VALUE);
 
 	sei();
 }
@@ -40,11 +36,10 @@ int main(void)
 
 	while (true)
 	{
-		for (uint16_t i = 1000; i <= 2000; i++)
-		{
-			timer1.output_compare_value_A(2 * i);
-			timer1.output_compare_value_B(2 * i);
-			_delay_ms(100);
-		}
+		timer2.unpause();
+		timer2.count(0);
+		trig = HIGH;
+		while (timer0.count() < 20) {}
+		trig = LOW;
 	}
 }
